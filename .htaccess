@@ -1,0 +1,24 @@
+# Set this to development, staging or production
+SetEnv CI_ENV development
+<IfModule mod_rewrite.c>
+    # Make sure directory listing is disabled
+    Options +FollowSymLinks -Indexes
+    # disable the Apache MultiViews directive if it is enabled on the server. It plays havoc with URL rewriting
+    Options -MultiViews
+    RewriteEngine on
+    # NOTICE: If you get a 404 play with combinations of the following commented out lines
+    #AllowOverride All
+    RewriteBase /apx/
+    # remove trailing slash
+    RewriteRule ^(.*)/(\?.*)?$ $1$2 [R=301,L]
+    # Send request via index.php (again, not if its a real file or folder)
+    RewriteCond $1 !^(index\.php|partials|layouts|license\.txt|robots\.txt|screenshot\.png|css|js|img|images|fonts)
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    <IfModule mod_php5.c>
+        RewriteRule ^(.*)$ index.php/$1 [L]
+    </IfModule>
+    <IfModule !mod_php5.c>
+        RewriteRule ^(.*)$ index.php?/$1 [L]
+    </IfModule>
+</IfModule>

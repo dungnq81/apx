@@ -1,0 +1,17 @@
+@charset "UTF-8";
+/**/
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: auto;
+    font-family: -apple-system, BlinkMacSystemFont, "Roboto", Helvetica, sans-serif;
+    font-size: 15px;
+    color: #333;
+}
+/**/
+.error-alert {display: none}
+.block {display: block;}
+.callout p {
+    margin-bottom: 0;
+    font-size: 14px;
+}

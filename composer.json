@@ -1,0 +1,25 @@
+{
+   "description" : "The CodeIgniter Application with Composer",
+   "require": {
+      "php": ">=5.6",
+      "codeigniter/framework": "3.*",
+      "paragonie/random_compat": "2.*",
+      "michelf/php-markdown": "1.*",
+      "peppeocchi/php-cron-scheduler": "2.*",
+      "zendframework/zend-mail": "2.*",
+      "google/recaptcha": "1.*",
+      "mikey179/vfsstream": "1.*",
+      "pyrocms/lex": "2.*",
+      "zordius/lightncandy": "1.*",
+      "defuse/php-encryption": "2.*",
+      "ext-curl": "*",
+      "ext-json": "*",
+      "ext-zip": "*",
+      "ext-mbstring": "*",
+      "ext-exif": "*",
+      "ext-gd": "*",
+      "ext-imagick": "*",
+      "ext-openssl": "*"
+   },
+   "require-dev": {}
+}
