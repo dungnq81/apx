@@ -3,6 +3,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Class Page_m
+ *
+ * @property CI_Input $input
+ * @property CI_URI $uri
  */
 class Page_m extends MY_Model
 {
@@ -196,10 +199,60 @@ class Page_m extends MY_Model
     }
 
     /**
+     * Callback to check uniqueness of slug + parent
+     *
+     *
+     * @param $slug string to check
      * @return bool
      */
-    public function _check_slug()
+    public function _check_slug($slug)
     {
+        // This is only going to be set on Edit
+        $page_id = $this->uri->segment(4);
+
+        // This might be set if there is a page
+        $pid = $this->input->post('pid');
+
+        // See if this slug exists already
+        if ($this->_unique_slug($slug, $pid, (int) $page_id))
+        {
+            // Root Level
+            if (empty($pid))
+            {
+                $parent_folder = 'the top level';
+                $url = '/' . $slug;
+            }
+            else // Child of a Page (find by parent)
+            {
+                $parent = $this->get($pid);
+                $url = $slug;
+                $parent_folder = '/' . $parent->uri;
+            }
+
+            $this->form_validation->set_message('_check_slug', sprintf('A page with the URL "%s" already exists in %s.', $url, $parent_folder));
+            return FALSE;
+        }
+
         return TRUE;
+    }
+
+    /**
+     * Check Slug for Uniqueness
+     *
+     * Slugs should be unique among sibling pages.
+     *
+     * @param string $slug The slug to check for.
+     * @param int $pid The pid if any.
+     * @param int $id The id of the page.
+     *
+     * @return bool
+     */
+    private function _unique_slug($slug, $pid, $id = 0)
+    {
+        return (bool) parent::count_by([
+                'id !=' => $id,
+                'slug' => $slug,
+                'pid' => $pid
+            ]) > 0;
     }
 }

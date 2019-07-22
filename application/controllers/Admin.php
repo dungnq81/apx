@@ -89,12 +89,12 @@ class Admin extends Admin_Controller
             }
             else
             {
-                $this->form_validation->set_message(__FUNCTION__, $this->auth->errors());
+                $this->form_validation->set_message('_check_login', $this->auth->errors());
                 return FALSE;
             }
         }
 
-        $this->form_validation->set_message(__FUNCTION__, __("Something_went_wrong"));
+        $this->form_validation->set_message('_check_login', __("Something_went_wrong"));
         return FALSE;
 	}
 }
