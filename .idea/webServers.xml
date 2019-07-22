@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="eb2d21c7-2126-40ce-b751-1f6bce601b2e" name="apx" url="http://s1.vietnhan.com">
+        <fileTransfer host="s1.vietnhan.com" port="21" rootFolder="/public_html/apx">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>
