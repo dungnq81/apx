@@ -60,7 +60,7 @@ class Pages extends Admin_Controller
         $layouts = $this->pages_layout_m->array_for_select('id', 'title');
 
         // validation the callbacks in page_m
-        //$this->form_validation->set_model('page_m');
+        $this->form_validation->set_model('page_m');
         //$this->page_m->compiled_validate = $this->page_m->validate;
 
         // Set the validation rules based on the compiled validation.
