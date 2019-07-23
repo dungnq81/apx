@@ -11,7 +11,7 @@
                 plugins: [
                     "advlist anchor autolink autosave image imagetools charmap",
                     "code codesample directionality emoticons responsivefilemanager",
-                    "fullpage fullscreen help hr imagetools importcss insertdatetime",
+                    "fullscreen help hr imagetools importcss insertdatetime",
                     "legacyoutput link lists nonbreaking noneditable pagebreak paste",
                     "preview print quickbars save searchreplace spellchecker tabfocus table",
                     "template textpattern toc visualblocks visualchars wordcount"

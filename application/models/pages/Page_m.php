@@ -37,7 +37,7 @@ class Page_m extends MY_Model
         [
             'field' => 'slug',
             'label' => 'Slug',
-            'rules' => 'trim|alpha_dash|max_length[250]|callback__check_slug',
+            'rules' => 'trim|max_length[250]|callback__check_slug',
         ],
         [
             'field' => 'img',
@@ -175,15 +175,20 @@ class Page_m extends MY_Model
             $this->_table . '.*',
             $this->_table . '.id AS ' . $this->db->protect_identifiers('pages_id'),
             $this->_table_layouts . '.slug AS ' . $this->db->protect_identifiers('layout_slug'),
-            $this->_table_layouts . '.title AS ' . $this->db->protect_identifiers('layout_title'),
             $this->_table_entities . '.pos',
             $this->_table_entities . '.css',
             $this->_table_entities . '.js',
             $this->_table_entities . '.img',
             $this->_table_entities . '.img_social',
-            $this->_table_entities . '.redirect_url',
             $this->_table_entities . '.created_on',
             $this->_table_entities . '.updated_on',
+            $this->_table_entities . '.published_on',
+            $this->_table_entities . '.meta_noindex',
+            $this->_table_entities . '.meta_nofollow',
+            $this->_table_entities . '.meta_noarchive',
+            $this->_table_entities . '.css_class_wrap',
+            $this->_table_entities . '.restricted_key',
+            $this->_table_entities . '.restricted_password',
         ])
             ->distinct()
             ->join(

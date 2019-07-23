@@ -15,19 +15,19 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="tabs-panel is-active" id="tab-content">
             <div>
                 <label for="title">Tiêu đề <sup>*</sup></label>
-                <input name="title" id="title" type="text" required pattern="^(.*\S+.*)$" maxlength="250" placeholder="Nhập tiêu đề">
+                <input value="<?php echo _post('title')?>" name="title" id="title" type="text" required pattern="^(.*\S+.*)$" maxlength="250" placeholder="Nhập tiêu đề">
             </div>
             <div>
                 <label for="slug">Slug</label>
-                <input name="slug" id="slug" type="text" pattern="^(.*\S+.*)$" maxlength="250">
+                <input value="<?php echo _post('slug')?>" name="slug" id="slug" type="text" pattern="^(.*\S+.*)$" maxlength="250">
             </div>
             <div class="editor-wrapper">
                 <label for="content" class="hide">Nội dung</label>
-                <textarea class="tinymce" name="content" id="content"></textarea>
+                <textarea class="tinymce" name="content" id="content"><?php echo _post('content')?></textarea>
             </div>
             <div>
                 <label for="short">Mô tả ngắn</label>
-                <textarea rows="2" name="short" id="short" pattern="^(.*\S+.*)$" aria-describedby="short_txt"></textarea>
+                <textarea rows="2" name="short" id="short" pattern="^(.*\S+.*)$" aria-describedby="short_txt"><?php echo _post('short')?></textarea>
                 <p class="help-text" id="short_txt">Mô tả ngắn là một đoạn mô tả về nội dung mà bạn tự nhập bằng tay, có thể được sử dụng để hiển thị trong trang.</p>
             </div>
             <div class="inline-block">
@@ -49,11 +49,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="inline-block">
                 <label for="pos">Thứ tự</label>
-                <input type="number" name="pos" id="pos" value="0">
+                <input type="number" name="pos" id="pos" value="<?php echo _post('pos', 0)?>">
             </div>
             <div>
                 <label for="title_label">Tiêu đề thay thế</label>
-                <input name="title_label" id="title_label" type="text" pattern="^(.*\S+.*)$" maxlength="250" aria-describedby="title_label_txt">
+                <input value="<?php echo _post('title_label')?>" name="title_label" id="title_label" type="text" pattern="^(.*\S+.*)$" maxlength="250" aria-describedby="title_label_txt">
                 <p class="help-text" id="title_label_txt">This renames the page title field from "Title". This is useful if you are using "Title" as something else, like "Product Name" or "Team Member Name".</p>
             </div>
             <div class="inline-block">
@@ -72,7 +72,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="inline-block">
                 <label for="restricted_password">Mật khẩu</label>
-                <input type="text" name="restricted_password" id="restricted_password" pattern="^(.*\S+.*)$" aria-describedby="restricted_password_txt">
+                <input value="<?php echo _post('restricted_password')?>" type="text" name="restricted_password" id="restricted_password" pattern="^(.*\S+.*)$" aria-describedby="restricted_password_txt">
                 <p class="help-text" id="restricted_password_txt">Nhập mật khẩu để bảo vệ trang. (nếu có)</p>
             </div>
             <div>
@@ -89,7 +89,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="meta-char-counter">Số ký tự <span class="chars count-empty">0 - Empty</span></div>
                 </div>
                 <div class="meta-title-input-wrap">
-                    <input type="text" name="meta_title" id="meta_title" pattern="^(.*\S+.*)$" maxlength="250">
+                    <input value="<?php echo _post('meta_title')?>" type="text" name="meta_title" id="meta_title" pattern="^(.*\S+.*)$" maxlength="250">
                     <span id="meta-title-offset"></span>
                     <span id="meta-title-placeholder"><?php echo ' | ' . $this->setting->site_name;?></span>
                 </div>
@@ -104,7 +104,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="meta-char-counter">Số ký tự <span class="chars count-empty">0 - Empty</span></div>
                 </div>
                 <div class="meta-description-input-wrap">
-                    <textarea rows="3" name="meta_description" id="meta_description" pattern="^(.*\S+.*)$" maxlength="320"></textarea>
+                    <textarea rows="3" name="meta_description" id="meta_description" pattern="^(.*\S+.*)$" maxlength="320"><?php echo _post('meta_description')?></textarea>
                 </div>
             </div>
             <div>
@@ -127,32 +127,32 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div>
                 <label for="img_social">Social Image URL <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
-                <label class="block"><input type="url" name="img_social_link"></label>
+                <label class="block"><input readonly type="url" name="img_social_link"></label>
                 <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$">
             </div>
             <div>
                 <label for="canonical_url">Canonical URL <a target="_blank" href="https://support.google.com/webmasters/answer/139066?hl=en" title="This urges search engines to go to the outputted URL.">[?]</a></label>
-                <input name="canonical_url" id="canonical_url" type="url">
+                <input value="<?php echo _post('canonical_url')?>" name="canonical_url" id="canonical_url" type="url">
             </div>
             <div>
                 <label for="redirect_url">301 Redirect URL <a target="_blank" href="https://support.google.com/webmasters/answer/93633?hl=en" title="This will force visitors to go to another URL.">[?]</a></label>
-                <input name="redirect_url" id="redirect_url" type="url">
+                <input value="<?php echo _post('redirect_url')?>" name="redirect_url" id="redirect_url" type="url">
             </div>
         </div>
         <div class="tabs-panel" id="tab-css">
             <div>
                 <label for="css">CSS inline</label>
-                <textarea name="css" id="css" class="codemirror codemirror-css"></textarea>
+                <textarea name="css" id="css" class="codemirror codemirror-css"><?php echo _post('css')?></textarea>
             </div>
             <div class="inline-block">
                 <label for="css_class_wrap">CSS class wrapper</label>
-                <input type="text" name="css_class_wrap" id="css_class_wrap" pattern="^(.*\S+.*)$">
+                <input value="<?php echo _post('css_class_wrap')?>" type="text" name="css_class_wrap" id="css_class_wrap" pattern="^(.*\S+.*)$">
             </div>
         </div>
         <div class="tabs-panel" id="tab-js">
             <div>
                 <label for="js">Script</label>
-                <textarea name="js" id="js" class="codemirror codemirror-js"></textarea>
+                <textarea name="js" id="js" class="codemirror codemirror-js"><?php echo _post('js')?></textarea>
             </div>
         </div>
         <div class="btn-submit">

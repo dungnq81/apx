@@ -61,14 +61,14 @@ class Pages extends Admin_Controller
 
         // validation the callbacks in page_m
         $this->form_validation->set_model('page_m');
-        //$this->page_m->compiled_validate = $this->page_m->validate;
+        $this->page_m->compiled_validate = $this->page_m->validate;
 
         // Set the validation rules based on the compiled validation.
-        //$this->form_validation->set_rules($this->page_m->compiled_validate);
+        $this->form_validation->set_rules($this->page_m->compiled_validate);
 
         // Run our compiled validation
-        //if ($this->form_validation->run())
-        if (isset($_POST['_action']))
+        if ($this->form_validation->run())
+        //if (isset($_POST['_action']))
         {
             $input = $this->input->post();
 

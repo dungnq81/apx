@@ -1140,6 +1140,34 @@ if (! function_exists('recaptcha_verify'))
 // view helper
 // -------------------------------------------------------------
 
+if (! function_exists('_post'))
+{
+    /**
+     * @param $name
+     * @param string $default
+     * @return mixed|string
+     */
+    function _post($name, $default = '')
+    {
+        return isset($_POST[$name]) ? html_escape(ci()->input->post($name, TRUE)) : $default;
+    }
+}
+
+// -------------------------------------------------------------
+
+if (! function_exists('_get'))
+{
+    /**
+     * @param $name
+     * @param string $default
+     * @return mixed|string
+     */
+    function _get($name, $default = '')
+    {
+        return isset($_GET[$name]) ? html_escape(ci()->input->get($name, TRUE)) : $default;
+    }
+}
+
 // -------------------------------------------------------------
 // other helper
 // -------------------------------------------------------------
