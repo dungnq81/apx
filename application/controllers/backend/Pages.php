@@ -60,14 +60,15 @@ class Pages extends Admin_Controller
         $layouts = $this->pages_layout_m->array_for_select('id', 'title');
 
         // validation the callbacks in page_m
-        $this->form_validation->set_model('page_m');
-        $this->page_m->compiled_validate = $this->page_m->validate;
+        //$this->form_validation->set_model('page_m');
+        //$this->page_m->compiled_validate = $this->page_m->validate;
 
         // Set the validation rules based on the compiled validation.
-        $this->form_validation->set_rules($this->page_m->compiled_validate);
+        //$this->form_validation->set_rules($this->page_m->compiled_validate);
 
         // Run our compiled validation
-        if ($this->form_validation->run())
+        //if ($this->form_validation->run())
+        if (isset($_POST['_action']))
         {
             $input = $this->input->post();
 
@@ -78,13 +79,13 @@ class Pages extends Admin_Controller
             }
 
             // Insert the page data
-            if ($id = $this->page_m->create($input))
+            /*if ($id = $this->page_m->create($input))
             {
                 $this->session->set_flashdata('success', 'Thêm trang mới thành công.');
 
                 // Redirect back to the form
                 redirect('admin/pages/edit/' . $id);
-            }
+            }*/
         }
 
         // Set some data that create forms will need
