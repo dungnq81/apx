@@ -663,7 +663,7 @@ abstract class MY_Model extends CI_Model
         $this->load->library('form_validation');
 
         // only set the model if it can be used for callbacks
-        if ($class = get_class($this) and $class !== 'MY_Model')
+        if ($class = get_class($this) AND $class !== 'MY_Model')
         {
             // make sure their MY_Form_validation is set up for it
             if (method_exists($this->form_validation, 'set_model'))
