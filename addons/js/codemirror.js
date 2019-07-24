@@ -7,7 +7,7 @@
         var codemirror = $(".codemirror");
         if(codemirror.length) {
 
-            var option = {
+            var options = {
                 mode: 'htmlmixed',
                 lineNumbers: true,
                 lineWrapping: true,
@@ -15,11 +15,13 @@
                 autoCloseBrackets: true,
                 autoCloseTags: true,
                 tabSize: 2,
+                indentUnit: 2,
+                indentWithTabs: true,
+                autoRefresh: true,
             };
             $.each(codemirror, function( index, value ) {
-                CodeMirror.fromTextArea(value, option);
+                CodeMirror.fromTextArea(value, options);
             });
         }
-
     });
 })(jQuery);

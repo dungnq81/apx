@@ -37,7 +37,7 @@ class Page_m extends MY_Model
         [
             'field' => 'slug',
             'label' => 'Slug',
-            'rules' => 'trim|max_length[250]|callback__check_slug',
+            'rules' => 'trim|alpha_dash|max_length[250]|callback__check_slug',
         ],
         [
             'field' => 'img',
@@ -206,7 +206,6 @@ class Page_m extends MY_Model
     /**
      * Callback to check uniqueness of slug + parent
      *
-     *
      * @param $slug string to check
      * @return bool
      */
@@ -243,7 +242,6 @@ class Page_m extends MY_Model
 
     /**
      * Check Slug for Uniqueness
-     *
      * Slugs should be unique among sibling pages.
      *
      * @param string $slug The slug to check for.

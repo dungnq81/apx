@@ -5,7 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 <div class="frm-wrapper page-wrapper">
     <h1>Thêm trang mới</h1>
     <?php echo form_open_multipart(uri_string() . '?_action=add', ['data-abide novalidate class' => 'frm-page', 'id' => 'frm-page']); ?>
-    <ul id="frm-page-tabs" class="tabs" data-deep-link="true" data-update-history="true" data-tabs>
+    <ul id="frm-page-tabs" class="tabs" data-deep-link="true" data-tabs>
         <li class="tabs-title is-active"><a href="#tab-content" aria-selected="true">Nội dung</a></li>
         <li class="tabs-title"><a href="#tab-meta">Meta data</a></li>
         <li class="tabs-title"><a href="#tab-css">CSS</a></li>
@@ -19,7 +19,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div>
                 <label for="slug">Slug</label>
-                <input value="<?php echo _post('slug')?>" name="slug" id="slug" type="text" pattern="^(.*\S+.*)$" maxlength="250">
+                <input value="<?php echo _post('slug')?>" name="slug" id="slug" type="text" pattern="^[a-z0-9_-]+$" maxlength="250" aria-describedby="slug_txt">
+                <p class="help-text" id="slug_txt">Chỉ bao gồm các ký tự bảng chữ cái thường không dấu, chữ số, gạch dưới và gạch ngang. Nếu để trống sẽ tự động lấy theo tiêu đề.</p>
             </div>
             <div class="editor-wrapper">
                 <label for="content" class="hide">Nội dung</label>

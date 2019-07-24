@@ -9,13 +9,15 @@
 
         var html = $("html");
         var body = $("body");
+        var main = $("main");
+        var footer = $("footer");
 
         apx.admin_theme_js = apx.admin_theme_url + 'js/';
         apx.title = html.find('title').text();
 
         // datetime picker
         var fdatepicker = $(".fdatepicker");
-        if (fdatepicker.length) {
+        if (fdatepicker) {
 
             // Load a JavaScript file from the server using a GET HTTP request, then execute it.
             $.getScript(BASE_URL + 'addons/js/datepicker/foundation-datepicker.min.js', function (data, textStatus, jqxhr) {
@@ -86,6 +88,16 @@
 
             var el = $(this).parent().parent().find(".meta-char-counter .chars");
             updateCounter(el, unescapeString($(this).val()), 45, 320);
+        });
+
+        //
+        var form_abide = frm_wrapper.find("form[data-abide]");
+        form_abide.on("forminvalid.zf.abide", function(ev, frm) { // form validation failed
+
+            var invalidFields = $(this).find('[data-invalid]');
+            if (invalidFields) {
+                $(window).delay(250).scrollTo(invalidFields, 600, {offset: -50, interrupt: true});
+            }
         });
 
         //
