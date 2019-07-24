@@ -127,17 +127,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </label>
             </div>
             <div>
-                <label for="img_social">Social Image URL <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
-                <label class="block"><input readonly type="url" name="img_social_link"></label>
-                <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$">
-            </div>
-            <div>
                 <label for="canonical_url">Canonical URL <a target="_blank" href="https://support.google.com/webmasters/answer/139066?hl=en" title="This urges search engines to go to the outputted URL.">[?]</a></label>
                 <input value="<?php echo _post('canonical_url')?>" name="canonical_url" id="canonical_url" type="url">
             </div>
             <div>
                 <label for="redirect_url">301 Redirect URL <a target="_blank" href="https://support.google.com/webmasters/answer/93633?hl=en" title="This will force visitors to go to another URL.">[?]</a></label>
                 <input value="<?php echo _post('redirect_url')?>" name="redirect_url" id="redirect_url" type="url">
+            </div>
+            <div class="inline-block">
+                <label for="img_social" class="block">Social Image <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
+                <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$">
             </div>
         </div>
         <div class="tabs-panel" id="tab-css">
