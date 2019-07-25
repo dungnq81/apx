@@ -79,13 +79,13 @@ class Pages extends Admin_Controller
             }
 
             // Insert the page data
-            /*if ($id = $this->page_m->create($input))
+            if ($id = $this->page_m->create($input))
             {
                 $this->session->set_flashdata('success', 'Thêm trang mới thành công.');
 
                 // Redirect back to the form
                 redirect('admin/pages/edit/' . $id);
-            }*/
+            }
         }
 
         // Set some data that create forms will need

@@ -56,9 +56,9 @@ abstract class MY_Model extends CI_Model
 	 */
 	public $validate = [];
 
-	/**
-	 * The class constructor, tries to guess the table name.
-	 */
+    /**
+     * MY_Model constructor.
+     */
 	public function __construct()
 	{
 		parent::__construct();

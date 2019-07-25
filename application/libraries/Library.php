@@ -20,11 +20,6 @@ abstract class Library
 	protected $errors = [];
 	protected $messages = [];
 
-    /**
-     * @var array
-     */
-	public $validate = [];
-
 	/**
 	 * Enables the use of CI super-global without having to define an extra variable.
 	 *

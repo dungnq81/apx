@@ -23,7 +23,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <p class="help-text" id="slug_txt">Chỉ bao gồm các ký tự bảng chữ cái thường không dấu, chữ số, gạch dưới và gạch ngang. Nếu để trống sẽ tự động lấy theo tiêu đề.</p>
             </div>
             <div class="editor-wrapper">
-                <label for="content" class="hide">Nội dung</label>
+                <label for="content">Nội dung</label>
                 <textarea class="tinymce" name="content" id="content"><?php echo _post('content')?></textarea>
             </div>
             <div>
@@ -33,7 +33,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="inline-block">
                 <label for="img" class="block">Ảnh đại diện</label>
-                <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$">
+                <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$" aria-describedby="img_txt">
+                <p class="help-text" id="img_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg)</p>
             </div>
             <div>
                 <label for="pid">Trang cha</label>
@@ -73,7 +74,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="inline-block">
                 <label for="restricted_password">Mật khẩu</label>
-                <input value="<?php echo _post('restricted_password')?>" type="text" name="restricted_password" id="restricted_password" pattern="^(.*\S+.*)$" aria-describedby="restricted_password_txt">
+                <input value="<?php echo _post('restricted_password')?>" type="text" name="restricted_password" id="restricted_password" aria-describedby="restricted_password_txt">
                 <p class="help-text" id="restricted_password_txt">Nhập mật khẩu để bảo vệ trang. (nếu có)</p>
             </div>
             <div>
@@ -136,7 +137,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="inline-block">
                 <label for="img_social" class="block">Social Image <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
-                <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$">
+                <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$" aria-describedby="img_social_txt">
+                <p class="help-text" id="img_social_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg)</p>
             </div>
         </div>
         <div class="tabs-panel" id="tab-css">
@@ -151,7 +153,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         </div>
         <div class="tabs-panel" id="tab-js">
             <div>
-                <label for="js">Script</label>
+                <label for="js">Script inline</label>
                 <textarea name="js" id="js" class="codemirror codemirror-js"><?php echo _post('js')?></textarea>
             </div>
         </div>
