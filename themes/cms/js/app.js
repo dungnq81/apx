@@ -106,7 +106,8 @@
 
             var _action = $.query.get('_action');
             if(_action) {
-                var split_url = window.location.href.split(/[?#]/)[0];
+                //var split_url = window.location.href.split(/[?#]/)[0];
+                var split_url = window.location.href.split("?")[0] + $.query.REMOVE("_action");
                 pushState({}, apx.title, split_url);
             }
         });
