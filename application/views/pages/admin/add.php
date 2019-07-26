@@ -83,6 +83,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     Cho phép bình luận
                 </label>
             </div>
+            <div>
+                <label class="font-normal">
+                    <input type="checkbox" checked name="rss_enabled" id="rss_enabled">
+                    RSS
+                </label>
+            </div>
         </div>
         <div class="tabs-panel" id="tab-meta">
             <div>

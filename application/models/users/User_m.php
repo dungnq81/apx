@@ -522,7 +522,7 @@ class User_m extends MY_Model
      */
 	public function update_user($id, $data = [])
 	{
-        $this->db->trans_begin();
+        $this->db->trans_start();
 
         // Filter the data passed
         $data = $this->filter_data($this->_table, $data);
@@ -577,14 +577,8 @@ class User_m extends MY_Model
 		}
 
 		$this->update($id, $data);
-		if ($this->db->trans_status() === FALSE)
-		{
-			$this->db->trans_rollback();
-			return FALSE;
-		}
-
-		$this->db->trans_commit();
-		return TRUE;
+        $this->db->trans_complete();
+        return ($this->db->trans_status() === FALSE) ? FALSE : TRUE;
 	}
 
 	// ------------------------------------------
@@ -596,19 +590,13 @@ class User_m extends MY_Model
 	 */
 	public function delete_user($id)
 	{
-		$this->db->trans_begin();
+		$this->db->trans_start();
 
 		// delete user from users table should be placed after remove from group
 		$this->delete($id);
 
-		if ($this->db->trans_status() === FALSE)
-		{
-			$this->db->trans_rollback();
-			return FALSE;
-		}
-
-		$this->db->trans_commit();
-		return TRUE;
+        $this->db->trans_complete();
+        return ($this->db->trans_status() === FALSE) ? FALSE : TRUE;
 	}
 
 	// ------------------------------------------
@@ -625,7 +613,7 @@ class User_m extends MY_Model
 	 */
 	public function add_user($username, $password, $email = FALSE, $phone = FALSE, $group = FALSE)
 	{
-		$this->db->trans_begin();
+		$this->db->trans_start();
         $default_group = $this->users_group_m->default_group();
 
 		// is array
@@ -668,14 +656,9 @@ class User_m extends MY_Model
 			$data['password'] = base64_encode($this->_hash_password($data['password']));
             $data['private_key'] = $this->dcrypto->generate_key();
 			$insert_id = $this->insert($data);
-			if ($this->db->trans_status() === FALSE)
-			{
-				$this->db->trans_rollback();
-				return FALSE;
-			}
 
-			$this->db->trans_commit();
-			return $insert_id;
+            $this->db->trans_complete();
+            return ($this->db->trans_status() === FALSE) ? FALSE : $insert_id;
 		}
 
 		//
@@ -714,14 +697,9 @@ class User_m extends MY_Model
 		}
 
 		$insert_id = $this->insert($dummy);
-		if ($this->db->trans_status() === FALSE)
-		{
-			$this->db->trans_rollback();
-			return FALSE;
-		}
 
-		$this->db->trans_commit();
-		return $insert_id;
+        $this->db->trans_complete();
+        return ($this->db->trans_status() === FALSE) ? FALSE : $insert_id;
 	}
 
 	// ------------------------------------------

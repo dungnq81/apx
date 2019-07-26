@@ -65,8 +65,8 @@ if (! function_exists('url_title'))
 			'^' . $separator => '',
 		];
 
+        $str = strip_tags($str);
 		$str = convert_accented_characters($str);
-		$str = strip_tags($str);
 		foreach ($trans as $key => $val)
 		{
 			$str = preg_replace('#' . $key . '#i', $val, $str);

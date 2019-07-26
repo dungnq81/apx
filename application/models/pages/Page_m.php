@@ -1,4 +1,8 @@
 <?php
+
+use Defuse\Crypto\Exception\BadFormatException;
+use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
+
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
@@ -6,6 +10,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @property CI_Input $input
  * @property CI_URI $uri
+ *
+ * @property Entity_m $entity_m
+ * @property Dcrypto $dcrypto
  */
 class Page_m extends MY_Model
 {
@@ -96,6 +103,46 @@ class Page_m extends MY_Model
     }
 
     /**
+     * @param $input
+     * @param null $lang
+     *
+     * @return array|bool
+     */
+    private function _filter_data($input, $lang = NULL)
+    {
+        if(!isset($input['entities_id']))
+        {
+            return FALSE;
+        }
+
+        $lang_code = $lang ? $lang : LANG;
+
+        $_array = [
+            'pid' => isset($input['pid']) ? (int)$input['pid'] : NULL,
+            'languages_id' => $lang ? $lang : LANG, // @todo sai. get id
+            'entities_id' => (int)$input['entities_id'],
+            'pages_layouts_id' => (int)$input['pages_layouts_id'],
+            'ip_address' => ip_address(),
+            'title' => $input['title'],
+            'title_label' => isset($input['title_label']) ? $input['title_label'] : NULL,
+            'meta_append_name' => !empty($input['meta_append_name']) ? 1 : 0,
+            'slug' => isset($input['slug']) ? url_title($input['slug']) : url_title($input['title']),
+            'uri' => NULL,
+            'short' => isset($input['short']) ? $input['short'] : NULL,
+            'status' => $input['status'],
+            'content' => $input['content'],
+            'comment_enabled' => !empty($input['comment_enabled']) ? 1 : 0,
+            'rss_enabled' => !empty($input['rss_enabled']) ? 1 : 0,
+            'meta_title' => isset($input['meta_title']) ? $input['meta_title'] : '',
+            'meta_description' 	=> isset($input['meta_description']) ? $input['meta_description'] : '',
+            'canonical_url' => isset($input['canonical_url']) ? $input['canonical_url'] : NULL,
+            'redirect_url' => isset($input['redirect_url']) ? $input['redirect_url'] : NULL,
+        ];
+
+        return $this->filter_data($this->_table, $_array);
+    }
+
+    /**
      * Get a page from the database.
      *
      * @param string $id
@@ -120,48 +167,44 @@ class Page_m extends MY_Model
     }
 
     /**
-     * Build a multi-array of parent > children.
+     * Create a new page
      *
-     * @param bool $check_lang
-     * @return array
+     * @param array $input The page data to insert.
+     * @return bool|int
      */
-    public function get_page_tree($check_lang = TRUE)
+    public function create(&$input)
     {
-        $this->db->select('id, pid, title, slug, active');
-        if($check_lang == TRUE)
+        $input['alias'] = $this->_table;
+        $input['created_on'] = now();
+        $input['updated_on'] = 0;
+        $input['published_on'] = strtotime(str_replace('/', '-', $input['published_on']));
+        if(!is_empty($input['restricted_password']))
         {
-            $this->db->where($this->_fk_languages_id, $this->language_m->lang_item(LANG)->id);
-        }
-
-        $all_pages = $this->db
-            ->get($this->_table)
-            ->result_array();
-
-        // re-index the array
-        foreach ($all_pages as $row)
-        {
-            $pages[$row['id']] = $row;
-        }
-
-        unset($all_pages);
-
-        // Build a multidimensional array of parent > children.
-        foreach ($pages as $row)
-        {
-            if (array_key_exists($row['pid'], $pages))
-            {
-                // Add this page to the children array of the parent page.
-                $pages[$row['pid']]['children'][] =& $pages[$row['id']];
-            }
-
-            // This is a root page.
-            if ($row['pid'] == 0)
-            {
-                $page_array[] =& $pages[$row['id']];
+            $this->load->library('dcrypto');
+            try {
+                $input['restricted_key'] = $this->dcrypto->generate_key();
+                $input['restricted_password'] = $this->dcrypto->encrypt($input['restricted_password'], $input['restricted_key']);
+            } catch (EnvironmentIsBrokenException $ebe) {
+                // print errors
+                show_error("ERROR: " . $ebe->getMessage() . " (" . $ebe->getCode() . ")");
+            } catch (BadFormatException $bfe) {
+                show_error("ERROR: " . $bfe->getMessage() . " (" . $bfe->getCode() . ")");
             }
         }
 
-        return $page_array;
+        $entities_id = $this->entity_m->create($input);
+        if($entities_id)
+        {
+            $this->db->trans_start();
+            $input['entities_id'] = $entities_id;
+            $id = $this->insert($this->_filter_data($input));
+
+            if (!$id) return FALSE;
+            $this->db->trans_complete();
+            return ($this->db->trans_status() === FALSE) ? FALSE : $id;
+        }
+
+        return FALSE;
     }
 
     /**
@@ -174,6 +217,7 @@ class Page_m extends MY_Model
             $this->_table . '.*',
             $this->_table . '.id AS ' . $this->db->protect_identifiers('pages_id'),
             $this->_table_layouts . '.slug AS ' . $this->db->protect_identifiers('layout_slug'),
+            $this->_table_layouts . '.title AS ' . $this->db->protect_identifiers('layout_title'),
             $this->_table_entities . '.*',
         ])
             ->distinct()

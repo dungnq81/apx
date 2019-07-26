@@ -1143,13 +1143,21 @@ if (! function_exists('recaptcha_verify'))
 if (! function_exists('_post'))
 {
     /**
-     * @param $name
+     * @param string $name
      * @param string $default
+     * @param bool $_escape
+     *
      * @return mixed|string
      */
-    function _post($name, $default = '')
+    function _post($name, $default = '', $_escape = TRUE)
     {
-        return isset($_POST[$name]) ? html_escape(ci()->input->post($name, TRUE)) : $default;
+        if(!isset($_POST[$name]))
+            return $default;
+
+        if($_escape == TRUE)
+            return html_escape(ci()->input->post($name, TRUE));
+
+        return ci()->input->post($name, TRUE);
     }
 }
 
@@ -1162,9 +1170,15 @@ if (! function_exists('_get'))
      * @param string $default
      * @return mixed|string
      */
-    function _get($name, $default = '')
+    function _get($name, $default = '', $_escape = TRUE)
     {
-        return isset($_GET[$name]) ? html_escape(ci()->input->get($name, TRUE)) : $default;
+        if(!isset($_GET[$name]))
+            return $default;
+
+        if($_escape == TRUE)
+            return html_escape(ci()->input->get($name, TRUE));
+
+        return ci()->input->get($name, TRUE);
     }
 }
 
