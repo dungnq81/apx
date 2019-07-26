@@ -197,6 +197,8 @@ class Page_m extends MY_Model
         {
             $this->db->trans_start();
             $input['entities_id'] = $entities_id;
+
+            // @todo chưa check slug
             $id = $this->insert($this->_filter_data($input));
 
             if (!$id) return FALSE;
