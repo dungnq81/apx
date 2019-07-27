@@ -104,29 +104,28 @@ class Page_m extends MY_Model
 
     /**
      * @param $input
-     * @param null $lang
+     * @param null|string $langcode
      *
      * @return array|bool
      */
-    private function _filter_data($input, $lang = NULL)
+    private function _filter_data($input, $langcode = NULL)
     {
         if(!isset($input['entities_id']))
         {
             return FALSE;
         }
 
-        $lang_code = $lang ? $lang : LANG;
-
+        $lang_code = $langcode ? $langcode : LANG;
         $_array = [
             'pid' => isset($input['pid']) ? (int)$input['pid'] : NULL,
-            'languages_id' => $lang ? $lang : LANG, // @todo sai. get id
+            'languages_id' => lang_id($lang_code),
             'entities_id' => (int)$input['entities_id'],
             'pages_layouts_id' => (int)$input['pages_layouts_id'],
             'ip_address' => ip_address(),
             'title' => $input['title'],
             'title_label' => isset($input['title_label']) ? $input['title_label'] : NULL,
             'meta_append_name' => !empty($input['meta_append_name']) ? 1 : 0,
-            'slug' => isset($input['slug']) ? url_title($input['slug']) : url_title($input['title']),
+            'slug' => !empty($input['slug']) ? trim($input['slug']) : url_title($input['title']),
             'uri' => NULL,
             'short' => isset($input['short']) ? $input['short'] : NULL,
             'status' => $input['status'],
@@ -139,7 +138,71 @@ class Page_m extends MY_Model
             'redirect_url' => isset($input['redirect_url']) ? $input['redirect_url'] : NULL,
         ];
 
+        // check slug
+        if(empty($input['slug']))
+        {
+            $_array['slug'] = $this->_sibling_slug($_array['slug'], $_array['pid']);
+        }
+
         return $this->filter_data($this->_table, $_array);
+    }
+
+    /**
+     * Build a lookup
+     *
+     * @param int $id The id of the page to build the lookup for.
+     * @return bool
+     */
+    public function build_lookup($id)
+    {
+        $current_id = $id;
+        $segments = [];
+        do
+        {
+            $page = $this->db
+                ->select('slug, pid')
+                ->where('id', $current_id)
+                ->get($this->_table)
+                ->row();
+
+            $current_id = $page->pid;
+            array_unshift($segments, $page->slug);
+        }
+        while ($page->pid > 0);
+
+        return $this->update($id, ['uri' => implode('/', $segments)], TRUE);
+    }
+
+    /**
+     * @param $slug
+     * @param null $pid
+     * @param int $current_id
+     *
+     * @return string
+     */
+    private function _sibling_slug($slug, $pid = NULL, $current_id = 0)
+    {
+        // See if this slug exists already
+        if(! $this->_unique_slug($slug, $pid, (int) $current_id))
+        {
+            return $slug;
+        }
+
+        $i = 1;
+        $flag = FALSE;
+        $new_slug = $slug;
+        while ($flag == FALSE)
+        {
+            $new_slug = $slug . '_' . $i;
+            if(! $this->_unique_slug($new_slug, $pid, (int) $current_id))
+            {
+                $flag = TRUE;
+            }
+
+            $i++;
+        }
+
+        return $new_slug;
     }
 
     /**
@@ -196,14 +259,17 @@ class Page_m extends MY_Model
         if($entities_id)
         {
             $this->db->trans_start();
-            $input['entities_id'] = $entities_id;
 
-            // @todo chưa check slug
+            $input['entities_id'] = (int)$entities_id;
             $id = $this->insert($this->_filter_data($input));
+            if (!$id)
+            {
+                return FALSE;
+            }
 
-            if (!$id) return FALSE;
+            $this->build_lookup($id);
             $this->db->trans_complete();
-            return ($this->db->trans_status() === FALSE) ? FALSE : $id;
+            return ($this->db->trans_status() === FALSE) ? FALSE : (ci()->pages_id = $id);
         }
 
         return FALSE;
@@ -247,6 +313,7 @@ class Page_m extends MY_Model
         $page_id = $this->uri->segment(4);
 
         // This might be set if there is a page
+        // NULL or interger format
         $pid = $this->input->post('pid');
 
         // See if this slug exists already

@@ -28,7 +28,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div>
                 <label for="short">Mô tả ngắn</label>
-                <textarea rows="2" name="short" id="short" pattern="^(.*\S+.*)$" aria-describedby="short_txt"><?php echo _post('short')?></textarea>
+                <textarea rows="3" name="short" id="short" pattern="^(.*\S+.*)$" aria-describedby="short_txt"><?php echo _post('short')?></textarea>
                 <p class="help-text" id="short_txt">Mô tả ngắn là một đoạn mô tả về nội dung mà bạn tự nhập bằng tay, có thể được sử dụng để hiển thị trong trang.</p>
             </div>
             <div class="inline-block">

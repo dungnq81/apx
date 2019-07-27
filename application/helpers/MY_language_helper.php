@@ -5,15 +5,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 if (! function_exists('lang_id'))
 {
-	/**
-	 * @return mixed
-	 */
-	function lang_id()
+    /**
+     * @param string $langcode
+     * @return mixed
+     */
+	function lang_id($langcode = '')
 	{
         $CI = get_instance();
         $CI->load->model('language_m');
 
-        return $CI->language_m->lang_item(lang_code())->languages_id;
+        string_not_empty($langcode) OR $langcode = lang_code();
+        return $CI->language_m->lang_item($langcode)->languages_id;
 	}
 }
 

@@ -12,6 +12,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property Setting $setting
  * @property Language_m $language_m
  * @property MY_Loader $load
+ * @property Permission_m $permission_m
  */
 class MY_Controller extends CI_Controller
 {
@@ -50,7 +51,8 @@ class MY_Controller extends CI_Controller
 		// Use this to define hooks with a nicer syntax
 		ci()->hooks =& $GLOBALS['EXT'];
 
-		// Work out controller, method and make them accessable throught the CI instance
+		// Work out controller, method
+        // and make them accessable throught the CI instance
 		ci()->controller = $this->controller = $this->router->class;
 		ci()->method = $this->method = $this->router->method;
 		ci()->directory = $this->directory = $this->router->directory;
@@ -64,8 +66,10 @@ class MY_Controller extends CI_Controller
 		// List available controller permissions for this user
 		ci()->permissions = $this->permissions = $this->current_user ? $this->permission_m->get_group($this->current_user->group_id) : [];
 
-		// default lang code
-        $lang = $this->setting->default_language;
+		//
+		// LANGUAGE
+        //
+		$lang = $this->language_m->get_default()->code;
         if (! empty($_SESSION['lang_code']))
         {
             $lang = $_SESSION['lang_code'];
@@ -76,28 +80,30 @@ class MY_Controller extends CI_Controller
             $lang = strtolower($_COOKIE['lang_code']);
         }
 
-        // get site lang item
+        // lang object
         $lang_item = $this->language_m->lang_item($lang);
 
         // Lock back-end language
         if (is_a($this, 'Admin_Controller'))
         {
-            $lang = $default_lang = $this->setting->default_language;
+            $lang = $this->setting->default_language;
+            $lang_item = $this->language_m->lang_item($lang);
+
+            define('ADMIN_LANG', $lang);
             if (! empty($_GET['lang']))
             {
                 $lang = strtolower($this->input->get('lang'));
             }
-
-            // define admin base lang code
-            define('DEFAULT_LANG', $default_lang);
-            $lang_item = $this->language_m->lang_item($default_lang);
         }
 
         // define default site language code or lang code by query in admin page
         define('LANG', $lang);
 
-        // save default site lang item or admin base lang item
+        // Whatever we decided the lang was,
+        // save it for next time to avoid working it out again
+        $_SESSION['lang_code'] = $lang;
         $this->load->vars(['lang' => $lang_item]);
+        unset($lang);
 
         // Set php locale time
         $locale = [
@@ -108,7 +114,6 @@ class MY_Controller extends CI_Controller
 
         array_unshift($locale, LC_TIME);
         call_user_func_array('setlocale', $locale);
-
         if ($lang_item->code != config_item('language'))
         {
             $this->config->set_item('language', $lang_item->code);
@@ -147,7 +152,8 @@ function &ci()
  */
 function _autoload($class)
 {
-	// don't autoload CI_ prefixed classes or those using the config subclass_prefix
+	// don't autoload CI_ prefixed classes
+    // or those using the config subclass_prefix
 	if (strstr($class, 'CI_') OR strstr($class, config_item('subclass_prefix')))
 	{
 		return;

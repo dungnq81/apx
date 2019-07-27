@@ -13,7 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     var apx = {'lang': {}};
     var BASE_URL = "<?php echo site_url('/');?>";
     var BASE_URI = "<?php echo site_uri('/');?>";
-    var DEFAULT_LANG = "<?php echo DEFAULT_LANG;?>";
+    var ADMIN_LANG = "<?php echo ADMIN_LANG;?>";
     var LANG = "<?php echo LANG;?>";
     apx.admin_theme_url = "<?php echo site_url($this->admin_theme->web_path . '/'); ?>";
     apx.csrf_cookie_name = "<?php echo config_item('cookie_prefix') . config_item('csrf_cookie_name'); ?>";

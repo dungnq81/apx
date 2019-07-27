@@ -43,7 +43,6 @@ class Permission_m extends MY_Model
 
 		// Save this result for later
 		$this->_groups[$group_id] = $rules;
-
 		return $rules;
 	}
 

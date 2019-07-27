@@ -103,7 +103,6 @@ class MY_Form_validation extends CI_Form_validation
      *
      * @param	string
      * @return	string
-     * @todo	Find decent regex to check utf-8 strings for harmful characters
      */
     public function utf8($str)
     {

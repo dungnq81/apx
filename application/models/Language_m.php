@@ -33,19 +33,18 @@ class Language_m extends MY_Model
         parent::__construct();
 
         // check default lang
-        $default_lang = $this->_get_default();
-        if(! $default_lang)
+        if(! $default_lang = $this->get_default())
         {
             if(! $this->lang_item(config_item('language')))
             {
                 $this->add(config_item('language'));
             }
 
-            $default_lang = $this->set_default(config_item('language'));
+            $default_lang= $this->set_default(config_item('language'));
         }
 
         // update default language setting
-        if(strcmp($this->setting->default_language, $default_lang->code) !== 0)
+        if(empty($this->setting->default_language))
         {
             $this->setting->default_language = $default_lang->code;
         }
@@ -85,6 +84,7 @@ class Language_m extends MY_Model
             $dummy = [
                 $this->_fk_languages_supports_id => $query->row()->id,
                 'pos' => $pos, // order
+                'is_default' => 0,
             ];
 
             return $this->insert($dummy);
@@ -130,11 +130,11 @@ class Language_m extends MY_Model
     }
 
     /**
-     * private function, instead of using setting default_language
+     * get_default
      *
-     * @return mixed
+     * @return array|bool|mixed|object
      */
-    private function _get_default()
+    public function get_default()
     {
         if($this->_cache_default)
         {
