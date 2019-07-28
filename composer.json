@@ -7,6 +7,7 @@
       "michelf/php-markdown": "1.*",
       "peppeocchi/php-cron-scheduler": "2.*",
       "zendframework/zend-mail": "2.*",
+      "zendframework/zend-escaper": "2.*",
       "google/recaptcha": "1.*",
       "mikey179/vfsstream": "1.*",
       "pyrocms/lex": "2.*",
@@ -18,7 +19,6 @@
       "ext-mbstring": "*",
       "ext-exif": "*",
       "ext-gd": "*",
-      "ext-imagick": "*",
       "ext-openssl": "*"
    },
    "require-dev": {}

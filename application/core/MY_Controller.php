@@ -96,7 +96,8 @@ class MY_Controller extends CI_Controller
             }
         }
 
-        // define default site language code or lang code by query in admin page
+        // define default site language code
+        // or lang code by query in admin page
         define('LANG', $lang);
 
         // Whatever we decided the lang was,

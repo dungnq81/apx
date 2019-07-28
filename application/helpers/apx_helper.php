@@ -4,6 +4,8 @@ use Defuse\Crypto\Core;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 use Defuse\Crypto\Key;
 use ReCaptcha\ReCaptcha;
+use ReCaptcha\RequestMethod\SocketPost;
+use Zend\Escaper\Escaper;
 
 defined('BASEPATH') OR exit('No direct script access allowed.');
 
@@ -277,22 +279,214 @@ if (! function_exists('br2nl'))
 
 // -------------------------------------------------------------
 
+if (! function_exists('html_excerpt'))
+{
+    /**
+     * https://developer.wordpress.org/reference/functions/wp_html_excerpt/
+     *
+     * @param $str
+     * @param $count
+     * @param null $more
+     * @return bool|string|string[]|null
+     */
+    function html_excerpt( $str, $count, $more = NULL )
+    {
+        if (NULL === $more)
+        {
+            $more = '';
+        }
+
+        $str = strip_all_tags($str, TRUE);
+        $excerpt = mb_substr($str, 0, $count);
+
+        // remove part of an entity at the end
+        $excerpt = preg_replace('/&[^;\s]{0,6}$/', '', $excerpt);
+        if ($str != $excerpt)
+        {
+            $excerpt = trim($excerpt) . $more;
+        }
+
+        return $excerpt;
+    }
+}
+
+// -------------------------------------------------------------
+
+if (! function_exists('strip_all_tags'))
+{
+    /**
+     * https://developer.wordpress.org/reference/functions/wp_strip_all_tags/
+     *
+     * @param $string
+     * @param bool $remove_breaks
+     * @return string
+     */
+    function strip_all_tags( $string, $remove_breaks = FALSE )
+    {
+        $string = preg_replace('@<(script|style)[^>]*?>.*?</\\1>@si', '', $string);
+        $string = strip_tags($string);
+
+        if ($remove_breaks)
+        {
+            $string = preg_replace('/[\r\n\t ]+/', ' ', $string);
+        }
+
+        return trim($string);
+    }
+}
+
+// -------------------------------------------------------------
+
+if (! function_exists('normalize_whitespace'))
+{
+    /**
+     * https://developer.wordpress.org/reference/functions/normalize_whitespace/
+     *
+     * @param $str
+     * @return mixed|string|string[]|null
+     */
+    function normalize_whitespace( $str )
+    {
+        $str = trim($str);
+        $str = str_replace("\r", "\n", $str);
+        $str = preg_replace(['/\n+/', '/[ \t]+/'], ["\n", ' '], $str);
+        return $str;
+    }
+}
+
+// -------------------------------------------------------------
+
 if (! function_exists('js_escape'))
 {
     /**
      * Normalize the string for JavaScript string value
      *
-     * @param string $string
+     * @param $text
+     * @return mixed|string|string[]|null
+     */
+    function js_escape($text)
+    {
+        $safe_text = (string) $text;
+        $safe_text = htmlspecialchars($safe_text, ENT_COMPAT, config_item('charset'), FALSE);
+        $safe_text = preg_replace('/&#(x)?0*(?(1)27|39);?/i', "'", stripslashes($safe_text));
+        $safe_text = str_replace("\r", '', $safe_text);
+        $safe_text = str_replace("\n", '\\n', addslashes($safe_text));
+
+        return $safe_text;
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (! function_exists('escape_html'))
+{
+    /**
+     * https://docs.zendframework.com/zend-escaper/escaping-html/
+     *
+     * @param $text
      * @return string
      */
-    function js_escape($string = '')
+    function escape_html($text)
     {
-        return
-            preg_replace('/\r?\n/', "\\n",
-                str_replace('"', "\\\"",
-                str_replace("'", "\\'",
-                str_replace("\\", "\\\\",
-                $string))));
+        static $_escaper;
+        if ($_escaper === NULL)
+        {
+            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
+        }
+
+        return $_escaper[0]->escapeHtml($text);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (! function_exists('escape_html_attr'))
+{
+    /**
+     * https://docs.zendframework.com/zend-escaper/escaping-html-attributes/
+     *
+     * @param $text
+     * @return string
+     */
+    function escape_html_attr($text)
+    {
+        static $_escaper;
+        if ($_escaper === NULL)
+        {
+            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
+        }
+
+        return $_escaper[0]->escapeHtmlAttr($text);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (! function_exists('escape_js'))
+{
+    /**
+     * https://docs.zendframework.com/zend-escaper/escaping-javascript/
+     *
+     * @param $text
+     * @return string
+     */
+    function escape_js($text)
+    {
+        static $_escaper;
+        if ($_escaper === NULL)
+        {
+            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
+        }
+
+        return $_escaper[0]->escapeJs($text);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (! function_exists('escape_css'))
+{
+    /**
+     * CSS escaping excludes only basic alphanumeric characters
+     * and escapes all other characters into valid CSS hexadecimal escapes.
+     * https://docs.zendframework.com/zend-escaper/escaping-css/
+     *
+     * @param $text
+     * @return string
+     */
+    function escape_css($text)
+    {
+        static $_escaper;
+        if ($_escaper === NULL)
+        {
+            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
+        }
+
+        return $_escaper[0]->escapeCss($text);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (! function_exists('escape_url'))
+{
+    /**
+     * URL escaping applies to data being inserted into a URL
+     * and not to the whole URL itself.
+     * https://docs.zendframework.com/zend-escaper/escaping-url/
+     *
+     * @param $text
+     * @return string
+     */
+    function escape_url($text)
+    {
+        static $_escaper;
+        if ($_escaper === NULL)
+        {
+            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
+        }
+
+        return $_escaper[0]->escapeUrl($text);
     }
 }
 
@@ -387,6 +581,34 @@ if (! function_exists('uuid'))
 			mt_rand(0, 0x2Aff), mt_rand(0, 0xffD3), mt_rand(0, 0xff4B)
 		);
 	}
+}
+
+// -------------------------------------------------------------
+
+if (! function_exists('sanitize_html_class'))
+{
+    /**
+     * https://developer.wordpress.org/reference/functions/sanitize_html_class/
+     *
+     * @param $class
+     * @param string $fallback
+     * @return string|string[]|null
+     */
+    function sanitize_html_class( $class, $fallback = '' )
+    {
+        //Strip out any % encoded octets
+        $sanitized = preg_replace( '|%[a-fA-F0-9][a-fA-F0-9]|', '', $class );
+
+        //Limit to A-Z,a-z,0-9,_,-
+        $sanitized = preg_replace( '/[^A-Za-z0-9_-]/', '', $sanitized );
+
+        if ( '' == $sanitized && $fallback )
+        {
+            return sanitize_html_class( $fallback );
+        }
+
+        return $sanitized;
+    }
 }
 
 // -------------------------------------------------------------
@@ -1113,15 +1335,16 @@ if (! function_exists('recaptcha_verify'))
      */
     function recaptcha_verify($response = '')
     {
-        string_not_empty($response) OR $response = ci()->input->post('g-recaptcha-response');
+        $CI = &get_instance();
+        string_not_empty($response) OR $response = $CI->input->post('g-recaptcha-response');
         if ($response)
         {
             // Create an instance of the service using your secret
-            $recaptcha = new ReCaptcha(ci()->setting->recaptcha_secretkey);
+            $recaptcha = new ReCaptcha($CI->setting->recaptcha_secretkey);
             if (!function_exists('file_get_contents'))
             {
                 // This makes use of fsockopen() instead.
-                $recaptcha = new ReCaptcha(ci()->setting->recaptcha_secretkey, new \ReCaptcha\RequestMethod\SocketPost());
+                $recaptcha = new ReCaptcha($CI->setting->recaptcha_secretkey, new SocketPost());
             }
 
             // Make the call to verify the response and also pass the user's IP address
@@ -1155,7 +1378,7 @@ if (! function_exists('_post'))
             return $default;
 
         if($_escape == TRUE)
-            return html_escape(ci()->input->post($name, TRUE));
+            return escape_html(ci()->input->post($name, TRUE));
 
         return ci()->input->post($name, TRUE);
     }
@@ -1176,7 +1399,7 @@ if (! function_exists('_get'))
             return $default;
 
         if($_escape == TRUE)
-            return html_escape(ci()->input->get($name, TRUE));
+            return escape_html(ci()->input->get($name, TRUE));
 
         return ci()->input->get($name, TRUE);
     }

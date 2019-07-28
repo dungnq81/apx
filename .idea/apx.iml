@@ -16,6 +16,7 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/pyrocms/lex" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/polyfill-mbstring" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/true/punycode" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-escaper" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-loader" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-mail" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/zendframework/zend-mime" />

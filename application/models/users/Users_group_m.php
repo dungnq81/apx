@@ -15,13 +15,13 @@ class Users_group_m extends MY_Model
         $this->load->config('auth', TRUE);
         $this->load->model('users/user_m');
 
-        $this->_init_group();
+        $this->_init();
     }
 
     /**
      * Check admin and default group
      */
-    private function _init_group()
+    private function _init()
     {
         // check default role
         $default_group = $this->config->item('default_group', 'auth');

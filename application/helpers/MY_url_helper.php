@@ -1,9 +1,5 @@
 <?php defined('BASEPATH') OR exit('No direct script access allowed.');
 
-/**
- * This overrides Codeigniter's helpers/url_helper.php file.
- */
-
 // ------------------------------------------------------------------------
 
 if (! function_exists('site_uri'))
@@ -19,7 +15,8 @@ if (! function_exists('site_uri'))
 	 */
 	function site_uri($uri = '')
 	{
-		return get_instance()->config->site_uri($uri);
+        $CI = &get_instance();
+		return $CI->config->site_uri($uri);
 	}
 }
 

@@ -21,6 +21,29 @@ class Pages_layout_m extends MY_Model
     }
 
     /**
+     * check default layout
+     */
+    private function _init()
+    {
+        $query = $this->db
+            ->where('slug', __return_empty_string())
+            ->get($this->_table, 1);
+
+        if ($query->num_rows() < 1)
+        {
+            $dummy = [
+                'title' => json_encode_uni([
+                    'vi' => 'Giao diện mặc định',
+                    'en' => 'Default layout',
+                ]),
+                'slug' => __return_empty_string(),
+            ];
+
+            $this->insert($dummy);
+        }
+    }
+
+    /**
      * @param $id
      * @return mixed
      */
@@ -102,28 +125,5 @@ class Pages_layout_m extends MY_Model
         return $this->_cache_layouts = $this->db
             ->get($this->_table)
             ->result();
-    }
-
-    /**
-     * check default layout
-     */
-    private function _init()
-    {
-        $query = $this->db
-            ->where('slug', __return_empty_string())
-            ->get($this->_table, 1);
-
-        if ($query->num_rows() < 1)
-        {
-            $dummy = [
-                'title' => json_encode_uni([
-                                'vi' => 'Giao diện mặc định',
-                                'en' => 'Default layout',
-                            ]),
-                'slug' => __return_empty_string(),
-            ];
-
-            $this->insert($dummy);
-        }
     }
 }

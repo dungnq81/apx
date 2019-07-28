@@ -80,7 +80,24 @@ if (! function_exists('esc__'))
      */
     function esc__($line = '', $for = '', $attributes = [], $extra = "")
     {
-        return html_escape(__($line, $for, $attributes, $extra));
+        return escape_html(__($line, $for, $attributes, $extra));
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (! function_exists('esc_attr_'))
+{
+    /**
+     * @param string $line
+     * @param string $for
+     * @param array $attributes
+     * @param string $extra
+     * @return mixed
+     */
+    function esc_attr_($line = '', $for = '', $attributes = [], $extra = "")
+    {
+        return escape_html_attr(__($line, $for, $attributes, $extra));
     }
 }
 
@@ -113,6 +130,22 @@ if (! function_exists('esc_e'))
     function esc_e($line = '', $for = '', $attributes = [], $extra = "")
     {
         echo esc__($line, $for, $attributes, $extra);
+    }
+}
+
+// ------------------------------------------------------------------------
+
+if (! function_exists('esc_attr_e'))
+{
+    /**
+     * @param string $line
+     * @param string $for
+     * @param array $attributes
+     * @param string $extra
+     */
+    function esc_attr_e($line = '', $for = '', $attributes = [], $extra = "")
+    {
+        echo esc_attr_($line, $for, $attributes, $extra);
     }
 }
 

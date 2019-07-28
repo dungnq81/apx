@@ -13,6 +13,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  *
  * @property Entity_m $entity_m
  * @property Dcrypto $dcrypto
+ * @property Pages_layout_m $pages_layout_m
  */
 class Page_m extends MY_Model
 {
@@ -73,7 +74,7 @@ class Page_m extends MY_Model
         [
             'field' => 'meta_description',
             'label' => 'Meta description',
-            'rules' => 'trim|max_length[320]'
+            'rules' => 'trim'
         ],
         [
             'field' => 'img_social',
@@ -117,25 +118,25 @@ class Page_m extends MY_Model
 
         $lang_code = $langcode ? $langcode : LANG;
         $_array = [
-            'pid' => isset($input['pid']) ? (int)$input['pid'] : NULL,
+            'pid' => !empty($input['pid']) ? (int)$input['pid'] : NULL,
             'languages_id' => lang_id($lang_code),
             'entities_id' => (int)$input['entities_id'],
             'pages_layouts_id' => (int)$input['pages_layouts_id'],
             'ip_address' => ip_address(),
             'title' => $input['title'],
-            'title_label' => isset($input['title_label']) ? $input['title_label'] : NULL,
+            'title_label' => !empty($input['title_label']) ? $input['title_label'] : NULL,
             'meta_append_name' => !empty($input['meta_append_name']) ? 1 : 0,
             'slug' => !empty($input['slug']) ? trim($input['slug']) : url_title($input['title']),
             'uri' => NULL,
-            'short' => isset($input['short']) ? $input['short'] : NULL,
+            'short' => !empty($input['short']) ? strip_all_tags($input['short']) : NULL,
             'status' => $input['status'],
             'content' => $input['content'],
             'comment_enabled' => !empty($input['comment_enabled']) ? 1 : 0,
             'rss_enabled' => !empty($input['rss_enabled']) ? 1 : 0,
-            'meta_title' => isset($input['meta_title']) ? $input['meta_title'] : '',
-            'meta_description' 	=> isset($input['meta_description']) ? $input['meta_description'] : '',
-            'canonical_url' => isset($input['canonical_url']) ? $input['canonical_url'] : NULL,
-            'redirect_url' => isset($input['redirect_url']) ? $input['redirect_url'] : NULL,
+            'meta_title' => !empty($input['meta_title']) ? $input['meta_title'] : $input['title'],
+            'meta_description' 	=> !empty($input['meta_description']) ? html_excerpt($input['meta_description'], 320, '...') : $input['title'],
+            'canonical_url' => !empty($input['canonical_url']) ? $input['canonical_url'] : NULL,
+            'redirect_url' => !empty($input['redirect_url']) ? $input['redirect_url'] : NULL,
         ];
 
         // check slug
@@ -148,7 +149,7 @@ class Page_m extends MY_Model
     }
 
     /**
-     * Build a lookup
+     * Build a lookup - update page uri
      *
      * @param int $id The id of the page to build the lookup for.
      * @return bool
@@ -234,13 +235,15 @@ class Page_m extends MY_Model
      *
      * @param array $input The page data to insert.
      * @return bool|int
+     *
+     * @throws Exception
      */
     public function create(&$input)
     {
         $input['alias'] = $this->_table;
         $input['created_on'] = now();
         $input['updated_on'] = 0;
-        $input['published_on'] = strtotime(str_replace('/', '-', $input['published_on']));
+        $input['published_on'] = strtotimetz(str_replace('/', '-', $input['published_on']));
         if(!is_empty($input['restricted_password']))
         {
             $this->load->library('dcrypto');
@@ -262,14 +265,15 @@ class Page_m extends MY_Model
 
             $input['entities_id'] = (int)$entities_id;
             $id = $this->insert($this->_filter_data($input));
-            if (!$id)
-            {
-                return FALSE;
-            }
+
+            // did it pass validation?
+            if (!$id) return FALSE;
 
             $this->build_lookup($id);
             $this->db->trans_complete();
             return ($this->db->trans_status() === FALSE) ? FALSE : (ci()->pages_id = $id);
+
+            // @todo write logs
         }
 
         return FALSE;

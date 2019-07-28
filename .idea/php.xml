@@ -22,6 +22,7 @@
       <path value="$PROJECT_DIR$/vendor/zendframework/zend-mime" />
       <path value="$PROJECT_DIR$/vendor/container-interop/container-interop" />
       <path value="$PROJECT_DIR$/vendor/composer" />
+      <path value="$PROJECT_DIR$/vendor/zendframework/zend-escaper" />
     </include_path>
   </component>
   <component name="PhpUnit">

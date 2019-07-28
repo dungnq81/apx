@@ -112,7 +112,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="meta-char-counter">Số ký tự <span class="chars count-empty">0 - Empty</span></div>
                 </div>
                 <div class="meta-description-input-wrap">
-                    <textarea rows="3" name="meta_description" id="meta_description" pattern="^(.*\S+.*)$" maxlength="320"><?php echo _post('meta_description')?></textarea>
+                    <textarea rows="3" name="meta_description" id="meta_description" pattern="^(.*\S+.*)$"><?php echo _post('meta_description')?></textarea>
                 </div>
             </div>
             <div>

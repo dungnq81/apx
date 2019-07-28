@@ -50,6 +50,7 @@ class Pages extends Admin_Controller
      * Create a new page
      *
      * @throws Asset_Exception
+     * @throws Exception
      */
     public function add()
     {
