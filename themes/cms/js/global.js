@@ -447,8 +447,8 @@ function stripTags(str) {
  * @return {string}
  */
 function escapeString(str) {
-    if (!str.length)
-        return '';
+    if($.type(str) === "undefined") return '';
+    if (!str.length) return '';
 
     var map = {
         '&': '&amp;',
@@ -470,9 +470,8 @@ function escapeString(str) {
  * @return {string}
  */
 function unescapeString(str) {
-
-    if (!str.length)
-        return '';
+    if($.type(str) === "undefined") return '';
+    if (!str.length) return '';
 
     var map = {
         '&': '&amp;',
@@ -532,6 +531,7 @@ function sDoubleSpace(str) {
  * @return {number}
  */
 function getStringLength(str) {
+    if($.type(str) === "undefined") return '';
     var e, length = 0;
     if (str.length) {
         e = document.createElement('span');
@@ -549,7 +549,6 @@ function getStringLength(str) {
  * @return {(object|undefined)}
  */
 function convertJSONResponse(response) {
-
     var testJSON = response && response.json || void 0, isJSON = 1 === testJSON;
     if (!isJSON) {
         var _response = response;

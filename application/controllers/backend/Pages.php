@@ -113,13 +113,21 @@ class Pages extends Admin_Controller
         // We are lost without an id. Redirect to the pages add.
         $id OR redirect('admin/pages/add');
 
+        // @todo check invalid $id
+
         // The user needs to be able to edit pages.
         role_or_die('pages', 'edit_page');
 
+        // page layout
+        $layouts = $this->pages_layout_m->array_for_select('id', 'title');
+
+        // Set some data that create forms will need
+        $this->_form_data();
         $this->template
             ->title('Chỉnh sửa trang')
             ->append_metadata($this->load->view('fragments/wysiwyg', [], TRUE))
             ->append_metadata($this->load->view('fragments/codemirror', [], TRUE))
+            ->set('layouts', $layouts)
             ->build('pages/admin/edit');
     }
 

@@ -14,6 +14,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  * @property Entity_m $entity_m
  * @property Dcrypto $dcrypto
  * @property Pages_layout_m $pages_layout_m
+ * @property Users_log_m $users_log_m
  */
 class Page_m extends MY_Model
 {
@@ -271,19 +272,24 @@ class Page_m extends MY_Model
 
             $this->build_lookup($id);
             $this->db->trans_complete();
-            return ($this->db->trans_status() === FALSE) ? FALSE : (ci()->pages_id = $id);
 
-            // @todo write logs
+            if($this->db->trans_status() === FALSE) return FALSE;
+            if($this->config->item('users_logs', 'auth') == TRUE)
+            {
+                $this->load->model('users/users_log_m');
+                $this->users_log_m->write_log($this->controller, $id, "create", "\"{$input['title']}\" created successful");
+            }
+
+            return ci()->pages_id = $id;
         }
 
         return FALSE;
     }
 
     /**
-     * @param string $type
      * @return CI_DB_query_builder
      */
-    private function _select_join($type = 'INNER')
+    private function _select_join()
     {
         return $this->db->select([
             $this->_table . '.*',
@@ -296,12 +302,12 @@ class Page_m extends MY_Model
             ->join(
                 $this->_table_entities,
                 $this->_table_entities . '.id = ' . $this->_table . '.' . $this->_fk_entities_id,
-                $type
+                'INNER'
             )
             ->join(
                 $this->_table_layouts,
-                $this->_table_entities . '.id = ' . $this->_table . '.' . $this->_fk_pages_layouts_id,
-                $type
+                $this->_table_layouts . '.id = ' . $this->_table . '.' . $this->_fk_pages_layouts_id,
+                'INNER'
             );
     }
 
