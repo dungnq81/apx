@@ -221,10 +221,7 @@ class Page_m extends MY_Model
             ->get($this->_table, 1)
             ->row();
 
-        if (!$page)
-        {
-            return FALSE;
-        }
+        if (!$page) return FALSE;
 
         // save current-page vars
         $this->load->vars(['page' => $page]);
