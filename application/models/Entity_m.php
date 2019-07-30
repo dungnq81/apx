@@ -6,6 +6,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Entity_m extends MY_Model
 {
+    const _CREATE = 'create';
+    const _EDIT = 'edit';
+
     /**
      * Entity_m constructor.
      */
@@ -22,19 +25,17 @@ class Entity_m extends MY_Model
 
     /**
      * @param $input
+     * @param string $action - create|edit|empty
      * @return array
      */
-    private function _filter_data($input)
+    private function _filter_data($input, $action = NULL)
     {
         $_array = [
-            'alias' => isset($input['alias']) ? $input['alias'] : NULL,
-            'controller' => isset(ci()->controller) ? ci()->controller : NULL,
             'pos' => (int)$input['pos'],
             'css' => !empty($input['css']) ? escape_css($input['css']) : NULL,
             'js' => !empty($input['js']) ? escape_js($input['js']) : NULL,
             //'img' => isset($input['img']) ? $input['img'] : NULL,
             //'img_social' => isset($input['img_social']) ? $input['img_social'] : NULL,
-            'created_on' => (int)$input['created_on'],
             'updated_on' => (int)$input['updated_on'],
             'published_on' => (int)$input['published_on'],
             'restricted_key' => !empty($input['restricted_key']) ? $input['restricted_key'] : NULL,
@@ -46,6 +47,13 @@ class Entity_m extends MY_Model
             'title_copy' => isset($input['title']) ? $input['title'] : NULL,
         ];
 
+        if(empty($action) OR $action == self::_CREATE)
+        {
+            $_array['alias'] = isset($input['alias']) ? $input['alias'] : NULL;
+            $_array['controller'] = isset(ci()->controller) ? ci()->controller : NULL;
+            $_array['created_on'] = (int)$input['created_on'];
+        }
+
         return $this->filter_data($this->_table, $_array);
     }
 
@@ -56,12 +64,34 @@ class Entity_m extends MY_Model
     public function create($input)
     {
         $this->db->trans_start();
-        $id = $this->insert($this->_filter_data($input));
+        $id = $this->insert(self::_filter_data($input));
 
         // did it pass validation?
         if (!$id) return FALSE;
 
         $this->db->trans_complete();
         return ($this->db->trans_status() === FALSE) ? FALSE : (ci()->entities_id = $id);
+    }
+
+    /**
+     * @param $id
+     * @param $input
+     * @return bool
+     */
+    public function edit($id, $input)
+    {
+        if(! $this->get($id))
+        {
+            return FALSE;
+        }
+
+        $this->db->trans_start();
+        $result = $this->update($id, self::_filter_data($input, self::_EDIT));
+
+        // did it pass validation?
+        if (! $result) return FALSE;
+
+        $this->db->trans_complete();
+        return (bool) $this->db->trans_status();
     }
 }

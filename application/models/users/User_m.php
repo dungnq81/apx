@@ -405,7 +405,7 @@ class User_m extends MY_Model
 		// write logs
         if($log == TRUE AND $this->config->item('users_logs', 'auth') == TRUE)
         {
-            $this->users_log_m->write_log($this->controller, $user->id, "login", "{$user->username} login successful");
+            $this->users_log_m->write_log($this->controller, $user->id, $this->method, "{$user->username} login successful");
         }
 	}
 
@@ -444,7 +444,7 @@ class User_m extends MY_Model
             if($log == TRUE AND $this->config->item('users_logs', 'auth') == TRUE)
             {
                 $user = $this->user($user_id)->row();
-                $this->users_log_m->write_log($this->controller, $user_id, "logout", "{$user->username} logout successful");
+                $this->users_log_m->write_log($this->controller, $user_id, $this->method, "{$user->username} logout successful");
             }
         }
 	}
@@ -1229,10 +1229,9 @@ class User_m extends MY_Model
     // ------------------------------------------
 
     /**
-     * @param string $type
      * @return CI_DB_query_builder
      */
-    private function _select_join($type = 'INNER')
+    private function _select_join()
     {
         $this->db->select([
             $this->_table . '.*',
@@ -1247,7 +1246,7 @@ class User_m extends MY_Model
         return $this->db->join(
             $this->_table_groups,
             $this->_table_groups . '.id = ' . $this->_table . '.' . $this->_fk_groups_id,
-            $type
+            'INNER'
         );
     }
 }

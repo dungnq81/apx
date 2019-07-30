@@ -31,7 +31,7 @@ class Admin extends Admin_Controller
 			[
 				'field' => 'identity',
 				'label' => 'Tên đăng nhập',
-				'rules' => 'trim|required|callback__check_login'
+				'rules' => 'trim|required|callback__check_login_callback'
 			],
 			[
 				'field' => 'password',
@@ -77,7 +77,7 @@ class Admin extends Admin_Controller
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function _check_login($identity)
+	public function _check_login_callback($identity)
 	{
 	    // recapcha
         $verify = recaptcha_verify($this->input->post('g-recaptcha-response'));
@@ -89,12 +89,12 @@ class Admin extends Admin_Controller
             }
             else
             {
-                $this->form_validation->set_message('_check_login', $this->auth->errors());
+                $this->form_validation->set_message(__FUNCTION__, $this->auth->errors());
                 return FALSE;
             }
         }
 
-        $this->form_validation->set_message('_check_login', __("Something_went_wrong"));
+        $this->form_validation->set_message(__FUNCTION__, __("Something_went_wrong"));
         return FALSE;
 	}
 }

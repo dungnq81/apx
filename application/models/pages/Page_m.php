@@ -45,7 +45,7 @@ class Page_m extends MY_Model
         [
             'field' => 'slug',
             'label' => 'Slug',
-            'rules' => 'trim|alpha_dash|max_length[250]|callback__check_slug',
+            'rules' => 'trim|alpha_dash|max_length[250]|callback__check_slug_callback',
         ],
         [
             'field' => 'img',
@@ -144,6 +144,7 @@ class Page_m extends MY_Model
         if(empty($input['slug']))
         {
             $_array['slug'] = $this->_sibling_slug($_array['slug'], $_array['pid']);
+            // @todo sai
         }
 
         return $this->filter_data($this->_table, $_array);
@@ -200,7 +201,6 @@ class Page_m extends MY_Model
             {
                 $flag = TRUE;
             }
-
             $i++;
         }
 
@@ -216,16 +216,16 @@ class Page_m extends MY_Model
     public function get($id)
     {
         $this->_select_join();
-        $page = $this->db
+        $query = $this->db
             ->where($this->_table . '.id', $id)
-            ->get($this->_table, 1)
-            ->row();
+            ->get($this->_table, 1);
 
-        if (!$page) return FALSE;
+        if($query->num_rows() < 1)
+        {
+            return FALSE;
+        }
 
-        // save current-page vars
-        $this->load->vars(['page' => $page]);
-        return $page;
+        return $query->row();
     }
 
     /**
@@ -244,16 +244,9 @@ class Page_m extends MY_Model
         $input['published_on'] = strtotimetz(str_replace('/', '-', $input['published_on']));
         if(!is_empty($input['restricted_password']))
         {
-            $this->load->library('dcrypto');
-            try {
-                $input['restricted_key'] = $this->dcrypto->generate_key();
-                $input['restricted_password'] = $this->dcrypto->encrypt($input['restricted_password'], $input['restricted_key']);
-            } catch (EnvironmentIsBrokenException $ebe) {
-                // print errors
-                show_error("ERROR: " . $ebe->getMessage() . " (" . $ebe->getCode() . ")");
-            } catch (BadFormatException $bfe) {
-                show_error("ERROR: " . $bfe->getMessage() . " (" . $bfe->getCode() . ")");
-            }
+            $pass = $this->_password_generator($input['restricted_password']);
+            $input['restricted_key'] = $pass['key'];
+            $input['restricted_password'] = $pass['password'];
         }
 
         $entities_id = $this->entity_m->create($input);
@@ -267,20 +260,146 @@ class Page_m extends MY_Model
             // did it pass validation?
             if (!$id) return FALSE;
 
+            // calc uri
             $this->build_lookup($id);
-            $this->db->trans_complete();
 
-            if($this->db->trans_status() === FALSE) return FALSE;
+            $this->db->trans_complete();
+            if($this->db->trans_status() === FALSE)
+            {
+                return FALSE;
+            }
+
             if($this->config->item('users_logs', 'auth') == TRUE)
             {
                 $this->load->model('users/users_log_m');
-                $this->users_log_m->write_log($this->controller, $id, "create", "\"{$input['title']}\" created successful");
+                $this->users_log_m->write_log($this->controller, $id, $this->method, "\"{$input['title']}\" created successful");
             }
 
             return ci()->pages_id = $id;
         }
 
         return FALSE;
+    }
+
+    /**
+     * Update a Page
+     *
+     * @param int $id The ID of the page to update
+     * @return bool
+     * @throws Exception
+     */
+    public function edit($id, &$input)
+    {
+        // check page exist
+        if (! $page = $this->get($id))
+        {
+            return FALSE;
+        }
+
+        $input['updated_on'] = now();
+        $input['published_on'] = strtotimetz(str_replace('/', '-', $input['published_on']));
+
+        // update password
+        if(!is_empty($input['restricted_password']))
+        {
+            $pass = $this->_password_generator($input['restricted_password']);
+            $input['restricted_key'] = $pass['key'];
+            $input['restricted_password'] = $pass['password'];
+        }
+
+        $entity = $this->entity_m->edit($page->{$this->_fk_entities_id}, $input);
+        if($entity)
+        {
+            $this->db->trans_start();
+
+            // validate the data and update
+
+        }
+    }
+
+    /**
+     * @param $password
+     * @return array
+     */
+    private function _password_generator($password)
+    {
+        $arr = [
+            'key' => NULL,
+            'password' => NULL,
+        ];
+
+        if(!is_empty($password))
+        {
+            $this->load->library('dcrypto');
+            try {
+                $arr['key'] = $this->dcrypto->generate_key();
+                $arr['password'] = $this->dcrypto->encrypt($password, $arr['key']);
+            } catch (EnvironmentIsBrokenException $ebe) {
+                // print errors
+                show_error("ERROR: " . $ebe->getMessage() . " (" . $ebe->getCode() . ")");
+            } catch (BadFormatException $bfe) {
+                show_error("ERROR: " . $bfe->getMessage() . " (" . $bfe->getCode() . ")");
+            }
+        }
+
+        return $arr;
+    }
+
+    /**
+     * Callback to check uniqueness of slug + parent
+     *
+     * @param $slug string to check
+     * @return bool
+     */
+    public function _check_slug_callback($slug)
+    {
+        // This is only going to be set on Edit
+        $page_id = $this->uri->segment(4);
+
+        // This might be set if there is a page
+        // NULL or interger format
+        $pid = $this->input->post('pid');
+
+        // See if this slug exists already
+        if ($this->_unique_slug($slug, $pid, (int) $page_id))
+        {
+            // Root Level
+            if (empty($pid))
+            {
+                $parent_folder = 'the top level';
+                $url = '/' . $slug;
+            }
+            else // Child of a Page (find by parent)
+            {
+                $parent = $this->get($pid);
+                $url = $slug;
+                $parent_folder = '/' . $parent->uri;
+            }
+
+            $this->form_validation->set_message(__FUNCTION__, sprintf('A page with the URL "%s" already exists in %s.', $url, $parent_folder));
+            return FALSE;
+        }
+
+        return TRUE;
+    }
+
+    /**
+     * Check Slug for Uniqueness
+     * Slugs should be unique among sibling pages.
+     *
+     * @param string $slug The slug to check for.
+     * @param int $pid The pid if any.
+     * @param int $id The id of the page.
+     *
+     * @return bool
+     */
+    private function _unique_slug($slug, $pid, $id = 0)
+    {
+        return (bool) parent::count_by([
+                'id !=' => $id,
+                'slug' => $slug,
+                'pid' => $pid
+            ]) > 0;
     }
 
     /**
@@ -306,62 +425,5 @@ class Page_m extends MY_Model
                 $this->_table_layouts . '.id = ' . $this->_table . '.' . $this->_fk_pages_layouts_id,
                 'INNER'
             );
-    }
-
-    /**
-     * Callback to check uniqueness of slug + parent
-     *
-     * @param $slug string to check
-     * @return bool
-     */
-    public function _check_slug($slug)
-    {
-        // This is only going to be set on Edit
-        $page_id = $this->uri->segment(4);
-
-        // This might be set if there is a page
-        // NULL or interger format
-        $pid = $this->input->post('pid');
-
-        // See if this slug exists already
-        if ($this->_unique_slug($slug, $pid, (int) $page_id))
-        {
-            // Root Level
-            if (empty($pid))
-            {
-                $parent_folder = 'the top level';
-                $url = '/' . $slug;
-            }
-            else // Child of a Page (find by parent)
-            {
-                $parent = $this->get($pid);
-                $url = $slug;
-                $parent_folder = '/' . $parent->uri;
-            }
-
-            $this->form_validation->set_message('_check_slug', sprintf('A page with the URL "%s" already exists in %s.', $url, $parent_folder));
-            return FALSE;
-        }
-
-        return TRUE;
-    }
-
-    /**
-     * Check Slug for Uniqueness
-     * Slugs should be unique among sibling pages.
-     *
-     * @param string $slug The slug to check for.
-     * @param int $pid The pid if any.
-     * @param int $id The id of the page.
-     *
-     * @return bool
-     */
-    private function _unique_slug($slug, $pid, $id = 0)
-    {
-        return (bool) parent::count_by([
-                'id !=' => $id,
-                'slug' => $slug,
-                'pid' => $pid
-            ]) > 0;
     }
 }
