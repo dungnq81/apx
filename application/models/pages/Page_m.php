@@ -106,21 +106,20 @@ class Page_m extends MY_Model
 
     /**
      * @param $input
-     * @param null|string $langcode
+     * @param null $action
      *
      * @return array|bool
      */
-    private function _filter_data($input, $langcode = NULL)
+    private function _filter_data($input, $action = NULL)
     {
         if(!isset($input['entities_id']))
         {
             return FALSE;
         }
 
-        $lang_code = $langcode ? $langcode : LANG;
         $_array = [
             'pid' => !empty($input['pid']) ? (int)$input['pid'] : NULL,
-            'languages_id' => lang_id($lang_code),
+            'languages_id' => (int)$input['languages_id'],
             'entities_id' => (int)$input['entities_id'],
             'pages_layouts_id' => (int)$input['pages_layouts_id'],
             'ip_address' => ip_address(),
@@ -139,6 +138,11 @@ class Page_m extends MY_Model
             'canonical_url' => !empty($input['canonical_url']) ? $input['canonical_url'] : NULL,
             'redirect_url' => !empty($input['redirect_url']) ? $input['redirect_url'] : NULL,
         ];
+
+        if(empty($action) OR $action == self::CREATE)
+        {
+
+        }
 
         // check slug
         if(empty($input['slug']))

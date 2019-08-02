@@ -6,9 +6,6 @@ defined('BASEPATH') OR exit('No direct script access allowed');
  */
 class Entity_m extends MY_Model
 {
-    const _CREATE = 'create';
-    const _EDIT = 'edit';
-
     /**
      * Entity_m constructor.
      */
@@ -47,7 +44,7 @@ class Entity_m extends MY_Model
             'title_copy' => isset($input['title']) ? $input['title'] : NULL,
         ];
 
-        if(empty($action) OR $action == self::_CREATE)
+        if(empty($action) OR $action == self::CREATE)
         {
             $_array['alias'] = isset($input['alias']) ? $input['alias'] : NULL;
             $_array['controller'] = isset(ci()->controller) ? ci()->controller : NULL;
@@ -86,7 +83,7 @@ class Entity_m extends MY_Model
         }
 
         $this->db->trans_start();
-        $result = $this->update($id, self::_filter_data($input, self::_EDIT));
+        $result = $this->update($id, self::_filter_data($input, self::EDIT));
 
         // did it pass validation?
         if (! $result) return FALSE;

@@ -163,6 +163,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <textarea name="js" id="js" class="codemirror codemirror-js"><?php echo _post('js')?></textarea>
             </div>
         </div>
+        <div class="lang-wrap">
+            <label for="languages_id">Ngôn ngữ</label>
+            <div>
+
+            </div>
+        </div>
         <div class="btn-submit">
             <?php echo form_hidden('_action', 'add'); ?>
             <button type="submit" class="button">Thêm mới</button>

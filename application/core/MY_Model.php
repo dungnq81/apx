@@ -57,6 +57,13 @@ abstract class MY_Model extends CI_Model
 	public $validate = [];
 
     /**
+     * define const
+     */
+    const CREATE = 'create';
+    const EDIT = 'edit';
+    const REMOVE = 'remove';
+
+    /**
      * MY_Model constructor.
      */
 	public function __construct()
@@ -379,10 +386,9 @@ abstract class MY_Model extends CI_Model
 	 *
 	 * @return array The options for the dropdown.
 	 */
-	function dropdown()
+	public function dropdown()
 	{
 		$args = func_get_args();
-
 		if (count($args) == 2)
 		{
 			list($key, $value) = $args;

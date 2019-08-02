@@ -23,7 +23,8 @@ class Language_m extends MY_Model
      * @var array|object
      */
     protected $_cache_default;
-    protected $_cache_lang;
+    protected $_cache_item;
+    protected $_cache_languages = [];
 
     /**
      * Language_m constructor.
@@ -51,18 +52,34 @@ class Language_m extends MY_Model
     }
 
     /**
+     * @return array
+     */
+    public function languages()
+    {
+        if($this->_cache_languages)
+        {
+            return $this->_cache_languages;
+        }
+
+        $this->_select_join();
+        return $this->_cache_languages = $this->db
+            ->get($this->_table)
+            ->result();
+    }
+
+    /**
      * @param string $langcode
      * @return mixed
      */
     public function lang_item($langcode = '')
     {
-        if($this->_cache_lang)
+        if($this->_cache_item)
         {
-            return $this->_cache_lang;
+            return $this->_cache_item;
         }
 
         $this->_select_join();
-        return $this->_cache_lang = $this->db
+        return $this->_cache_item = $this->db
             ->where($this->_table_supports . '.code', $langcode)
             ->get($this->_table, 1)
             ->row();
@@ -102,8 +119,9 @@ class Language_m extends MY_Model
         $lang_item = $this->lang_item($langcode);
 
         // check default lang
-        if($lang_item->is_default == 0)
+        if($lang_item AND $lang_item->is_default == 0)
         {
+            $this->_cache_item = __return_false();
             return $this->delete($lang_item->languages_id);
         }
 
@@ -118,7 +136,7 @@ class Language_m extends MY_Model
     public function set_default($langcode = '')
     {
         $lang_item = $this->lang_item($langcode);
-        if(!$lang_item)
+        if (!$lang_item)
         {
             return FALSE;
         }
@@ -155,22 +173,20 @@ class Language_m extends MY_Model
     }
 
     /**
-     * @param string $type
      * @return CI_DB_query_builder
      */
-    private function _select_join($type = 'INNER')
+    private function _select_join()
     {
         return $this->db->select([
+                $this->_table . '.*',
                 $this->_table . '.id AS ' . $this->db->protect_identifiers('languages_id'),
-                $this->_table . '.pos',
-                $this->_table . '.is_default',
                 $this->_table_supports . '.*',
             ])
             ->distinct()
             ->join(
                 $this->_table_supports,
                 $this->_table_supports . '.id = ' . $this->_table . '.' . $this->_fk_languages_supports_id,
-                $type
+                'INNER'
             );
     }
 }
