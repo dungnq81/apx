@@ -4,7 +4,7 @@
 <div class="frm-wrapper page-wrapper">
     <h1>Cập nhật trang</h1>
     <?php echo form_open_multipart(uri_string() . '?_action=edit', ['data-abide novalidate class' => 'frm-page', 'id' => 'frm-page']); ?>
-    <ul id="frm-page-tabs" class="tabs" data-deep-link="true" data-tabs>
+    <ul id="frm-page-tabs" class="tabs" data-tabs>
         <li class="tabs-title is-active"><a href="#tab-content" aria-selected="true">Nội dung</a></li>
         <li class="tabs-title"><a href="#tab-meta">Meta data</a></li>
         <li class="tabs-title"><a href="#tab-css">CSS</a></li>

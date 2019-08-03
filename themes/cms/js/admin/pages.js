@@ -7,7 +7,7 @@ $(function () {
         $.post(BASE_URL + "admin/pages/change_language", {code: e.target.value}, function (data) {
             var results = $.parseJSON(data);
             select_lang.find("img.flag").attr("src", results.flag);
-            pushState({}, apx.title, window.location.href.split(/[?#]/)[0] + $.query.SET('lang', results.code));
+            pushState({}, document.title, window.location.href.split(/[#?]/)[0] + $.query.SET('lang', results.code));
         });
     });
 });

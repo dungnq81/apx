@@ -86,7 +86,6 @@ $(function () {
 
     var html = $("html");
     apx.admin_theme_js = apx.admin_theme_url + 'js/';
-    apx.title = html.find('title').text();
 
     /**
      * Overload the json converter to avoid error when json is null or empty.
