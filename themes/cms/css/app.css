@@ -107,6 +107,20 @@ textarea.tinymce {height: 0;}
 .tox .tox-statusbar .tox-statusbar__branding {display: none !important;}
 .tox .tox-dialog-wrap div[role="tablist"] {display: none;}
 /**/
+.select-language {position: relative;}
+.select-language>img.flag {
+    position: absolute;
+    height: 14px;
+    top: 50%;
+    margin-top: -7px;
+    left: .5rem;
+    width: 20px;
+}
+.select-language>select {
+    margin-bottom: 0;
+    padding-left: 35px;
+}
+/**/
 .grid-container {max-width: 64rem;}
 .main-container {
     margin-bottom: 30px;

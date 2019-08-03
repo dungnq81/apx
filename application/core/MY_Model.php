@@ -389,10 +389,8 @@ abstract class MY_Model extends CI_Model
 	public function dropdown()
 	{
 		$args = func_get_args();
-		if (count($args) == 2)
-		{
-			list($key, $value) = $args;
-		}
+
+		if (count($args) == 2) list($key, $value) = $args;
 		else
 		{
 			$key = $this->_primary_key;

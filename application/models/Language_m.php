@@ -22,7 +22,7 @@ class Language_m extends MY_Model
     /**
      * @var array|object
      */
-    private $_cache_default = FALSE;
+    private $_cache_default;
     private $_cache = [];
 
     /**
@@ -36,20 +36,20 @@ class Language_m extends MY_Model
         $this->languages();
 
         // check default lang
-        if(! $default_lang = $this->get_default())
+        if(! $this->get_default())
         {
             if(! $this->lang_item(config_item('language')))
             {
                 $this->add(config_item('language'));
             }
 
-            $default_lang = $this->set_default(config_item('language'));
+            $this->set_default(config_item('language'));
         }
 
         // update default language setting
         if(empty($this->setting->default_language))
         {
-            $this->setting->default_language = $default_lang->code;
+            $this->setting->default_language = $this->_cache_default->code;
         }
     }
 
@@ -58,7 +58,7 @@ class Language_m extends MY_Model
      */
     public function languages()
     {
-        if($this->_cache)
+        if(! is_empty($this->_cache))
         {
             return $this->_cache;
         }
@@ -106,7 +106,7 @@ class Language_m extends MY_Model
             ->where('code', $code)
             ->get($this->_table_supports, 1);
 
-        if ($query->num_rows() === 1)
+        if ($query->num_rows() > 0)
         {
             $dummy = [
                 $this->_fk_languages_supports_id => $query->row()->id,
@@ -123,7 +123,7 @@ class Language_m extends MY_Model
     }
 
     /**
-     * @param $langcode
+     * @param string $code
      * @return bool
      */
     public function remove($code = '')
@@ -142,7 +142,7 @@ class Language_m extends MY_Model
     }
 
     /**
-     * @param string $langcode
+     * @param string $code
      * @return bool|mixed
      */
     public function set_default($code = '')
@@ -182,6 +182,30 @@ class Language_m extends MY_Model
         }
 
         return FALSE;
+    }
+
+    /**
+     * @return array
+     */
+    public function array_for_select()
+    {
+        $languages = $this->languages();
+        $args = func_get_args();
+
+        if (count($args) == 2) list($key, $value) = $args;
+        else
+        {
+            $key = 'languages_id';
+            $value = $args[0];
+        }
+
+        $options = [];
+        foreach ($languages as $item)
+        {
+            $options[$item->{$key}] = $item->{$value};
+        }
+
+        return $options;
     }
 
     /**

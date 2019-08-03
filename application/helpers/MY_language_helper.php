@@ -3,20 +3,20 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('lang_id'))
+if (! function_exists('lang_item'))
 {
     /**
-     * @param string $langcode
+     * @param string $code
      * @return mixed
      */
-	function lang_id($langcode = '')
-	{
-        $CI = get_instance();
+    function lang_item($code = '')
+    {
+        $CI =& get_instance();
         $CI->load->model('language_m');
 
-        string_not_empty($langcode) OR $langcode = lang_code();
-        return $CI->language_m->lang_item($langcode)->languages_id;
-	}
+        string_not_empty($code) OR $code = lang_code();
+        return $CI->language_m->lang_item($code);
+    }
 }
 
 // ------------------------------------------------------------------------
@@ -26,15 +26,12 @@ if (! function_exists('lang_code'))
 	/**
      * Get site lang or admin base lang
      *
-	 * @param string $default
 	 * @return string
 	 */
-	function lang_code($default = '')
+	function lang_code()
 	{
-        $CI = get_instance();
-        string_not_empty($default) OR $default = $CI->setting->default_language;
-
-        return !empty($lang = $CI->load->get_var('lang')->code) ? $lang : $default;
+        $CI =& get_instance();
+        return !empty($lang = $CI->load->get_var('lang')->code) ? $lang : $CI->setting->default_language;
 	}
 }
 

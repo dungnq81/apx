@@ -69,7 +69,7 @@ class MY_Controller extends CI_Controller
 		//
 		// LANGUAGE
         //
-		$lang = $this->language_m->get_default();
+		$lang = $this->language_m->get_default()->code;
         if (! empty($_SESSION['lang_code']))
         {
             $lang = $_SESSION['lang_code'];
@@ -102,7 +102,6 @@ class MY_Controller extends CI_Controller
 
         // Whatever we decided the lang was,
         // save it for next time to avoid working it out again
-        $_SESSION['lang_code'] = $lang;
         $this->load->vars(['lang' => $lang_item]);
         unset($lang);
 

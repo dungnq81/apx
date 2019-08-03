@@ -49,7 +49,6 @@ class Pages extends Admin_Controller
     /**
      * Create a new page
      *
-     * @throws Asset_Exception
      * @throws Exception
      */
     public function add()
@@ -58,7 +57,7 @@ class Pages extends Admin_Controller
         role_or_die('pages', 'add_page');
 
         // page layout
-        $layouts = $this->pages_layout_m->array_for_select('id', 'title');
+        $layouts_options = $this->pages_layout_m->array_for_select('id', 'title');
 
         // validation the callbacks in page_m
         $this->form_validation->set_model('page_m');
@@ -98,7 +97,7 @@ class Pages extends Admin_Controller
             ->title('Thêm trang mới')
             ->append_metadata($this->load->view('fragments/wysiwyg', [], TRUE))
             ->append_metadata($this->load->view('fragments/codemirror', [], TRUE))
-            ->set('layouts', $layouts)
+            ->set('layouts', $layouts_options)
             ->build('pages/admin/add');
     }
 
@@ -106,7 +105,6 @@ class Pages extends Admin_Controller
      * Edit an existing page
      *
      * @param int $id The id of the page.
-     * @throws Asset_Exception
      */
     public function edit($id = 0)
     {
@@ -143,14 +141,32 @@ class Pages extends Admin_Controller
 
     /**
      * Sets up common form inputs.
-     *
      * This is used in the creation forms.
-     * @throws Asset_Exception
      */
     private function _form_data()
     {
+        $lang_options = $this->language_m->array_for_select('code', 'name');
+
         // load page scripts
         $this->template
+            ->set('languages', $lang_options)
             ->append_js(['admin/pages.js']);
+    }
+
+    /**
+     * ajax change language
+     */
+    public function change_language()
+    {
+        $code = $this->input->post('code');
+        $lang_item = $this->language_m->lang_item($code);
+        if(is_ajax_request())
+        {
+            echo json_encode([
+                'flag' => $lang_item->flag,
+                'code' => $code,
+            ]);
+            exit();
+        }
     }
 }

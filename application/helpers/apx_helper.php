@@ -1112,16 +1112,16 @@ if (! function_exists('assoc_array_prop'))
 if (! function_exists('object_to_array'))
 {
 	/**
-	 * @param $object
+	 * @param object $object
 	 *
 	 * @return array
 	 */
 	function object_to_array($object)
 	{
-		if (! is_object($object) && ! is_array($object))
-			return $object;
+		if (is_string($object))
+			return (array) $object;
 
-        return array_map('object_to_array', (array)$object);
+        return array_map(__FUNCTION__, (array) $object);
 	}
 }
 
@@ -1138,10 +1138,9 @@ if (! function_exists('array_to_object'))
 	{
 		/**
 		 * Return array converted to object
-		 * Using __FUNCTION__ (Magic constant)
 		 * for recursive call
 		 */
-        return is_array($arr) ? (object)array_map(__FUNCTION__, $arr) : $arr;
+        return is_array($arr) ? (object) array_map(__FUNCTION__, $arr) : $arr;
 	}
 }
 
@@ -1160,8 +1159,8 @@ if (! function_exists('string_empty'))
         if(!is_string($str))
             return FALSE;
 
-        $val = preg_replace('/\s+/', '', $str);
-        return empty($val) ? TRUE : FALSE;
+        $str = preg_replace('/\s+/', '', $str);
+        return empty($str) ? TRUE : FALSE;
     }
 }
 
@@ -1170,10 +1169,10 @@ if (! function_exists('string_empty'))
 if (! function_exists('string_not_empty'))
 {
     /**
-     * @param $str
+     * @param string $str
      * @return bool
      */
-    function string_not_empty($str)
+    function string_not_empty($str = '')
     {
         if(! is_string($str))
             return FALSE;
@@ -1187,30 +1186,23 @@ if (! function_exists('string_not_empty'))
 if (! function_exists('is_empty'))
 {
 	/**
-	 * @param string $cnt
+	 * @param string|object|array $cnt
 	 * @param string $excluded_tags
 	 *
 	 * @return bool
 	 */
-	function is_empty($cnt = '', $excluded_tags = NULL)
+	function is_empty($cnt, $excluded_tags = NULL)
 	{
-		if (empty($cnt))
-			return TRUE;
-
-        if(is_object($cnt))
-            $cnt = object_to_array($cnt);
-
-		if (is_array($cnt))
-			return is_empty_array($cnt);
-
-        $val = $cnt;
+		if (empty($cnt)) return TRUE;
+        if(is_object($cnt)) $cnt = object_to_array($cnt);
+		if (is_array($cnt)) return is_empty_array($cnt);
         if(is_string($cnt))
         {
-            $val = strip_tags($cnt, $excluded_tags);
-            $val = preg_replace('/\s+/', '', $val);
+            $cnt = strip_tags($cnt, $excluded_tags);
+            return string_empty($cnt);
         }
 
-		return empty($val) ? TRUE : FALSE;
+        return FALSE;
 	}
 }
 
@@ -1225,18 +1217,14 @@ if (! function_exists('is_empty_array'))
 	 */
 	function is_empty_array($arr = [])
 	{
-		if (is_array($arr))
-		{
-			foreach ($arr as $value)
-			{
-				if (! is_empty_array($value))
-					return FALSE;
-			}
-		}
-		elseif (! is_empty($arr))
-			return FALSE;
+	    if(! is_array($arr)) return FALSE;
+        foreach ($arr as $value)
+        {
+            if(! is_empty($value))
+                return FALSE;
+        }
 
-		return TRUE;
+        return TRUE;
 	}
 }
 
@@ -1279,14 +1267,14 @@ if (! function_exists('role_or_die'))
 	 */
 	function role_or_die($controller, $role, $redirect_to = 'admin', $message = '')
 	{
-        if (ci()->input->is_ajax_request() AND !group_has_role($controller, $role))
+        if (is_ajax_request() AND !group_has_role($controller, $role))
 		{
-			echo json_encode(['error' => ($message ? $message : __('cp:access_denied'))]);
+			echo json_encode(['error' => ($message ? $message : 'Access denied')]);
 			return FALSE;
 		}
         elseif (!group_has_role($controller, $role))
 		{
-			ci()->session->set_flashdata('error', ($message ? $message : __('cp:access_denied')));
+			ci()->session->set_flashdata('error', ($message ? $message : 'Access denied'));
 			redirect($redirect_to);
 		}
 
@@ -1407,6 +1395,20 @@ if (! function_exists('_get'))
 
 // -------------------------------------------------------------
 // other helper
+// -------------------------------------------------------------
+
+if (! function_exists('is_ajax_request'))
+{
+    /**
+     * @return mixed
+     */
+    function is_ajax_request()
+    {
+        $CI = &get_instance();
+        return $CI->input->is_ajax_request();
+    }
+}
+
 // -------------------------------------------------------------
 
 if (! function_exists('asset_js'))

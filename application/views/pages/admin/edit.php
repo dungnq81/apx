@@ -33,7 +33,7 @@
             <div class="inline-block">
                 <label for="img" class="block">Ảnh đại diện</label>
                 <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
-                <p class="help-text" id="img_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg)</p>
+                <p class="help-text" id="img_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg, gif)</p>
             </div>
             <div>
                 <label for="pid">Trang cha</label>
@@ -143,7 +143,7 @@
             <div class="inline-block">
                 <label for="img_social" class="block">Social Image <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
                 <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_social_txt">
-                <p class="help-text" id="img_social_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg)</p>
+                <p class="help-text" id="img_social_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg, gif)</p>
             </div>
         </div>
         <div class="tabs-panel" id="tab-css">

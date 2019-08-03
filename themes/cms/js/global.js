@@ -1,97 +1,14 @@
-/* GLOBAL */
+/*
+ It may already be defined in metadata partial
+ */
+if (typeof(apx) == 'undefined') {
+    var apx = {'lang': {}};
+}
+
 (function ($) {
-
-    // usage: log('inside coolFunc', this, arguments);
-    // paulirish.com/2009/log-a-lightweight-wrapper-for-consolelog/
-    window.log = function () {
-        log.history = log.history || [];   // store logs to an array for reference
-        log.history.push(arguments);
-        if (this.console) {
-            arguments.callee = arguments.callee.caller;
-            var newarr = [].slice.call(arguments);
-            (typeof console.log === 'object' ? log.apply.call(console.log, console, newarr) : console.log.apply(console, newarr));
-        }
-    };
-
-    // make it safe to use console.log always
-    (function (b) {
-        function c() {
-        }
-
-        for (var d = "assert,count,debug,dir,dirxml,error,exception,group,groupCollapsed,groupEnd,info,log,timeStamp,profile,profileEnd,time,timeEnd,trace,warn".split(","), a; a = d.pop();) {
-            b[a] = b[a] || c
-        }
-    })((function () {
-        try {
-            console.log();
-            return window.console;
-        } catch (err) {
-            return window.console = {};
-        }
-    })());
-
-    /**
-     * @param c
-     * @param d
-     * @param t
-     * @returns {string}
-     */
-    Number.prototype.formatMoney = function (c, d, t) {
-        var n = this,
-            c = isNaN(c = Math.abs(c)) ? 2 : c,
-            d = d == undefined ? "." : d,
-            t = t == undefined ? "," : t,
-            s = n < 0 ? "-" : "",
-            i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
-            j = (j = i.length) > 3 ? j % 3 : 0;
-        return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
-    };
-
-    /**
-     * animateCss
-     * https://github.com/daneden/animate.css
-     */
-    $.fn.extend({
-        animateCss: function (animationName, callback) {
-            var animationEnd = (function (el) {
-                var animations = {
-                    animation: 'animationend',
-                    OAnimation: 'oAnimationEnd',
-                    MozAnimation: 'mozAnimationEnd',
-                    WebkitAnimation: 'webkitAnimationEnd',
-                };
-                for (var t in animations) {
-                    if (el.style[t] !== undefined) {
-                        return animations[t];
-                    }
-                }
-            })(document.createElement('div'));
-
-            this.addClass('animated ' + animationName).one(animationEnd, function () {
-                $(this).removeClass('animated ' + animationName);
-
-                if (typeof callback === 'function') callback();
-            });
-
-            return this;
-        },
-
-        /**
-         * $('#yourElement').animateCss('bounce');
-         *   or;
-         *   $('#yourElement').animateCss('bounce', function() {
-         *     // Do somthing after animation
-         *   });
-         */
-    });
-
     /*!
-     * jQuery serializeObject - v0.2 - 1/20/2010
+     * jQuery serializeObject - v0.2
      * http://benalman.com/projects/jquery-misc-plugins/
-     *
-     * Copyright (c) 2010 "Cowboy" Ben Alman
-     * Dual licensed under the MIT and GPL licenses.
-     * http://benalman.com/about/license/
      */
     $.fn.serializeObject = function () {
         var obj = {};
@@ -103,29 +20,73 @@
                 : $.isArray(obj[n]) ? obj[n].concat(v)
                     : [obj[n], v];
         });
-
         return obj;
     };
 
     /*!
-     * jQuery viewportOffset - v0.3 - 2/3/2010
+     * jQuery viewportOffset - v0.3
      * http://benalman.com/projects/jquery-misc-plugins/
-     *
-     * Copyright (c) 2010 "Cowboy" Ben Alman
-     * Dual licensed under the MIT and GPL licenses.
-     * http://benalman.com/about/license/
      *
      * Like the built-in jQuery .offset() method, but calculates left and top from
      * the element's position relative to the viewport, not the document.
      */
     $.fn.viewportOffset = function () {
         var offset = $(this).offset();
-
         return {
             left: offset.left - $(window).scrollLeft(),
             top: offset.top - $(window).scrollTop()
         };
     };
+
+    /**
+     * https://github.com/daneden/animate.css
+     */
+    $.fn.animateCss = function (animationName, callback) {
+        var animationEnd = (function (el) {
+            var animations = {
+                animation: 'animationend',
+                OAnimation: 'oAnimationEnd',
+                MozAnimation: 'mozAnimationEnd',
+                WebkitAnimation: 'webkitAnimationEnd',
+            };
+            for (var t in animations) {
+                if (el.style[t] !== undefined) {
+                    return animations[t];
+                }
+            }
+        })(document.createElement('div'));
+        this.addClass('animated ' + animationName).one(animationEnd, function () {
+            $(this).removeClass('animated ' + animationName);
+
+            if (typeof callback === 'function') callback();
+        });
+        return this;
+    };
+})(jQuery);
+
+/**
+ * @param c
+ * @param d
+ * @param t
+ * @returns {string}
+ */
+Number.prototype.formatMoney = function (c, d, t) {
+    var n = this,
+        c = isNaN(c = Math.abs(c)) ? 2 : c,
+        d = d == undefined ? "." : d,
+        t = t == undefined ? "," : t,
+        s = n < 0 ? "-" : "",
+        i = String(parseInt(n = Math.abs(Number(n) || 0).toFixed(c))),
+        j = (j = i.length) > 3 ? j % 3 : 0;
+    return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
+};
+
+$(function () {
+    'use strict';
+
+    var html = $("html");
+    apx.admin_theme_js = apx.admin_theme_url + 'js/';
+    apx.title = html.find('title').text();
 
     /**
      * Overload the json converter to avoid error when json is null or empty.
@@ -139,68 +100,25 @@
                 }
                 return json;
             }
+        },
+        data: {
+            '_csrf_token': $.cookie(apx.csrf_cookie_name)
         }
     });
 
-    /**
-     * $(document).ready()
-     */
-    $(function () {
+    // css var
+    if (!browser_CssVariables()) {
+        $('body').prepend("<p class=\"browserupgrade\">You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\" style=\"color:#E62117\" target=\"_blank\">upgrade your browser</a> to improve your experience.</p>");
+    }
 
-        // enable the pattern attribute on all textareas
-        var errorMessage = "Please match the requested format.";
-        $(this).find("textarea").on("input change propertychange", function () {
-            var pattern = $(this).attr("pattern");
-            if (typeof pattern !== typeof undefined && pattern !== false) {
-                var patternRegex = new RegExp("^" + pattern.replace(/^\^|\$$/g, '') + "$", "g");
-                var hasError = !$(this).val().match(patternRegex);
-                if (typeof this.setCustomValidity === "function") {
-                    this.setCustomValidity(hasError ? errorMessage : "");
-                } else {
-                    $(this).toggleClass("error", !!hasError);
-                    $(this).toggleClass("ok", !hasError);
-
-                    if (hasError) {
-                        $(this).attr("title", errorMessage);
-                    } else {
-                        $(this).removeAttr("title");
-                    }
-                }
-            }
-        });
-
-        // css var
-        if (!browser_CssVariables()) {
-            $('body').prepend("<p class=\"browserupgrade\">You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\" style=\"color:#E62117\" target=\"_blank\">upgrade your browser</a> to improve your experience.</p>");
-            //$('head').append("<link rel=\"stylesheet\" href=\"" + BASE_URI + "css/var.css\"/>");
-        }
-
-        // Hide all elements with .hideOnSubmit class when parent form is submit
-        $('form').submit(function () {
-            $(this).find('.hideOnSubmit').hide();
-        });
-
-        // Add copyright
-        var copyright = $(".copyright");
-        var cp_string = " <a class=\"_blank\" href=\"https://vietnhan.com/\">Powered by Việt Nhân</a>";
-        //copyright.append(cp_string);
-
-        // attribute target="_blank" is not W3C compliant
-        $('a._blank, a.blank, a.js-new-window').attr('target', '_blank');
+    // Hide all elements with .hideOnSubmit class when parent form is submit
+    $('form').submit(function () {
+        $(this).find('.hideOnSubmit').hide();
     });
 
-})(jQuery);
-
-/**
- * foundation_validate_form
- *
- * @param selector
- * @returns {boolean}
- */
-function foundation_validate_form(selector) {
-    selector.foundation('validateForm', selector);
-    return !(selector.find('.form-error.is-visible').length || selector.find('.is-invalid-label').length || selector.find('.is-invalid-input').length);
-}
+    // attribute target="_blank" is not W3C compliant
+    $('a._blank, a.blank, a.js-new-window').attr('target', '_blank');
+});
 
 /**
  * browser_CssVariables
@@ -277,19 +195,6 @@ function getScripts(scripts, callback) {
 }
 
 /**
- * Get query value
- *
- * @param name
- * @returns {string}
- */
-function query_string(name) {
-    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
-    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),
-        results = regex.exec(location.search);
-    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
-}
-
-/**
  * Function : print_r()
  * Arguments: The data  - array,hash(associative array),object
  *            The level - OPTIONAL
@@ -336,8 +241,6 @@ function getExtension(filename) {
 
 /**
  * Verify if value is in the array
- *
- * $.inArray()
  *
  * @param value
  * @param array
@@ -447,9 +350,7 @@ function stripTags(str) {
  * @return {string}
  */
 function escapeString(str) {
-    if($.type(str) === "undefined") return '';
-    if (!str.length) return '';
-
+    if ($.type(str) === "undefined" || !str.length) return '';
     var map = {
         '&': '&amp;',
         '<': '&lt;',
@@ -470,9 +371,7 @@ function escapeString(str) {
  * @return {string}
  */
 function unescapeString(str) {
-    if($.type(str) === "undefined") return '';
-    if (!str.length) return '';
-
+    if ($.type(str) === "undefined" || !str.length) return '';
     var map = {
         '&': '&amp;',
         '<': '&lt;',
@@ -531,7 +430,7 @@ function sDoubleSpace(str) {
  * @return {number}
  */
 function getStringLength(str) {
-    if($.type(str) === "undefined") return '';
+    if ($.type(str) === "undefined") return '';
     var e, length = 0;
     if (str.length) {
         e = document.createElement('span');
@@ -540,6 +439,68 @@ function getStringLength(str) {
             length = e.childNodes[0].nodeValue.length;
     }
     return +length;
+}
+
+
+/**
+ *
+ * @param el
+ * @param text
+ * @param min
+ * @param max
+ */
+function updateCounter(el, text, min, max) {
+
+    var test = {
+        'e': el,
+        'text': text,
+    };
+    updateCharacterCounter(test, min, max);
+}
+
+/**
+ * Updates character counter.
+ *
+ * @param test
+ * @param min
+ * @param max
+ */
+function updateCharacterCounter(test, min, max) {
+
+    var el = test.e, text = test.text;
+    var testLength = getStringLength(text), newClass = '', exclaimer = '';
+    var classes = {
+        empty: 'count-empty',
+        bad: 'count-bad',
+        good: 'count-good',
+    };
+
+    if (!min) min = 25;
+    if (!max) max = 75;
+
+    if (!testLength) {
+        newClass = classes.empty;
+        exclaimer = 'Empty';
+    } else if (testLength < min) {
+        newClass = classes.bad;
+        exclaimer = 'Too short';
+    } else if (testLength > max) {
+        newClass = classes.bad;
+        exclaimer = 'Too long';
+    } else {
+        //= between min and max.
+        newClass = classes.good;
+        exclaimer = 'Good';
+    }
+
+    exclaimer = testLength.toString() + ' - ' + exclaimer;
+    el.html(exclaimer);
+
+    //= IE11 compat... great. Spread syntax please :)
+    for (var _c in classes) {
+        el.removeClass(classes[_c]);
+    }
+    el.addClass(newClass);
 }
 
 /**
@@ -564,4 +525,18 @@ function convertJSONResponse(response) {
         }
     }
     return response;
+}
+
+/**
+ *
+ * @param page
+ * @param title
+ * @param url
+ */
+function pushState(page, title, url) {
+    if ("undefined" !== typeof history.pushState) {
+        history.pushState({page: page}, title, url);
+    } else {
+        window.location.assign(url);
+    }
 }

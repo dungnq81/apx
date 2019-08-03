@@ -1,7 +1,4 @@
-<?php
-defined('BASEPATH') OR exit('No direct script access allowed');
-
-?>
+<?php defined('BASEPATH') OR exit('No direct script access allowed'); ?>
 <!DOCTYPE html>
 <html lang="<?php echo lang_code();?>" class="no-js">
 <head>
@@ -24,7 +21,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     <?php asset_js(['addon::current-device.min.js', 'addon::jquery/jquery.query.min.js']);?>
     <script>
         var apx = {'lang': {}};
-        var DEFAULT_LANG = "<?php echo DEFAULT_LANG;?>";
+        var DEFAULT_LANG = "<?php echo ADMIN_LANG;?>";
         apx.csrf_cookie_name = "<?php echo config_item('cookie_prefix') . config_item('csrf_cookie_name'); ?>";
     </script>
 </head>
