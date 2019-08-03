@@ -50,7 +50,7 @@ class Page_m extends MY_Model
         [
             'field' => 'img',
             'label' => 'Ảnh đại diện',
-            'rules' => 'regex_match[/^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$/]',
+            'rules' => 'regex_match[/^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$/]',
         ],
         [
             'field' => 'pos',
@@ -80,7 +80,7 @@ class Page_m extends MY_Model
         [
             'field' => 'img_social',
             'label' => 'Social Image',
-            'rules' => 'regex_match[/^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG)$/]',
+            'rules' => 'regex_match[/^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$/]',
         ],
     ];
 
