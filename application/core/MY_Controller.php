@@ -69,7 +69,7 @@ class MY_Controller extends CI_Controller
 		//
 		// LANGUAGE
         //
-		$lang = $this->language_m->get_default()->code;
+		$lang = $this->language_m->get_default();
         if (! empty($_SESSION['lang_code']))
         {
             $lang = $_SESSION['lang_code'];
@@ -124,7 +124,6 @@ class MY_Controller extends CI_Controller
         Asset::add_path('addon', site_url('addons/'));
         Asset::set_url(base_url());
 
-        // https://github.com/kenjis/codeigniter-tettei-apps/
         //$this->output->set_header('Content-Type: text/html; charset=UTF-8');
         //$this->output->enable_profiler(TRUE);
         $this->benchmark->mark('my_controller_end');

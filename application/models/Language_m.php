@@ -22,9 +22,8 @@ class Language_m extends MY_Model
     /**
      * @var array|object
      */
-    protected $_cache_default;
-    protected $_cache_item;
-    protected $_cache_languages = [];
+    private $_cache_default = FALSE;
+    private $_cache = [];
 
     /**
      * Language_m constructor.
@@ -32,6 +31,9 @@ class Language_m extends MY_Model
     public function __construct()
     {
         parent::__construct();
+
+        // get all languages
+        $this->languages();
 
         // check default lang
         if(! $default_lang = $this->get_default())
@@ -41,7 +43,7 @@ class Language_m extends MY_Model
                 $this->add(config_item('language'));
             }
 
-            $default_lang= $this->set_default(config_item('language'));
+            $default_lang = $this->set_default(config_item('language'));
         }
 
         // update default language setting
@@ -56,44 +58,52 @@ class Language_m extends MY_Model
      */
     public function languages()
     {
-        if($this->_cache_languages)
+        if($this->_cache)
         {
-            return $this->_cache_languages;
+            return $this->_cache;
         }
 
         $this->_select_join();
-        return $this->_cache_languages = $this->db
+        $languages = $this->db
+            ->order_by($this->_table . '.pos', 'DESC')
             ->get($this->_table)
             ->result();
+
+        foreach ($languages as $item)
+        {
+            $this->_cache[$item->code] = $item;
+        }
+
+        return $this->_cache;
     }
 
     /**
-     * @param string $langcode
+     * @param string $code
      * @return mixed
      */
-    public function lang_item($langcode = '')
+    public function lang_item($code = '')
     {
-        if($this->_cache_item)
+        if(isset($this->_cache[$code]))
         {
-            return $this->_cache_item;
+            return $this->_cache[$code];
         }
 
         $this->_select_join();
-        return $this->_cache_item = $this->db
-            ->where($this->_table_supports . '.code', $langcode)
+        return $this->_cache[$code] = $this->db
+            ->where($this->_table_supports . '.code', $code)
             ->get($this->_table, 1)
             ->row();
     }
 
     /**
-     * @param string $langcode
+     * @param string $code
      * @param int $pos
      * @return bool|int
      */
-    public function add($langcode = '', $pos = 0)
+    public function add($code = '', $pos = 0)
     {
         $query = $this->db
-            ->where('code', $langcode)
+            ->where('code', $code)
             ->get($this->_table_supports, 1);
 
         if ($query->num_rows() === 1)
@@ -104,7 +114,9 @@ class Language_m extends MY_Model
                 'is_default' => 0,
             ];
 
-            return $this->insert($dummy);
+            $id = $this->insert($dummy);
+            $this->_cache[$code] = $this->lang_item($code);
+            return $id;
         }
 
         return FALSE;
@@ -114,18 +126,18 @@ class Language_m extends MY_Model
      * @param $langcode
      * @return bool
      */
-    public function remove($langcode = '')
+    public function remove($code = '')
     {
-        $lang_item = $this->lang_item($langcode);
+        $lang_item = $this->lang_item($code);
 
         // check default lang
         if($lang_item AND $lang_item->is_default == 0)
         {
-            $this->_cache_item = __return_false();
+            unset($this->_cache[$code]);
             return $this->delete($lang_item->languages_id);
         }
 
-        $this->error = sprintf("Language '%s' is not deleted.", $langcode);
+        $this->error = sprintf("Language '%s' is not deleted.", $code);
         return FALSE;
     }
 
@@ -133,9 +145,9 @@ class Language_m extends MY_Model
      * @param string $langcode
      * @return bool|mixed
      */
-    public function set_default($langcode = '')
+    public function set_default($code = '')
     {
-        $lang_item = $this->lang_item($langcode);
+        $lang_item = $this->lang_item($code);
         if (!$lang_item)
         {
             return FALSE;
@@ -164,7 +176,7 @@ class Language_m extends MY_Model
             ->where($this->_table . '.is_default', 1)
             ->get($this->_table, 1);
 
-        if ($query->num_rows() === 1)
+        if ($query->num_rows() > 0)
         {
             return $this->_cache_default = $query->row();
         }
@@ -178,8 +190,10 @@ class Language_m extends MY_Model
     private function _select_join()
     {
         return $this->db->select([
-                $this->_table . '.*',
                 $this->_table . '.id AS ' . $this->db->protect_identifiers('languages_id'),
+                $this->_table . '.languages_supports_id',
+                $this->_table . '.pos',
+                $this->_table . '.is_default',
                 $this->_table_supports . '.*',
             ])
             ->distinct()
