@@ -167,6 +167,7 @@ class Pages extends Admin_Controller
                 'code' => $code,
             ]);
             exit();
+            // @todo load parent page
         }
     }
 }

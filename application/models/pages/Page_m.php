@@ -418,16 +418,16 @@ class Page_m extends MY_Model
             $this->_table_layouts . '.title AS ' . $this->db->protect_identifiers('layout_title'),
             $this->_table_entities . '.*',
         ])
-            ->distinct()
-            ->join(
-                $this->_table_entities,
-                $this->_table_entities . '.id = ' . $this->_table . '.' . $this->_fk_entities_id,
-                'INNER'
-            )
-            ->join(
-                $this->_table_layouts,
-                $this->_table_layouts . '.id = ' . $this->_table . '.' . $this->_fk_pages_layouts_id,
-                'INNER'
-            );
+        ->distinct()
+        ->join(
+            $this->_table_entities,
+            $this->_table_entities . '.id = ' . $this->_table . '.' . $this->_fk_entities_id,
+            'INNER'
+        )
+        ->join(
+            $this->_table_layouts,
+            $this->_table_layouts . '.id = ' . $this->_table . '.' . $this->_fk_pages_layouts_id,
+            'INNER'
+        );
     }
 }

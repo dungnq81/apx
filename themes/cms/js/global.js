@@ -55,6 +55,7 @@ if (typeof(apx) == 'undefined') {
                 }
             }
         })(document.createElement('div'));
+
         this.addClass('animated ' + animationName).one(animationEnd, function () {
             $(this).removeClass('animated ' + animationName);
 
@@ -85,6 +86,7 @@ $(function () {
     'use strict';
 
     var html = $("html");
+    var body = $("body");
     apx.admin_theme_js = apx.admin_theme_url + 'js/';
 
     /**
@@ -107,7 +109,7 @@ $(function () {
 
     // css var
     if (!browser_CssVariables()) {
-        $('body').prepend("<p class=\"browserupgrade\">You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\" style=\"color:#E62117\" target=\"_blank\">upgrade your browser</a> to improve your experience.</p>");
+        body.prepend("<p class=\"browserupgrade\">You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\" style=\"color:#E62117\" target=\"_blank\">upgrade your browser</a> to improve your experience.</p>");
     }
 
     // Hide all elements with .hideOnSubmit class when parent form is submit

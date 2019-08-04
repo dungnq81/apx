@@ -1,6 +1,8 @@
 $(function () {
 
+    //
     // select languages
+    //
     var select_lang = $(".select-language");
     select_lang.find('select').on('change', function(e, params) {
 

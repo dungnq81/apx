@@ -3,7 +3,9 @@ $(document).foundation();
 // Start the main app logic.
 $(function () {
 
+    //
     // datetime picker
+    //
     var fdatepicker = $(".fdatepicker");
     if (fdatepicker) {
 
