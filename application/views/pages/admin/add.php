@@ -32,8 +32,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <p class="help-text" id="short_txt">Mô tả ngắn là một đoạn mô tả về nội dung mà bạn tự nhập bằng tay, có thể được sử dụng để hiển thị trong trang.</p>
             </div>
             <div class="inline-block">
-                <label for="img" class="block">Ảnh đại diện</label>
-                <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
+                <label for="img">Ảnh đại diện</label>
+                <div class="file-input-wrap">
+                    <output class="thumbnails"></output>
+                    <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
+                    <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                </div>
                 <p class="help-text" id="img_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg, gif)</p>
             </div>
             <div>

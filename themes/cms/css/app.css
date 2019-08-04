@@ -89,7 +89,7 @@ span.help-text {
 .font-normal {font-weight: normal !important;}
 /**/
 input.fdatepicker {
-    background-size: 15px;
+    background-size: 16px;
     background-repeat: no-repeat;
     background-position-x: calc(100% - 0.5rem);
     background-position-y: center;
@@ -120,6 +120,37 @@ textarea.tinymce {height: 0;}
     margin-bottom: 0;
     padding-left: 35px;
 }
+/**/
+.file-input-wrap {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 1rem;
+}
+.file-input-wrap .thumbnails {}
+.file-input-wrap .trap-plus {
+    border: 2px dotted #999;
+    height: 110px;
+    width: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.file-input-wrap .trap-plus>i {
+    color: #999;
+    font-size: 1.5rem;
+}
+.file-input-wrap input[type="file"] {
+    position: absolute;
+    cursor: pointer;
+    opacity: 0;
+    top: 0;
+    margin: 0;
+    left: 0;
+    height: 110px;
+    width: 130px !important;
+}
+.file-input-wrap input[data-invalid] ~ .trap-plus {border-color: #cc4b37;}
+.file-input-wrap input[data-invalid] ~ .trap-plus>i {color: #cc4b37;}
 /**/
 .grid-container {max-width: 64rem;}
 .main-container {

@@ -90,6 +90,12 @@ $(function () {
             $(window).delay(250).scrollTo(invalidFields, 600, {offset: -50, interrupt: true});
         }
     });
+
+    //
+    // file input wrap
+    //
+    var input_wrap = $(".file-input-wrap");
+
 });
 
 //
