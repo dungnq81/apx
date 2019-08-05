@@ -94,8 +94,17 @@ $(function () {
     //
     // file input wrap
     //
-    var input_wrap = $(".file-input-wrap");
+    var single_input = $(".single-input");
+    single_input.find('input').on('change', function (e, params) {
 
+        // FileList object
+        var file = e.target.files[0];
+
+        // Only process image files.
+        if (file.type.match('image.*')) {
+
+        }
+    });
 });
 
 //

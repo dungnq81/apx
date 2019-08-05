@@ -129,15 +129,15 @@ textarea.tinymce {height: 0;}
 .file-input-wrap .thumbnails {}
 .file-input-wrap .trap-plus {
     border: 2px dotted #999;
-    height: 110px;
-    width: 130px;
+    height: 150px;
+    width: 180px;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 .file-input-wrap .trap-plus>i {
     color: #999;
-    font-size: 1.5rem;
+    font-size: 2rem;
 }
 .file-input-wrap input[type="file"] {
     position: absolute;
@@ -146,8 +146,8 @@ textarea.tinymce {height: 0;}
     top: 0;
     margin: 0;
     left: 0;
-    height: 110px;
-    width: 130px !important;
+    height: 150px;
+    width: 180px !important;
 }
 .file-input-wrap input[data-invalid] ~ .trap-plus {border-color: #cc4b37;}
 .file-input-wrap input[data-invalid] ~ .trap-plus>i {color: #cc4b37;}
