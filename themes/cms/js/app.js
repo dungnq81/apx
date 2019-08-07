@@ -49,7 +49,7 @@ $(function () {
     }
 
     // toogle append the site-name
-    meta_append_name.change(function () {
+    meta_append_name.on('change', function () {
         title_placeholder.hide();
         if ($(this).is(':checked')) {
             title_placeholder.show();
@@ -95,16 +95,6 @@ $(function () {
     // file input wrap
     //
     var single_input = $(".single-input");
-    single_input.find('input').on('change', function (e, params) {
-
-        // FileList object
-        var file = e.target.files[0];
-
-        // Only process image files.
-        if (file.type.match('image.*')) {
-
-        }
-    });
 });
 
 //
