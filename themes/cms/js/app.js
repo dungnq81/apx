@@ -11,28 +11,22 @@ $(function () {
 
         // Load a JavaScript file from the server using a GET HTTP request, then execute it.
         $.getScript(BASE_URL + 'addons/js/datepicker/foundation-datepicker.min.js', function (data, textStatus, jqxhr) {
+            lang = ADMIN_LANG;
+            $.getScript(BASE_URL + 'addons/js/datepicker/locales/foundation-datepicker.' + lang + '.js').done(function() {
 
-            $.fn.fdatepicker.dates['vi'] = {
-                days: ["Chủ Nhật", "Thứ 2", "Thứ 3", "Thứ 4", "Thứ 5", "Thứ 6", "Thứ 7", "Chủ Nhật"],
-                daysShort: ["CN", "T2", "T3", "T4", "T5", "T6", "T7", "CN"],
-                daysMin: ["CN", "T2", "T3", "T4", "T5", "T6", "T7", "CN"],
-                months: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5", "Tháng 6", "7", "Tháng 8", "Tháng 9", "Tháng 10", "Tháng 11", "Tháng 12"],
-                monthsShort: ["Thg1", "Thg2", "Thg3", "Thg4", "Thg5", "Thg6", "Thg7", "Thg8", "Thg9", "Thg10", "Thg11", "Thg12"],
-                today: "Hôm nay",
-            };
-
-            // input select searched
-            if (fdatepicker.is(".pick_time")) {
-                fdatepicker.fdatepicker({
-                    leftArrow: '<i class="fa fa-angle-left" aria-hidden="true"></i>',
-                    rightArrow: '<i class="fa fa-angle-right" aria-hidden="true"></i>',
-                    format: 'yyyy-mm-dd hh:ii',
-                    language: (LANG === 'vi') ? 'vi' : 'en',
-                    todayHighlight: true,
-                    pickTime: true,
-                    onRender: function (d) {},
-                });
-            }
+                // input select searched
+                if (fdatepicker.is(".pick_time")) {
+                    fdatepicker.fdatepicker({
+                        leftArrow: '<i class="fa fa-angle-left" aria-hidden="true"></i>',
+                        rightArrow: '<i class="fa fa-angle-right" aria-hidden="true"></i>',
+                        format: 'yyyy-mm-dd hh:ii',
+                        language: lang,
+                        todayHighlight: true,
+                        pickTime: true,
+                        onRender: function (d) {},
+                    });
+                }
+            });
         });
     }
 
@@ -42,7 +36,6 @@ $(function () {
     var frm_wrapper = $(".frm-wrapper");
     var title_placeholder = frm_wrapper.find("#meta-title-placeholder");
     var title_offset = frm_wrapper.find("#meta-title-offset");
-
     var meta_append_name = frm_wrapper.find('input[name="meta_append_name"]');
     if (meta_append_name.is(':checked')) {
         title_placeholder.show();
@@ -62,21 +55,19 @@ $(function () {
     });
 
     title_placeholder.css('left', title_offset.width() + 16 + 'px');
-    updateCounter(frm_wrapper.find(".meta-title-input-wrap .meta-char-counter .chars"), unescapeString(meta_title.val()));
+    updateCounter(frm_wrapper.find(".meta-title-input-wrap .meta-char-counter .chars"), unescape(meta_title.val()));
     meta_title.on('input', function () {
         title_offset.html($(this).val());
         title_placeholder.css('left', title_offset.width() + 16 + 'px');
-
         var el = $(this).parent().parent().find(".meta-char-counter .chars");
-        updateCounter(el, unescapeString(title_offset.html()));
+        updateCounter(el, unescape(title_offset.html()));
     });
 
     var meta_description = frm_wrapper.find('textarea[name="meta_description"]');
-    updateCounter(frm_wrapper.find(".meta-description-input-wrap .meta-char-counter .chars"), unescapeString(meta_description.val()), 45, 320);
+    updateCounter(frm_wrapper.find(".meta-description-input-wrap .meta-char-counter .chars"), unescape(meta_description.val()), 45, 320);
     meta_description.on('input', function () {
-
         var el = $(this).parent().parent().find(".meta-char-counter .chars");
-        updateCounter(el, unescapeString($(this).val()), 45, 320);
+        updateCounter(el, unescape($(this).val()), 45, 320);
     });
 
     //
@@ -84,17 +75,39 @@ $(function () {
     //
     var form_abide = frm_wrapper.find("form[data-abide]");
     form_abide.on("forminvalid.zf.abide", function(ev, frm) {
-
-        var invalidFields = $(this).find('[data-invalid]');
-        if (invalidFields) {
-            $(window).delay(250).scrollTo(invalidFields, 600, {offset: -50, interrupt: true});
+        var invalid = $(this).find('[data-invalid]');
+        if (invalid) {
+            $(window).delay(250).scrollTo(invalid, 600, {offset: -50, interrupt: true});
         }
     });
 
     //
     // file input wrap
     //
-    var single_input = $(".single-input");
+    var thumbnail_input = $(".thumbnail-input");
+    thumbnail_input.find('input').on('change', function (e, params) {
+
+        // FileList object, single file upload
+        var f = e.target.files[0];
+
+        // Only process image files.
+        if (f.type.match('image.*')) {
+            var reader = new FileReader();
+
+            // Closure to capture the file information.
+            reader.onload = (function(file) {
+                return function(e) {
+
+                    // Render thumbnail.
+                    var span = $("<span/>", {"class": 'res res-1y1'}).html(['<img src="', e.target.result, '" title="', escape(file.name), '"/>'].join(''));
+                    thumbnail_input.find('.thumbnails').append(span);
+                };
+            })(f);
+
+            // Read in the image file as a data URL.
+            reader.readAsDataURL(f);
+        }
+    });
 });
 
 //

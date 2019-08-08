@@ -33,10 +33,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="inline-block">
                 <label for="img">Ảnh đại diện</label>
-                <div class="file-input-wrap single-input">
+                <div class="file-input-wrap thumbnail-input">
                     <output class="thumbnails"></output>
-                    <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
                     <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                    <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
                 </div>
                 <p class="help-text" id="img_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg, gif)</p>
             </div>

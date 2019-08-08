@@ -550,11 +550,15 @@ if (! function_exists('trim_s'))
 {
     /**
      * @param string $str
+     * @param string $space
+     *
      * @return string|string[]|null
      */
-    function trim_s($str = '')
+    function trim_s($str, $space = '')
     {
-        return preg_replace('/\s+/', '', $str);
+        $str = (string) $str;
+        $str = trim($str);
+        return preg_replace('/\s+/', $space, $str);
     }
 }
 
@@ -1194,9 +1198,9 @@ if (! function_exists('is_empty'))
 	function is_empty($cnt, $excluded_tags = NULL)
 	{
 		if (empty($cnt)) return TRUE;
-        if(is_object($cnt)) $cnt = object_to_array($cnt);
+        if (is_object($cnt)) $cnt = object_to_array($cnt);
 		if (is_array($cnt)) return is_empty_array($cnt);
-        if(is_string($cnt))
+        if (is_string($cnt))
         {
             $cnt = strip_tags($cnt, $excluded_tags);
             return string_empty($cnt);
@@ -1217,10 +1221,10 @@ if (! function_exists('is_empty_array'))
 	 */
 	function is_empty_array($arr = [])
 	{
-	    if(! is_array($arr)) return FALSE;
+        if (!is_array($arr)) return FALSE;
         foreach ($arr as $value)
         {
-            if(! is_empty($value))
+            if (!is_empty($value))
                 return FALSE;
         }
 
@@ -1329,7 +1333,7 @@ if (! function_exists('recaptcha_verify'))
         {
             // Create an instance of the service using your secret
             $recaptcha = new ReCaptcha($CI->setting->recaptcha_secretkey);
-            if (!function_exists('file_get_contents'))
+            if (! function_exists('file_get_contents'))
             {
                 // This makes use of fsockopen() instead.
                 $recaptcha = new ReCaptcha($CI->setting->recaptcha_secretkey, new SocketPost());
@@ -1362,7 +1366,7 @@ if (! function_exists('_post'))
      */
     function _post($name, $default = '', $_escape = TRUE)
     {
-        if(!isset($_POST[$name]))
+        if(! isset($_POST[$name]))
             return $default;
 
         if($_escape == TRUE)
@@ -1383,7 +1387,7 @@ if (! function_exists('_get'))
      */
     function _get($name, $default = '', $_escape = TRUE)
     {
-        if(!isset($_GET[$name]))
+        if(! isset($_GET[$name]))
             return $default;
 
         if($_escape == TRUE)

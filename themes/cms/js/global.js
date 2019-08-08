@@ -63,6 +63,26 @@ if (typeof(apx) == 'undefined') {
         });
         return this;
     };
+
+    /**
+     *
+     * @param url
+     * @param options
+     * @returns {*}
+     */
+    $.cachedScript = function( url, options ) {
+
+        // Allow user to set any option except for dataType, cache, and url
+        options = $.extend( options || {}, {
+            dataType: "script",
+            cache: true,
+            url: url
+        });
+
+        // Use $.ajax() since it is more flexible than $.getScript
+        // Return the jqXHR object so we can chain callbacks
+        return $.ajax( options );
+    };
 })(jQuery);
 
 /**
@@ -95,7 +115,7 @@ $(function () {
     $.ajaxSetup({
         converters: {
             'text json': function (text) {
-                var json = $.parseJSON(text);
+                var json = JSON.parse(text);
                 if (!$.ajaxSettings.allowEmpty && (json == null || $.isEmptyObject(json))) {
                     $.error('The server is not responding correctly, please try again later.');
                 }
@@ -104,7 +124,8 @@ $(function () {
         },
         data: {
             '_csrf_token': $.cookie(apx.csrf_cookie_name)
-        }
+        },
+        cache: true, // Caching Responses
     });
 
     // css var
@@ -150,7 +171,6 @@ function valid_email($email) {
 }
 
 /**
- * redirect
  *
  * @param url
  */
@@ -178,21 +198,6 @@ function redirect(url) {
             window.location.href = url;
         }
     }
-}
-
-/**
- * Get multi scripts
- *
- * @param scripts
- * @param callback
- */
-function getScripts(scripts, callback) {
-    var progress = 0;
-    scripts.forEach(function (script) {
-        $.getScript(script, function () {
-            if (++progress == scripts.length) callback();
-        });
-    });
 }
 
 /**
@@ -349,6 +354,8 @@ function stripTags(str) {
  * @source <https://stackoverflow.com/a/4835406>
  * @param {string} str
  * @return {string}
+ * @deprecated
+ * Use escape() instead
  */
 function escapeString(str) {
     if ($.type(str) === "undefined" || !str.length) return '';
@@ -370,6 +377,8 @@ function escapeString(str) {
  *
  * @param {string} str The escaped str via escapeString
  * @return {string}
+ * @deprecated
+ * Use unescape() instead
  */
 function unescapeString(str) {
     if ($.type(str) === "undefined" || !str.length) return '';
@@ -435,7 +444,7 @@ function getStringLength(str) {
     var e, length = 0;
     if (str.length) {
         e = document.createElement('span');
-        e.innerHTML = escapeString(str).trim(); // Trimming can lead to empty child nodes.
+        e.innerHTML = escape(str).trim(); // Trimming can lead to empty child nodes.
         if ('undefined' !== typeof e.childNodes[0])
             length = e.childNodes[0].nodeValue.length;
     }
