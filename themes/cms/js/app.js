@@ -55,19 +55,19 @@ $(function () {
     });
 
     title_placeholder.css('left', title_offset.width() + 16 + 'px');
-    updateCounter(frm_wrapper.find(".meta-title-input-wrap .meta-char-counter .chars"), unescape(meta_title.val()));
+    updateCounter(frm_wrapper.find(".meta-title-input-wrap .meta-char-counter .chars"), unescapeString(meta_title.val()));
     meta_title.on('input', function () {
         title_offset.html($(this).val());
         title_placeholder.css('left', title_offset.width() + 16 + 'px');
         var el = $(this).parent().parent().find(".meta-char-counter .chars");
-        updateCounter(el, unescape(title_offset.html()));
+        updateCounter(el, unescapeString(title_offset.html()));
     });
 
     var meta_description = frm_wrapper.find('textarea[name="meta_description"]');
-    updateCounter(frm_wrapper.find(".meta-description-input-wrap .meta-char-counter .chars"), unescape(meta_description.val()), 45, 320);
+    updateCounter(frm_wrapper.find(".meta-description-input-wrap .meta-char-counter .chars"), unescapeString(meta_description.val()), 45, 320);
     meta_description.on('input', function () {
         var el = $(this).parent().parent().find(".meta-char-counter .chars");
-        updateCounter(el, unescape($(this).val()), 45, 320);
+        updateCounter(el, unescapeString($(this).val()), 45, 320);
     });
 
     //
@@ -85,28 +85,35 @@ $(function () {
     // file input wrap
     //
     var thumbnail_input = $(".thumbnail-input");
-    thumbnail_input.find('input').on('change', function (e, params) {
+    thumbnail_input.find('input').on('change', function (evt, params) {
 
-        // FileList object, single file upload
-        var f = e.target.files[0];
+        var thumbnails = thumbnail_input.find(".thumbnails");
+        if(evt.target.value.length > 0) {
 
-        // Only process image files.
-        if (f.type.match('image.*')) {
-            var reader = new FileReader();
+            // FileList object, single file upload
+            var f = evt.target.files[0];
 
-            // Closure to capture the file information.
-            reader.onload = (function(file) {
-                return function(e) {
+            // Only process image files.
+            if (f.type.match('image.*')) {
+                var reader = new FileReader();
 
-                    // Render thumbnail.
-                    var span = $("<span/>", {"class": 'res res-1y1'}).html(['<img src="', e.target.result, '" title="', escape(file.name), '"/>'].join(''));
-                    thumbnail_input.find('.thumbnails').append(span);
-                };
-            })(f);
+                // Closure to capture the file information.
+                reader.onload = (function(file) {
+                    return function(e) {
 
-            // Read in the image file as a data URL.
-            reader.readAsDataURL(f);
+                        // Render thumbnail.
+                        var span = $("<span/>", {"class": 'res res-1y1'}).html(['<img src="', e.target.result, '" title="', escapeString(file.name), '"/>'].join(''));
+                        thumbnails.children('figure').remove();
+                        thumbnails.append($("<figure/>").html(span));
+                    };
+                })(f);
+
+                // Read in the image file as a data URL.
+                reader.readAsDataURL(f);
+            }
         }
+        else
+            thumbnails.children('figure').remove();
     });
 });
 

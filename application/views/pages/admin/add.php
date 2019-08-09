@@ -31,12 +31,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <textarea rows="3" name="short" id="short" pattern="^(.*\S+.*)$" aria-describedby="short_txt"><?php echo _post('short')?></textarea>
                 <p class="help-text" id="short_txt">Mô tả ngắn là một đoạn mô tả về nội dung mà bạn tự nhập bằng tay, có thể được sử dụng để hiển thị trong trang.</p>
             </div>
-            <div class="inline-block">
+            <div>
                 <label for="img">Ảnh đại diện</label>
                 <div class="file-input-wrap thumbnail-input">
-                    <output class="thumbnails"></output>
-                    <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
-                    <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
+                    <div class="thumbnails">
+                        <div class="trap-wrap">
+                            <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
+                            <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                        </div>
+                    </div>
                 </div>
                 <p class="help-text" id="img_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg, gif)</p>
             </div>
@@ -147,7 +150,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="inline-block">
                 <label for="img_social" class="block">Social Image <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
-                <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_social_txt">
+                <div class="file-input-wrap thumbnail-input">
+                    <div class="thumbnails">
+                        <div class="trap-wrap">
+                            <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_social_txt">
+                            <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                        </div>
+                    </div>
+                </div>
                 <p class="help-text" id="img_social_txt">Chấp nhận các file ảnh có định dạng (png, jpg, jpeg, gif)</p>
             </div>
         </div>

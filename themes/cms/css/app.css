@@ -168,22 +168,28 @@ textarea.tinymce {height: 0;}
     padding-left: 35px;
 }
 /**/
-.file-input-wrap {
+.file-input-wrap {overflow: hidden;}
+.file-input-wrap .thumbnails {
+    display: flex;
+    flex-flow: row wrap;
+    margin-right: -15px;
+}
+.file-input-wrap .thumbnails figure {
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    width: 146px;
+}
+.file-input-wrap .thumbnails figure>span {}
+.file-input-wrap .thumbnails figure>span>img {}
+.file-input-wrap .trap-wrap {
+    margin-right: 1rem;
     position: relative;
-    overflow: hidden;
     margin-bottom: 1rem;
 }
-.file-input-wrap .thumbnails {
-    width: 150px;
-    height: 150px;
-    display: block;
-}
-.file-input-wrap .thumbnails>span {}
-.file-input-wrap .thumbnails>span>img {}
 .file-input-wrap .trap-plus {
     border: 2px dotted #999;
-    height: 150px;
-    width: 150px;
+    height: 146px;
+    width: 146px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -199,8 +205,8 @@ textarea.tinymce {height: 0;}
     top: 0;
     margin: 0;
     left: 0;
-    height: 150px;
-    width: 150px !important;
+    height: 146px;
+    width: 146px !important;
 }
 .file-input-wrap input[data-invalid] ~ .trap-plus {border-color: #cc4b37;}
 .file-input-wrap input[data-invalid] ~ .trap-plus>i {color: #cc4b37;}

@@ -354,8 +354,6 @@ function stripTags(str) {
  * @source <https://stackoverflow.com/a/4835406>
  * @param {string} str
  * @return {string}
- * @deprecated
- * Use escape() instead
  */
 function escapeString(str) {
     if ($.type(str) === "undefined" || !str.length) return '';
@@ -377,8 +375,6 @@ function escapeString(str) {
  *
  * @param {string} str The escaped str via escapeString
  * @return {string}
- * @deprecated
- * Use unescape() instead
  */
 function unescapeString(str) {
     if ($.type(str) === "undefined" || !str.length) return '';
@@ -440,11 +436,11 @@ function sDoubleSpace(str) {
  * @return {number}
  */
 function getStringLength(str) {
-    if ($.type(str) === "undefined") return '';
+    if ($.type(str) === "undefined") return 0;
     var e, length = 0;
     if (str.length) {
         e = document.createElement('span');
-        e.innerHTML = escape(str).trim(); // Trimming can lead to empty child nodes.
+        e.innerHTML = escapeString(str).trim(); // Trimming can lead to empty child nodes.
         if ('undefined' !== typeof e.childNodes[0])
             length = e.childNodes[0].nodeValue.length;
     }
