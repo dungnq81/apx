@@ -546,3 +546,17 @@ function pushState(page, title, url) {
         window.location.assign(url);
     }
 }
+
+/**
+ * https://stackoverflow.com/questions/20549241/how-to-reset-input-type-file/31751943
+ *
+ * @param input
+ */
+function reset_input(input) {
+    input.value = '';
+
+    if(!/safari/i.test(navigator.userAgent)){
+        input.type = '';
+        input.type = 'file';
+    }
+}

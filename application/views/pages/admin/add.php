@@ -150,7 +150,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
             <div class="inline-block">
                 <label for="img_social" class="block">Social Image <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
-                <div class="file-input-wrap thumbnail-input">
+                <div class="file-input-wrap social-input">
                     <div class="thumbnails">
                         <div class="trap-wrap">
                             <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_social_txt">
