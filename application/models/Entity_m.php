@@ -31,10 +31,8 @@ class Entity_m extends MY_Model
             'pos' => (int)$input['pos'],
             'css' => !empty($input['css']) ? escape_css($input['css']) : NULL,
             'js' => !empty($input['js']) ? escape_js($input['js']) : NULL,
-            //'img' => isset($input['img']) ? $input['img'] : NULL,
-            //'img_social' => isset($input['img_social']) ? $input['img_social'] : NULL,
-            'updated_on' => (int)$input['updated_on'],
-            'published_on' => (int)$input['published_on'],
+            'updated_on' => (int) $input['updated_on'],
+            'published_on' => (int) $input['published_on'],
             'restricted_key' => !empty($input['restricted_key']) ? $input['restricted_key'] : NULL,
             'restricted_password' => !empty($input['restricted_password']) ? $input['restricted_password'] : NULL,
             'meta_noindex' => !empty($input['meta_noindex']) ? 1 : 0,
@@ -48,7 +46,7 @@ class Entity_m extends MY_Model
         {
             $_array['alias'] = isset($input['alias']) ? $input['alias'] : NULL;
             $_array['controller'] = isset(ci()->controller) ? ci()->controller : NULL;
-            $_array['created_on'] = (int)$input['created_on'];
+            $_array['created_on'] = (int) $input['created_on'];
         }
 
         return $this->filter_data($this->_table, $_array);

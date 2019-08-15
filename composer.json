@@ -19,7 +19,8 @@
       "ext-mbstring": "*",
       "ext-exif": "*",
       "ext-gd": "*",
-      "ext-openssl": "*"
+      "ext-openssl": "*",
+      "ext-fileinfo": "*"
    },
    "require-dev": {}
 }

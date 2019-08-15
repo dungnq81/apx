@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-
+dump($demo);
 ?>
 <div class="frm-wrapper page-wrapper">
     <h1>Thêm trang mới</h1>
@@ -36,7 +36,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="file-input-wrap thumbnail-input">
                     <div class="thumbnails">
                         <div class="trap-wrap">
-                            <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
+                            <input name="img" id="img" type="file" accept="image/*" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
                             <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
                         </div>
                     </div>
@@ -153,7 +153,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="file-input-wrap social-input">
                     <div class="thumbnails">
                         <div class="trap-wrap">
-                            <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_social_txt">
+                            <input name="img_social" id="img_social" type="file" accept="image/*" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_social_txt">
                             <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
                         </div>
                     </div>

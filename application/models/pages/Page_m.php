@@ -248,9 +248,9 @@ class Page_m extends MY_Model
         $input['published_on'] = strtotimetz(str_replace('/', '-', $input['published_on']));
         if(!is_empty($input['restricted_password']))
         {
-            $pass = $this->_password_generator($input['restricted_password']);
-            $input['restricted_key'] = $pass['key'];
-            $input['restricted_password'] = $pass['password'];
+            $_pass = $this->_password_generator($input['restricted_password']);
+            $input['restricted_key'] = $_pass['key'];
+            $input['restricted_password'] = $_pass['password'];
         }
 
         $entities_id = $this->entity_m->create($input);
@@ -332,7 +332,7 @@ class Page_m extends MY_Model
             'password' => NULL,
         ];
 
-        if(!is_empty($password))
+        if (!is_empty($password))
         {
             $this->load->library('dcrypto');
             try {

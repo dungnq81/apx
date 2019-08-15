@@ -970,9 +970,17 @@ if (! function_exists('make_upload_file'))
 	{
 		if (create_directory($new_path))
 		{
-			$new_path_file = rtrim($new_path, '/') . '/' . $new_file_name;
-			if (move_uploaded_file($tmp_file, $new_path_file) === TRUE)
-				return TRUE;
+			// we'll attempt to use copy() first. If that fails
+            // we'll use move_uploaded_file().
+            if (!@copy($tmp_file, rtrim($new_path, '/') . '/' . $new_file_name))
+            {
+                if (!@move_uploaded_file($tmp_file, rtrim($new_path, '/') . '/' . $new_file_name))
+                {
+                    return FALSE;
+                }
+            }
+
+			return TRUE;
 		}
 
 		return FALSE;
