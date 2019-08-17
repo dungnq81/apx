@@ -552,7 +552,7 @@ function pushState(page, title, url) {
  *
  * @param input
  */
-function reset_input(input) {
+function reset_file_input(input) {
     input.value = '';
 
     if(!/safari/i.test(navigator.userAgent)){

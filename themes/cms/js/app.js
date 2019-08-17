@@ -102,7 +102,7 @@ $(function () {
                                 mouseenter: function () {
                                     $(this).append($("<a/>", {"class": "close", "href": "javascript:;", "title": "Remove " + escapeString(file.name)}).html("<i class=\"fa fa-times\" aria-hidden=\"true\"></i>"));
                                     $(this).find('.close').on('click', function () {
-                                        reset_input(event.target);
+                                        reset_file_input(event.target);
                                         $(this).closest('figure').remove();
                                     });
                                 },
