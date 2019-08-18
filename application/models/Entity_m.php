@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Class Entity_m
+ *
+ * @property MY_Upload $upload
  */
 class Entity_m extends MY_Model
 {
@@ -12,6 +14,14 @@ class Entity_m extends MY_Model
     public function __construct()
     {
         parent::__construct();
+
+        $this->load->library('Upload');
+        $_upload_path = FCPATH . 'uploads/' . date('Y') . '/' . date('n') . '/';
+        $_thumbnail_path = FCPATH . 'thumbs/' . date('Y') . '/' . date('n') . '/';
+        $this->upload->set_upload_path($_upload_path);
+        $this->upload->set_thumbnail_path($_thumbnail_path);
+
+        //...
         $this->_init();
     }
 
@@ -63,6 +73,9 @@ class Entity_m extends MY_Model
 
         // did it pass validation?
         if (!$id) return FALSE;
+
+        // image
+
 
         $this->db->trans_complete();
         return ($this->db->trans_status() === FALSE) ? FALSE : (ci()->entities_id = $id);

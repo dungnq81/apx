@@ -197,7 +197,7 @@ class Page_m extends MY_Model
 
         $i = 1;
         $flag = FALSE;
-        $new_slug = $slug;
+        //$new_slug = $slug;
         while ($flag == FALSE)
         {
             $new_slug = $slug . '_' . $i;

@@ -364,6 +364,8 @@ class MY_Upload extends CI_Upload
     /**
      * Perform the file upload
      *
+     * <input type="file" name="userfile" />
+     *
      * @param string $field
      * @param string $wmv T M B
      * @param string $wmh L C R
@@ -394,6 +396,8 @@ class MY_Upload extends CI_Upload
     /**
      * Perform the multi-files upload
      * https://github.com/stvnthomas/CodeIgniter-Multi-Upload/blob/master/MY_Upload.php
+     *
+     * <input type="file" name="userfiles[]" multiple />
      *
      * @param string $field
      * @param string $wmv T M B

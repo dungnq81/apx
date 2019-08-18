@@ -90,10 +90,6 @@ class Pages extends Admin_Controller
         // Set some data that create forms will need
         $this->_form_data();
 
-        $config['upload_path'] = 'xxx';
-        $this->load->library('Upload', $config);
-        $demo = $this->upload->watermark_text;
-
         // Load wysiwyg editor
         // Load codemirror
         $this->template
@@ -101,7 +97,6 @@ class Pages extends Admin_Controller
             ->append_metadata($this->load->view('fragments/wysiwyg', [], TRUE))
             ->append_metadata($this->load->view('fragments/codemirror', [], TRUE))
             ->set('layouts', $layouts_options)
-            ->set('demo', $demo)
             ->build('pages/admin/add');
     }
 

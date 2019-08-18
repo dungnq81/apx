@@ -1,6 +1,6 @@
 <?php
 defined('BASEPATH') OR exit('No direct script access allowed');
-dump($demo);
+
 ?>
 <div class="frm-wrapper page-wrapper">
     <h1>Thêm trang mới</h1>
