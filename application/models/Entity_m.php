@@ -16,10 +16,10 @@ class Entity_m extends MY_Model
         parent::__construct();
 
         $this->load->library('Upload');
-        $_upload_path = FCPATH . 'uploads/' . date('Y') . '/' . date('n') . '/';
-        $_thumbnail_path = FCPATH . 'thumbs/' . date('Y') . '/' . date('n') . '/';
-        $this->upload->set_upload_path($_upload_path);
-        $this->upload->set_thumbnail_path($_thumbnail_path);
+
+        // set upload path
+        $this->upload->set_upload_path(FCPATH . 'uploads/' . date('Y') . '/' . date('n') . '/');
+        $this->upload->set_thumbnail_path(FCPATH . 'thumbs/' . date('Y') . '/' . date('n') . '/');
 
         //...
         $this->_init();
@@ -31,11 +31,11 @@ class Entity_m extends MY_Model
     private function _init() {}
 
     /**
-     * @param $input
+     * @param array $input
      * @param string $action - create|edit|empty
      * @return array
      */
-    private function _filter_data($input, $action = NULL)
+    private function _filter_data(array $input, $action = NULL)
     {
         $_array = [
             'pos' => (int)$input['pos'],

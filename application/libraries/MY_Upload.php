@@ -58,6 +58,13 @@ class MY_Upload extends CI_Upload
     protected $_multi_file_name_override = '';
 
     /**
+     * Maximum files number - multi-upload
+     *
+     * @var int files
+     */
+    public $max_files = 0;
+
+    /**
      * MY_Upload constructor.
      *
      * @param array $config
@@ -78,6 +85,7 @@ class MY_Upload extends CI_Upload
 
         $config['file_ext_tolower'] = TRUE;
         $config['max_size'] = 4096; // 4MB
+        $config['max_files'] = 20;
 
         parent::__construct($config);
 
@@ -141,10 +149,20 @@ class MY_Upload extends CI_Upload
     }
 
     /**
+     * @param int $_max_files
+     * @return $this
+     */
+    public function set_max_files_number(int $_max_files = 0)
+    {
+        ! empty($files_number) AND $this->max_files = $_max_files;
+        return $this;
+    }
+
+    /**
      * @param $path
      * @return MY_Upload
      */
-    public function set_thumbnail_path($path)
+    public function set_thumbnail_path(string $path)
     {
         // Make sure it has a trailing slash
         $this->thumbnails['upload_path'] = rtrim($path, '/') . '/';
@@ -155,7 +173,7 @@ class MY_Upload extends CI_Upload
      * @param string $path
      * @return $this
      */
-    public function set_thumbnail_properties($path = '')
+    public function set_thumbnail_properties(string $path = '')
     {
         if ($this->is_image() AND function_exists('getimagesize'))
         {
@@ -237,7 +255,7 @@ class MY_Upload extends CI_Upload
      * @param int $count
      * @return    void
      */
-    protected function _file_mime_type($file, $count = 0)
+    protected function _file_mime_type($file, int $count = 0)
     {
         // Mutliple file?
         if(is_array($file["name"]))
@@ -384,7 +402,7 @@ class MY_Upload extends CI_Upload
             // thumbnail
             if ($this->is_thumbnail)
             {
-                $this->_thumbnails($this->thumbnails['upload_path'] . $this->file_name, TRUE);
+                $this->_thumbnails($this->thumbnails['upload_path'] . $this->file_name);
             }
 
             return TRUE;
@@ -438,8 +456,8 @@ class MY_Upload extends CI_Upload
             // Was the file able to be uploaded? If not, determine the reason why.
             if(!is_uploaded_file($_FILES[$field]["tmp_name"][$i]))
             {
-                //Determine error number.
-                $error = (!isset($_FILES[$field]["error"][$i])) ? 4 : $_FILES[$field]["error"][$i];
+                // Determine error number.
+                $error = (!isset($_FILES[$field]["error"][$i])) ? UPLOAD_ERR_NO_FILE : $_FILES[$field]["error"][$i];
 
                 switch ($error)
                 {
@@ -611,7 +629,7 @@ class MY_Upload extends CI_Upload
             // thumbnail
             if ($this->is_thumbnail)
             {
-                $this->_thumbnails($this->thumbnails['upload_path'] . $this->file_name, TRUE);
+                $this->_thumbnails($this->thumbnails['upload_path'] . $this->file_name);
             }
 
             /* Set the finalized image dimensions
@@ -667,16 +685,18 @@ class MY_Upload extends CI_Upload
 
     /**
      * @param $thumb_path
-     * @param bool $crop
+     * @param bool $_crop
+     * @param bool $_scale
      */
-    private function _thumbnails($thumb_path, $crop = FALSE)
+    private function _thumbnails($thumb_path, bool $_crop = TRUE, bool $_scale = TRUE)
     {
         // Use Image_moo library
-        $this->_CI->image_moo->allow_scale_up(TRUE);
+        $this->_CI->image_moo->allow_scale_up($_scale);
         $this->_CI->image_moo->set_jpeg_quality($this->thumbnails['jpeg_quality']);
 
+        /** @var Image_moo $moo */
         $moo = $this->_CI->image_moo->load($this->upload_path . $this->file_name);
-        if ($crop == TRUE)
+        if ($_crop == TRUE)
         {
             if (!$moo->resize_crop($this->thumbnails['max_width'], $this->thumbnails['max_height'])->save($thumb_path, FALSE))
             {
