@@ -1409,6 +1409,26 @@ if (! function_exists('_get'))
 // other helper
 // -------------------------------------------------------------
 
+if (! function_exists('is_json'))
+{
+    /**
+     * isJson method
+     *
+     * Check if string is a valid json
+     *
+     * @param $string
+     *
+     * @return bool
+     */
+    function is_json($string)
+    {
+        json_decode($string);
+        return (json_last_error() == JSON_ERROR_NONE);
+    }
+}
+
+// -------------------------------------------------------------
+
 if (! function_exists('is_ajax_request'))
 {
     /**

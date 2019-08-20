@@ -18,8 +18,8 @@ class Entity_m extends MY_Model
         $this->load->library('Upload');
 
         // set upload path
-        $this->upload->set_upload_path(FCPATH . 'uploads/' . date('Y') . '/' . date('n') . '/');
-        $this->upload->set_thumbnail_path(FCPATH . 'thumbs/' . date('Y') . '/' . date('n') . '/');
+        $this->upload->set_upload_path(FCPATH . 'uploads/' . date('Y') . '/' . date('m') . '/');
+        $this->upload->set_thumbnail_path(FCPATH . 'thumbs/' . date('Y') . '/' . date('m') . '/');
 
         //...
         $this->_init();
