@@ -159,7 +159,7 @@ class Pages extends Admin_Controller
     {
         $code = $this->input->post('code');
         $lang_item = $this->language_m->lang_item($code);
-        if(is_ajax_request())
+        if (is_ajax_request())
         {
             echo json_encode([
                 'flag' => $lang_item->flag,

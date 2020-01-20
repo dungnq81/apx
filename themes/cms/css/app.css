@@ -301,7 +301,7 @@ table.border tr td {border-right: 2px solid #e6e6e6;border-bottom: 2px solid #e6
 .cover .res.res-load {
     background-position: center;
     background-repeat: no-repeat;
-    background-image: url(../img/loader-2.gif);
+    background-image: url(../images/loader-2.gif);
     opacity: 0.9;
     transition: opacity ease-in-out 1s;
 }
@@ -435,7 +435,7 @@ table.border tr td {border-right: 2px solid #e6e6e6;border-bottom: 2px solid #e6
     content: "";
     width: 24px;
     height: 24px;
-    background: url(../img/zalo.svg) no-repeat center;
+    background: url(../images/zalo.svg) no-repeat center;
     background-size: contain;
     position: absolute;
     left: 0;

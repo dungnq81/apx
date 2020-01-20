@@ -17,14 +17,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
     apx.csrf_cookie_name = "<?php echo config_item('cookie_prefix') . config_item('csrf_cookie_name'); ?>";
 </script>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Roboto+Mono:400,400i,500,500i,700,700i|Roboto:400,400i,500,500i,700,700i|Roboto+Condensed:400,400i,700,700i&display=swap&subset=vietnamese" />
-<link rel="stylesheet" href="https://use.fontawesome.com/5016a31c8c.css" />
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/css/foundation.min.css" />
 <?php asset_css('app.css'); ?>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.2.3/what-input.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/js/foundation.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-scrollTo/2.1.2/jquery.scrollTo.min.js"></script>
 <?php
-asset_js(['addon::current-device.min.js', 'addon::jquery/jquery.query.min.js', 'global.js']);
+asset_js(['addon::what-input.min.js', 'addon::current-device.min.js', 'addon::js.cookie.min.js', 'addon::jquery/jquery.query.min.js', 'global.js']);
 echo $template['metadata'];

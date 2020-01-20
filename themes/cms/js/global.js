@@ -130,7 +130,7 @@ $(function () {
                 return json;
             }
         },
-        data: { '_csrf_token': $.cookie(apx.csrf_cookie_name) },
+        data: { '_csrf_token': Cookies.get(apx.csrf_cookie_name) },
         cache: true, // Caching Responses
     });
 

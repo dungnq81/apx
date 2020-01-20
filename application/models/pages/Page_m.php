@@ -139,13 +139,13 @@ class Page_m extends MY_Model
             'redirect_url' => !empty($input['redirect_url']) ? $input['redirect_url'] : NULL,
         ];
 
-        if(empty($action) OR $action == self::CREATE)
+        if (empty($action) OR $action == self::CREATE)
         {
 
         }
 
         // check slug
-        if(empty($input['slug']))
+        if (empty($input['slug']))
         {
             $_array['slug'] = $this->_sibling_slug($_array['slug'], $_array['pid']);
             // @todo sai
@@ -267,12 +267,12 @@ class Page_m extends MY_Model
             $this->build_lookup($id);
 
             $this->db->trans_complete();
-            if($this->db->trans_status() === FALSE)
+            if ($this->db->trans_status() === FALSE)
             {
                 return FALSE;
             }
 
-            if($this->config->item('users_logs', 'auth') == TRUE)
+            if ($this->config->item('users_logs', 'auth') == TRUE)
             {
                 $this->load->model('users/users_log_m');
                 $this->users_log_m->write_log($this->controller, $id, $this->method, "\"{$input['title']}\" created successful");
