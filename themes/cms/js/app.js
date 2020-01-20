@@ -55,19 +55,19 @@ $(function () {
     });
 
     title_placeholder.css('left', title_offset.width() + 16 + 'px');
-    updateCounter(frm_wrapper.find(".meta-title-input-wrap .meta-char-counter .chars"), unescape(meta_title.val()));
+    updateCounter(frm_wrapper.find(".meta-title-input-wrap .meta-char-counter .chars"), unescapeString(meta_title.val()));
     meta_title.on('input', function () {
         title_offset.html($(this).val());
         title_placeholder.css('left', title_offset.width() + 16 + 'px');
         var el = $(this).parent().parent().find(".meta-char-counter .chars");
-        updateCounter(el, unescape(title_offset.html()));
+        updateCounter(el, unescapeString(title_offset.html()));
     });
 
     var meta_description = frm_wrapper.find('textarea[name="meta_description"]');
-    updateCounter(frm_wrapper.find(".meta-description-input-wrap .meta-char-counter .chars"), unescape(meta_description.val()), 45, 320);
+    updateCounter(frm_wrapper.find(".meta-description-input-wrap .meta-char-counter .chars"), unescapeString(meta_description.val()), 45, 320);
     meta_description.on('input', function () {
         var el = $(this).parent().parent().find(".meta-char-counter .chars");
-        updateCounter(el, unescape($(this).val()), 45, 320);
+        updateCounter(el, unescapeString($(this).val()), 45, 320);
     });
 
     //
@@ -99,8 +99,8 @@ $(function () {
                 return function(e) {
 
                     // Render thumbnail.
-                    var span = $("<span/>", {"class": 'res res-1y1'}).html(['<img src="', e.target.result, '" title="', escape(file.name), '"/>'].join(''));
-                    thumbnail_input.find('.thumbnails').append(span);
+                    var span = $("<span/>", {"class": 'res res-1y1'}).html(['<img src="', e.target.result, '" title="', escapeString(file.name), '"/>'].join(''));
+                    thumbnail_input.find('.thumbnails').append($("<figure/>").html(span));
                 };
             })(f);
 
