@@ -168,7 +168,7 @@ textarea.tinymce {height: 0;}
     padding-left: 35px;
 }
 /**/
-.file-input-wrap {overflow: hidden;}
+.file-input-wrap {}
 .file-input-wrap .thumbnails {
     display: flex;
     flex-flow: row wrap;
@@ -179,6 +179,21 @@ textarea.tinymce {height: 0;}
     margin-bottom: 1rem;
     width: 146px;
 }
+.file-input-wrap .thumbnails figure .close {
+    color: #cc4b37;
+    border: 1px solid #ccc;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: -5px;
+    right: -5px;
+}
+.file-input-wrap .thumbnails figure .close>i {font-size: 1rem;}
 .file-input-wrap .thumbnails figure>span {}
 .file-input-wrap .thumbnails figure>span>img {}
 .file-input-wrap .trap-wrap {

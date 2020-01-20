@@ -28,7 +28,7 @@ class Users_log_m extends MY_Model
         $user_id = $this->session->userdata("user_id");
         if($this->user_m->user($user_id)->num_rows() === 1)
         {
-            $dummy = [
+            $_dummy = [
                 $this->user_m->table_name() . '_id' => $user_id,
                 'created_on' => now(),
                 'ip_address' => $this->input->ip_address(),
@@ -41,7 +41,7 @@ class Users_log_m extends MY_Model
                 'agent' => $this->agent->platform . ', ' . $this->agent->browser . ', ' . $this->agent->version,
             ];
 
-            $this->insert($dummy);
+            $this->insert($_dummy);
         }
     }
 }

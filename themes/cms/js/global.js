@@ -436,7 +436,7 @@ function sDoubleSpace(str) {
  * @return {number}
  */
 function getStringLength(str) {
-    if ($.type(str) === "undefined") return '';
+    if ($.type(str) === "undefined") return 0;
     var e, length = 0;
     if (str.length) {
         e = document.createElement('span');
@@ -544,5 +544,19 @@ function pushState(page, title, url) {
         history.pushState({page: page}, title, url);
     } else {
         window.location.assign(url);
+    }
+}
+
+/**
+ * https://stackoverflow.com/questions/20549241/how-to-reset-input-type-file/31751943
+ *
+ * @param input
+ */
+function reset_file_input(input) {
+    input.value = '';
+
+    if(!/safari/i.test(navigator.userAgent)){
+        input.type = '';
+        input.type = 'file';
     }
 }

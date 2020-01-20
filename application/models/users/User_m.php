@@ -253,7 +253,7 @@ class User_m extends MY_Model
     /**
      * @param object $user
      */
-    private function _remember_user($user)
+    private function _remember_user(object $user)
     {
         if (isset($user->id))
         {
@@ -313,7 +313,7 @@ class User_m extends MY_Model
             // Verify stored hash against plain-text password
             if ($this->_verify_password($password, $user->id))
             {
-                $this->_set_login($user, $remember);
+                $this->_set_login($user, (bool) $remember);
                 return TRUE;
             }
 		}
@@ -383,7 +383,7 @@ class User_m extends MY_Model
      * @param bool $log
      * @throws Exception
      */
-	private function _set_login($user, $remember = FALSE, $log = TRUE)
+	private function _set_login($user, bool $remember = FALSE, $log = TRUE)
 	{
 		$this->_update_last_login($user);
 		$this->session->set_userdata([
@@ -391,7 +391,7 @@ class User_m extends MY_Model
             'user_login_time' => now(),
 		]);
 
-		if ($remember && $this->config->item('remember_users', 'auth'))
+		if ($remember == TRUE && $this->config->item('remember_users', 'auth'))
 		{
 			if (empty($user->remember_code))
 			{
@@ -520,7 +520,7 @@ class User_m extends MY_Model
      * @param array $data
      * @return bool
      */
-	public function update_user($id, $data = [])
+	public function update_user($id, array $data = [])
 	{
         $this->db->trans_start();
 

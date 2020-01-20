@@ -68,7 +68,6 @@ class Pages extends Admin_Controller
 
         // Run our compiled validation
         if ($this->form_validation->run())
-        //if (isset($_POST['_action']))
         {
             $input = $this->input->post();
 

@@ -110,7 +110,7 @@ class Language_m extends MY_Model
         {
             $dummy = [
                 $this->_fk_languages_supports_id => $query->row()->id,
-                'pos' => $pos, // order
+                'pos' => (int) $pos, // order
                 'is_default' => 0,
             ];
 

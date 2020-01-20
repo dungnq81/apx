@@ -183,7 +183,7 @@ class Theme_m extends MY_Model implements Countable
      *
      * @return boolean
      */
-    public function set_default($input)
+    public function set_default(array $input)
     {
         if ($input['method'] == 'index')
         {

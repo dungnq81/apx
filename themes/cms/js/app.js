@@ -71,6 +71,57 @@ $(function () {
     });
 
     //
+    // file input wrap
+    //
+    var single_input_arr = [".thumbnail-input", ".social-input"];
+    $.each(single_input_arr, function (index, value) {
+
+        var thumbnails = $(value).find(".thumbnails");
+        $(value).find('input').on('change', function (event) {
+            // check if files were select
+            if(event.target.files.length > 0) {
+
+                // FileList object, single file upload
+                var f = event.target.files[0];
+
+                // Only process image files.
+                if (f.type.match('image.*')) {
+                    var reader = new FileReader();
+
+                    // Closure to capture the file information.
+                    reader.onload = (function(file) {
+                        return function(e) {
+
+                            // Render thumbnail.
+                            var ele = $("<span/>", {"class": "res res-1y1"}).html(['<img src="', e.target.result, '" alt="', escapeString(file.name), '"/>'].join(''));
+                            thumbnails.children('figure').remove();
+                            thumbnails.append($("<figure/>").html(ele));
+
+                            // hover, click
+                            thumbnails.find('figure').on({
+                                mouseenter: function () {
+                                    $(this).append($("<a/>", {"class": "close", "href": "javascript:;", "title": "Remove " + escapeString(file.name)}).html("<i class=\"fa fa-times\" aria-hidden=\"true\"></i>"));
+                                    $(this).find('.close').on('click', function () {
+                                        reset_file_input(event.target);
+                                        $(this).closest('figure').remove();
+                                    });
+                                },
+                                mouseleave: function () {
+                                    $(this).find('.close').remove();
+                                }
+                            });
+                        };
+                    })(f);
+
+                    // Read in the image file as a data URL.
+                    reader.readAsDataURL(f);
+                }
+            }
+            else thumbnails.children('figure').remove();
+        });
+    });
+
+    //
     // abide form validation failed
     //
     var form_abide = frm_wrapper.find("form[data-abide]");
@@ -78,34 +129,6 @@ $(function () {
         var invalid = $(this).find('[data-invalid]');
         if (invalid) {
             $(window).delay(250).scrollTo(invalid, 600, {offset: -50, interrupt: true});
-        }
-    });
-
-    //
-    // file input wrap
-    //
-    var thumbnail_input = $(".thumbnail-input");
-    thumbnail_input.find('input').on('change', function (e, params) {
-
-        // FileList object, single file upload
-        var f = e.target.files[0];
-
-        // Only process image files.
-        if (f.type.match('image.*')) {
-            var reader = new FileReader();
-
-            // Closure to capture the file information.
-            reader.onload = (function(file) {
-                return function(e) {
-
-                    // Render thumbnail.
-                    var span = $("<span/>", {"class": 'res res-1y1'}).html(['<img src="', e.target.result, '" title="', escapeString(file.name), '"/>'].join(''));
-                    thumbnail_input.find('.thumbnails').append($("<figure/>").html(span));
-                };
-            })(f);
-
-            // Read in the image file as a data URL.
-            reader.readAsDataURL(f);
         }
     });
 });

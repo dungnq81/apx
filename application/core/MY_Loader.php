@@ -65,7 +65,7 @@ class MY_Loader extends CI_Loader
 	 *
 	 * @return object
 	 */
-	public function libraries($libraries = [], $params = NULL, $object_name = NULL)
+	public function libraries(array $libraries = [], $params = NULL, $object_name = NULL)
 	{
 		return $this->library($libraries, $params, $object_name);
 	}
@@ -77,7 +77,7 @@ class MY_Loader extends CI_Loader
 	 *
 	 * @return mixed
 	 */
-	public function models($models = [], $name = '', $db_conn = FALSE)
+	public function models(array $models = [], $name = '', $db_conn = FALSE)
 	{
 		return $this->model($models, $name, $db_conn);
 	}
@@ -90,7 +90,7 @@ class MY_Loader extends CI_Loader
 	 *
 	 * @return object
 	 */
-	public function languages($files = [], $lang = '')
+	public function languages(array $files = [], $lang = '')
 	{
 		return $this->language($files, $lang);
 

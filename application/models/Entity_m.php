@@ -3,6 +3,8 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /**
  * Class Entity_m
+ *
+ * @property MY_Upload $upload
  */
 class Entity_m extends MY_Model
 {
@@ -12,6 +14,14 @@ class Entity_m extends MY_Model
     public function __construct()
     {
         parent::__construct();
+
+        $this->load->library('Upload');
+
+        // set upload path
+        $this->upload->set_upload_path(FCPATH . 'uploads/' . date('Y') . '/' . date('m') . '/');
+        $this->upload->set_thumbnail_path(FCPATH . 'thumbs/' . date('Y') . '/' . date('m') . '/');
+
+        //...
         $this->_init();
     }
 
@@ -21,20 +31,18 @@ class Entity_m extends MY_Model
     private function _init() {}
 
     /**
-     * @param $input
+     * @param array $input
      * @param string $action - create|edit|empty
      * @return array
      */
-    private function _filter_data($input, $action = NULL)
+    private function _filter_data(array $input, $action = NULL)
     {
         $_array = [
             'pos' => (int)$input['pos'],
             'css' => !empty($input['css']) ? escape_css($input['css']) : NULL,
             'js' => !empty($input['js']) ? escape_js($input['js']) : NULL,
-            //'img' => isset($input['img']) ? $input['img'] : NULL,
-            //'img_social' => isset($input['img_social']) ? $input['img_social'] : NULL,
-            'updated_on' => (int)$input['updated_on'],
-            'published_on' => (int)$input['published_on'],
+            'updated_on' => (int) $input['updated_on'],
+            'published_on' => (int) $input['published_on'],
             'restricted_key' => !empty($input['restricted_key']) ? $input['restricted_key'] : NULL,
             'restricted_password' => !empty($input['restricted_password']) ? $input['restricted_password'] : NULL,
             'meta_noindex' => !empty($input['meta_noindex']) ? 1 : 0,
@@ -48,7 +56,7 @@ class Entity_m extends MY_Model
         {
             $_array['alias'] = isset($input['alias']) ? $input['alias'] : NULL;
             $_array['controller'] = isset(ci()->controller) ? ci()->controller : NULL;
-            $_array['created_on'] = (int)$input['created_on'];
+            $_array['created_on'] = (int) $input['created_on'];
         }
 
         return $this->filter_data($this->_table, $_array);
@@ -65,6 +73,9 @@ class Entity_m extends MY_Model
 
         // did it pass validation?
         if (!$id) return FALSE;
+
+        // image
+
 
         $this->db->trans_complete();
         return ($this->db->trans_status() === FALSE) ? FALSE : (ci()->entities_id = $id);

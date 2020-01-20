@@ -110,7 +110,7 @@ class Page_m extends MY_Model
      *
      * @return array|bool
      */
-    private function _filter_data($input, $action = NULL)
+    private function _filter_data(array $input, $action = NULL)
     {
         if(!isset($input['entities_id']))
         {
@@ -118,10 +118,10 @@ class Page_m extends MY_Model
         }
 
         $_array = [
-            'pid' => !empty($input['pid']) ? (int)$input['pid'] : NULL,
-            'languages_id' => (int)$input['languages_id'],
-            'entities_id' => (int)$input['entities_id'],
-            'pages_layouts_id' => (int)$input['pages_layouts_id'],
+            'pid' => !empty($input['pid']) ? (int) $input['pid'] : NULL,
+            'languages_id' => (int) $input['languages_id'],
+            'entities_id' => (int) $input['entities_id'],
+            'pages_layouts_id' => (int) $input['pages_layouts_id'],
             'ip_address' => ip_address(),
             'title' => $input['title'],
             'title_label' => !empty($input['title_label']) ? $input['title_label'] : NULL,
@@ -197,7 +197,6 @@ class Page_m extends MY_Model
 
         $i = 1;
         $flag = FALSE;
-        $new_slug = $slug;
         while ($flag == FALSE)
         {
             $new_slug = $slug . '_' . $i;
@@ -240,7 +239,7 @@ class Page_m extends MY_Model
      *
      * @throws Exception
      */
-    public function create(&$input)
+    public function create(array &$input)
     {
         $input['alias'] = $this->_table;
         $input['created_on'] = now();
@@ -248,9 +247,9 @@ class Page_m extends MY_Model
         $input['published_on'] = strtotimetz(str_replace('/', '-', $input['published_on']));
         if(!is_empty($input['restricted_password']))
         {
-            $pass = $this->_password_generator($input['restricted_password']);
-            $input['restricted_key'] = $pass['key'];
-            $input['restricted_password'] = $pass['password'];
+            $_pass = $this->_password_generator($input['restricted_password']);
+            $input['restricted_key'] = $_pass['key'];
+            $input['restricted_password'] = $_pass['password'];
         }
 
         $entities_id = $this->entity_m->create($input);
@@ -292,7 +291,7 @@ class Page_m extends MY_Model
      * @return bool
      * @throws Exception
      */
-    public function edit($id, &$input)
+    public function edit($id, array &$input)
     {
         // check page exist
         if (! $page = $this->get($id))
@@ -332,7 +331,7 @@ class Page_m extends MY_Model
             'password' => NULL,
         ];
 
-        if(!is_empty($password))
+        if (!is_empty($password))
         {
             $this->load->library('dcrypto');
             try {
@@ -397,7 +396,7 @@ class Page_m extends MY_Model
      *
      * @return bool
      */
-    private function _unique_slug($slug, $pid, $id = 0)
+    private function _unique_slug($slug, $pid, int $id = 0)
     {
         return (bool) parent::count_by([
                 'id !=' => $id,
