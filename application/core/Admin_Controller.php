@@ -95,7 +95,7 @@ class Admin_Controller extends MY_Controller
 
 		// trigger the run() method in the selected admin theme
 		$class = 'Theme_' . ucfirst($this->admin_theme->slug);
-		call_user_func([new $class, 'run']);
+        call_user_func([new $class, 'run']);
 	}
 
 	/**
@@ -141,7 +141,7 @@ class Admin_Controller extends MY_Controller
 			}
 
 			// Check if the current user can view that page
-			return array_key_exists($this->controller, $this->permissions);
+            return array_key_exists($this->controller, $this->permissions);
 		}
 
 		// god knows what this is... erm...

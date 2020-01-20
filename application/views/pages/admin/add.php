@@ -46,7 +46,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div>
                 <label for="pid">Trang cha</label>
                 <div class="br"></div>
-                <select name="pid" id="pid">
+                <select name="pid" id="pid" class="inline-block">
                     <option value="" selected>Không có trang cha</option>
                 </select>
             </div>
@@ -54,46 +54,49 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <label for="pages_layouts_id">Giao diện</label>
                 <div class="br"></div>
                 <?php /** @var array $layouts */
-                echo form_dropdown('pages_layouts_id', $layouts, [], 'id="pages_layouts_id"'); ?>
+                echo form_dropdown('pages_layouts_id', $layouts, [], 'id="pages_layouts_id" class="inline-block"'); ?>
             </div>
-            <div class="inline-block">
+            <div>
                 <label for="pos">Thứ tự</label>
-                <input type="number" name="pos" id="pos" value="<?php echo _post('pos', 0)?>">
+                <div class="br"></div>
+                <input class="inline-block" type="number" name="pos" id="pos" value="<?php echo _post('pos', 0)?>">
             </div>
             <div>
                 <label for="title_label">Tiêu đề thay thế</label>
                 <input value="<?php echo _post('title_label')?>" name="title_label" id="title_label" type="text" pattern="^(.*\S+.*)$" maxlength="250" aria-describedby="title_label_txt">
                 <p class="help-text" id="title_label_txt">This renames the page title field from "Title". This is useful if you are using "Title" as something else, like "Product Name" or "Team Member Name".</p>
             </div>
-            <div class="inline-block">
+            <div>
                 <label for="published_on">Thời điểm đăng <sup>*</sup></label>
-                <input required type="text" class="fdatepicker pick_time" id="published_on" name="published_on" value="<?=date('Y-m-d H:i')?>" aria-describedby="published_on_txt">
+                <div class="br"></div>
+                <input required type="text" class="fdatepicker pick_time inline-block" id="published_on" name="published_on" value="<?=date('Y-m-d H:i')?>" aria-describedby="published_on_txt">
                 <p class="help-text" id="published_on_txt">Thời điểm trang bắt đầu hiển thị.</p>
             </div>
             <div>
                 <label for="status">Status</label>
                 <div class="br"></div>
-                <select name="status" id="status">
+                <select name="status" id="status" class="inline-block">
                     <option value="draft" selected>Nháp</option>
                     <option value="live">Đăng</option>
                     <option value="hide">Ẩn</option>
                 </select>
             </div>
-            <div class="inline-block">
+            <div>
                 <label for="restricted_password">Mật khẩu</label>
-                <input value="<?php echo _post('restricted_password')?>" type="text" name="restricted_password" id="restricted_password" aria-describedby="restricted_password_txt">
+                <div class="br"></div>
+                <input class="inline-block" value="<?php echo _post('restricted_password')?>" type="text" name="restricted_password" id="restricted_password" aria-describedby="restricted_password_txt">
                 <p class="help-text" id="restricted_password_txt">Nhập mật khẩu để bảo vệ trang. (nếu có)</p>
             </div>
             <div>
                 <label class="font-normal">
                     <input type="checkbox" name="comment_enabled" id="comment_enabled">
-                    Cho phép bình luận
+                    <span>Cho phép bình luận</span>
                 </label>
             </div>
             <div>
                 <label class="font-normal">
                     <input type="checkbox" checked name="rss_enabled" id="rss_enabled">
-                    RSS
+                    <span>RSS</span>
                 </label>
             </div>
         </div>
@@ -110,7 +113,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 </div>
                 <label class="font-normal">
                     <input type="checkbox" name="meta_append_name" aria-describedby="meta_append_name_txt">
-                    Append the site-name? <cite id="meta_append_name_txt" class="inline-block">Use this when you want to rearrange the title parts manually.</cite>
+                    <span>Append the site-name? <cite id="meta_append_name_txt" class="inline-block">Use this when you want to rearrange the title parts manually.</cite></span>
                 </label>
             </div>
             <div>
@@ -127,17 +130,17 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <div class="br"></div>
                 <label class="font-normal">
                     <input type="checkbox" name="meta_noindex">
-                    noindex <a target="_blank" href="https://support.google.com/webmasters/answer/93710?hl=en" title="This tells search engines not to show this page in their search results.">[?]</a>
+                    <span>Noindex <a target="_blank" href="https://support.google.com/webmasters/answer/93710?hl=en" title="This tells search engines not to show this page in their search results.">[?]</a></span>
                 </label>
                 <div class="br"></div>
                 <label class="font-normal">
                     <input type="checkbox" name="meta_nofollow">
-                    nofollow <a target="_blank" href="https://support.google.com/webmasters/answer/96569?hl=en" title="This tells search engines not to follow links on this page.">[?]</a>
+                    <span>Nofollow <a target="_blank" href="https://support.google.com/webmasters/answer/96569?hl=en" title="This tells search engines not to follow links on this page.">[?]</a></span>
                 </label>
                 <div class="br"></div>
                 <label class="font-normal">
                     <input type="checkbox" name="meta_noarchive">
-                    noarchive <a target="_blank" href="https://support.google.com/webmasters/answer/79812?hl=en" title="This tells search engines not to save a cached copy of this page.">[?]</a>
+                    <span>Noarchive <a target="_blank" href="https://support.google.com/webmasters/answer/79812?hl=en" title="This tells search engines not to save a cached copy of this page.">[?]</a></span>
                 </label>
             </div>
             <div>
@@ -148,9 +151,9 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <label for="redirect_url">301 Redirect URL <a target="_blank" href="https://support.google.com/webmasters/answer/93633?hl=en" title="This will force visitors to go to another URL.">[?]</a></label>
                 <input value="<?php echo _post('redirect_url')?>" name="redirect_url" id="redirect_url" type="url">
             </div>
-            <div class="inline-block">
-                <label for="img_social" class="block">Social Image <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
-                <div class="file-input-wrap thumbnail-input">
+            <div>
+                <label for="img_social">Social Image <a target="_blank" href="https://developers.facebook.com/docs/sharing/best-practices#images" title="Set preferred page Social Image URL location.">[?]</a></label>
+                <div class="file-input-wrap social-input">
                     <div class="thumbnails">
                         <div class="trap-wrap">
                             <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_social_txt">
@@ -166,9 +169,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <label for="css">CSS inline</label>
                 <textarea name="css" id="css" class="codemirror codemirror-css"><?php echo _post('css')?></textarea>
             </div>
-            <div class="inline-block">
+            <div>
                 <label for="css_class_wrap">CSS class wrapper</label>
-                <input value="<?php echo _post('css_class_wrap')?>" type="text" name="css_class_wrap" id="css_class_wrap" pattern="^(.*\S+.*)$">
+                <div class="br"></div>
+                <input class="inline-block" value="<?php echo _post('css_class_wrap')?>" type="text" name="css_class_wrap" id="css_class_wrap" pattern="^(.*\S+.*)$">
             </div>
         </div>
         <div class="tabs-panel" id="tab-js">
@@ -183,7 +187,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <img class="flag" src="<?php echo lang_item(LANG)->flag;?>" alt="<?php echo escape_html(lang_item(LANG)->name);?>">
                 <?php
                 /** @var array $languages */
-                echo form_dropdown('languages_id', $languages, [LANG], 'id="languages_id"'); ?>
+                echo form_dropdown('languages_id', $languages, [LANG], 'id="languages_id" class="inline-block"'); ?>
             </div>
         </div>
         <div class="btn-submit">

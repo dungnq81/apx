@@ -1,9 +1,17 @@
 /*
  It may already be defined in metadata partial
  */
-if (typeof(apx) == 'undefined') {
+if (typeof (apx) == 'undefined') {
     var apx = {'lang': {}};
 }
+
+var html = $("html"),
+    header = $('header'),
+    footer = $('footer'),
+    main = $("main"),
+    body = $("body"),
+    article = $('article'),
+    wrap_body_width = body.outerWidth(true) + 8;
 
 (function ($) {
     /*!
@@ -70,10 +78,10 @@ if (typeof(apx) == 'undefined') {
      * @param options
      * @returns {*}
      */
-    $.cachedScript = function( url, options ) {
+    $.cachedScript = function (url, options) {
 
         // Allow user to set any option except for dataType, cache, and url
-        options = $.extend( options || {}, {
+        options = $.extend(options || {}, {
             dataType: "script",
             cache: true,
             url: url
@@ -81,7 +89,7 @@ if (typeof(apx) == 'undefined') {
 
         // Use $.ajax() since it is more flexible than $.getScript
         // Return the jqXHR object so we can chain callbacks
-        return $.ajax( options );
+        return $.ajax(options);
     };
 })(jQuery);
 
@@ -102,12 +110,12 @@ Number.prototype.formatMoney = function (c, d, t) {
     return s + (j ? i.substr(0, j) + t : "") + i.substr(j).replace(/(\d{3})(?=\d)/g, "$1" + t) + (c ? d + Math.abs(n - i).toFixed(c).slice(2) : "");
 };
 
+/* eslint-disable no-undef */
 $(function () {
     'use strict';
 
-    var html = $("html");
-    var body = $("body");
     apx.admin_theme_js = apx.admin_theme_url + 'js/';
+    apx.title = document.title;
 
     /**
      * Overload the json converter to avoid error when json is null or empty.
@@ -122,16 +130,9 @@ $(function () {
                 return json;
             }
         },
-        data: {
-            '_csrf_token': $.cookie(apx.csrf_cookie_name)
-        },
+        data: { '_csrf_token': $.cookie(apx.csrf_cookie_name) },
         cache: true, // Caching Responses
     });
-
-    // css var
-    if (!browser_CssVariables()) {
-        body.prepend("<p class=\"browserupgrade\">You are using an <strong>outdated</strong> browser. Please <a href=\"http://browsehappy.com/\" style=\"color:#E62117\" target=\"_blank\">upgrade your browser</a> to improve your experience.</p>");
-    }
 
     // Hide all elements with .hideOnSubmit class when parent form is submit
     $('form').submit(function () {
@@ -139,15 +140,29 @@ $(function () {
     });
 
     // attribute target="_blank" is not W3C compliant
-    $('a._blank, a.blank, a.js-new-window').attr('target', '_blank');
+    $('a._blank, a.blank, a.link-blank').attr('target', '_blank');
 });
 
 /**
- * browser_CssVariables
- * @returns {*}
+ * init_loader
  */
-function browser_CssVariables() {
-    return window.CSS && window.CSS.supports && window.CSS.supports('--fake-var', 0);
+function init_loading(jquery_wrap) {
+    $([
+        '<div class="apx-loading"><span>',
+        '<i class="fad fa-spinner fa-pulse fa-2x"></i>',
+        '<span class="sr-only">Loading...</span>',
+        '</span></div>'
+    ].join('')).prependTo(jquery_wrap);
+}
+
+/**
+ * remove_loading
+ */
+function remove_loading(jquery_wrap) {
+    var loading = jquery_wrap.find(".apx-loading");
+    if (loading.length) {
+        loading.fadeOut().remove();
+    }
 }
 
 /**
@@ -555,8 +570,23 @@ function pushState(page, title, url) {
 function reset_file_input(input) {
     input.value = '';
 
-    if(!/safari/i.test(navigator.userAgent)){
+    if (!/safari/i.test(navigator.userAgent)) {
         input.type = '';
         input.type = 'file';
     }
+}
+
+/**
+ *
+ * @param img_select
+ */
+function gray(img_select) {
+    img_select.addClass("gray").on({
+        mouseenter: function () {
+            $(this).removeClass("gray");
+        },
+        mouseleave: function () {
+            img_select.addClass("gray");
+        }
+    });
 }

@@ -1,9 +1,5 @@
+/* eslint-disable no-undef */
 $(document).foundation();
-$(function () {
-    $.ajaxSetup({
-        data: {'_csrf_token': $.cookie(apx.csrf_cookie_name)}
-    });
-});
 
 // onload
 $(window).on("load", function () {

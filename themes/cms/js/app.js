@@ -93,7 +93,7 @@ $(function () {
                         return function(e) {
 
                             // Render thumbnail.
-                            var ele = $("<span/>", {"class": "res res-1y1"}).html(['<img src="', e.target.result, '" alt="', escapeString(file.name), '"/>'].join(''));
+                            var ele = $("<span/>", {"class": "res res-1v1 res-auto"}).html(['<img src="', e.target.result, '" alt="', escapeString(file.name), '"/>'].join(''));
                             thumbnails.children('figure').remove();
                             thumbnails.append($("<figure/>").html(ele));
 

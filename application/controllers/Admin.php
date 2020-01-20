@@ -64,7 +64,7 @@ class Admin extends Admin_Controller
 	public function logout()
 	{
 		$this->auth->logout();
-		$this->session->set_flashdata('success', 'Đã thoát');
+		$this->session->set_flashdata('success', __("Logged out"));
 
 		redirect('admin/login');
 	}

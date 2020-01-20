@@ -19,7 +19,7 @@ class MY_Security extends CI_Security
      *
      * http://www.johnkieken.com/how-to-handle-an-expired-csrf-token-after-a-page-is-left-open/
      *
-     * @return	void
+     * @return    void
      */
     public function csrf_show_error()
     {
@@ -27,12 +27,9 @@ class MY_Security extends CI_Security
 
         // force page "refresh" - redirect back to itself with sanitized URI for security
         // a page refresh restores the CSRF cookie to allow a subsequent login
-        if(function_exists('redirect'))
-        {
+        if (function_exists('redirect')) {
             redirect($_SERVER['REQUEST_URI'], 'refresh');
-        }
-        else
-        {
+        } else {
             header('Location: ' . htmlspecialchars($_SERVER['REQUEST_URI']), TRUE, 200);
         }
     }

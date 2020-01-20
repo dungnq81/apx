@@ -3,22 +3,19 @@
 <html lang="<?php echo lang_code();?>" class="no-js">
 <head>
     <meta charset="UTF-8"/>
-    <base href="<?php echo base_url(); ?>"/>
-    <meta http-equiv="x-dns-prefetch-control" content="on"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2.0" />
     <link rel="dns-prefetch" href="https://ajax.googleapis.com"/>
     <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com"/>
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <title>Đăng nhập | <?php echo $this->setting->site_name; ?></title>
     <meta name="robots" content="noindex, nofollow"/>
     <link rel="shortcut icon" href="<?php echo site_url()?>favicon.ico"/>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto%3A400%2C400i%2C500%2C500i%2C700%2C700i&#038;display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noto+Sans:400,400i,700,700i|Roboto+Mono:400,400i,500,500i,700,700i|Roboto:400,400i,500,500i,700,700i|Roboto+Condensed:400,400i,700,700i&display=swap&subset=vietnamese" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/css/foundation.min.css" />
-    <?php asset_css('login.css'); ?>
+    <?php asset_css(['addon::fontawesome.min.css', 'login.css']); ?>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/what-input/5.2.3/what-input.min.js"></script>
+    <?php asset_js(['addon::what-input.min.js', 'addon::current-device.min.js', 'addon::jquery/jquery.query.min.js', 'addon::jquery/jquery.cookie.min.js']);?>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.5.3/js/foundation.min.js"></script>
-    <?php asset_js(['addon::current-device.min.js', 'addon::jquery/jquery.query.min.js']);?>
     <script>
         var apx = {'lang': {}};
         var DEFAULT_LANG = "<?php echo ADMIN_LANG;?>";
