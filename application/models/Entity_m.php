@@ -9,6 +9,11 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Entity_m extends MY_Model
 {
     /**
+     * @var string
+     */
+    private $_sub_folder = '/';
+
+    /**
      * Entity_m constructor.
      */
     public function __construct()
@@ -18,8 +23,9 @@ class Entity_m extends MY_Model
         $this->load->library('Upload');
 
         // set upload path
-        $this->upload->set_upload_path(FCPATH . 'uploads/' . date('Y') . '/' . date('m') . '/');
-        $this->upload->set_thumbnail_path(FCPATH . 'thumbs/' . date('Y') . '/' . date('m') . '/');
+        $this->_sub_folder = '/' . date('Y') . '/' . date('m') . '/';
+        $this->upload->set_upload_path(FCPATH . 'uploads' . $this->_sub_folder);
+        $this->upload->set_thumbnail_path(FCPATH . 'thumbs' . $this->_sub_folder);
 
         //...
         $this->_init();
@@ -74,9 +80,20 @@ class Entity_m extends MY_Model
         // did it pass validation?
         if (!$id) return FALSE;
 
-        // image
+        // images
+        $_imgs = [
+            'img' => NULL,
+            'img_social' => NULL,
+        ];
+        foreach ($_imgs as $key => $value)
+        {
+            if(isset($_FILES[$key]) AND $this->upload->do_upload($key))
+            {
+                $_img[$key] = $this->_sub_folder . $this->upload->data('file_name');
+            }
+        }
 
-
+        $this->update($id, $_imgs);
         $this->db->trans_complete();
         return ($this->db->trans_status() === FALSE) ? FALSE : (ci()->entities_id = $id);
     }

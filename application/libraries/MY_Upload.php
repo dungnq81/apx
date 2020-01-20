@@ -72,6 +72,7 @@ class MY_Upload extends CI_Upload
     public function __construct($config = [])
     {
         $config['upload_path'] = FCPATH . 'uploads/';
+        $config['allowed_types'] = 'gif|jpg|jpeg|png';
         $config['thumbnails'] = [
             'upload_path' => FCPATH . 'thumbs/',
             'jpeg_quality' => 70,
@@ -380,6 +381,7 @@ class MY_Upload extends CI_Upload
     }
 
     /**
+     *
      * Perform the file upload
      *
      * <input type="file" name="userfile" />
@@ -470,9 +472,6 @@ class MY_Upload extends CI_Upload
                     case UPLOAD_ERR_PARTIAL:
                         $this->set_error('upload_file_partial', 'debug');
                         break;
-                    case UPLOAD_ERR_NO_FILE:
-                        $this->set_error('upload_no_file_selected', 'debug');
-                        break;
                     case UPLOAD_ERR_NO_TMP_DIR:
                         $this->set_error('upload_no_temp_directory', 'error');
                         break;
@@ -482,6 +481,7 @@ class MY_Upload extends CI_Upload
                     case UPLOAD_ERR_EXTENSION:
                         $this->set_error('upload_stopped_by_extension', 'debug');
                         break;
+                    case UPLOAD_ERR_NO_FILE:
                     default:
                         $this->set_error('upload_no_file_selected', 'debug');
                         break;
