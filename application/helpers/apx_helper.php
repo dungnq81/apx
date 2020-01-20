@@ -3,9 +3,9 @@
 use Defuse\Crypto\Core;
 use Defuse\Crypto\Exception\EnvironmentIsBrokenException;
 use Defuse\Crypto\Key;
+use Laminas\Escaper\Escaper;
 use ReCaptcha\ReCaptcha;
 use ReCaptcha\RequestMethod\SocketPost;
-use Zend\Escaper\Escaper;
 
 defined('BASEPATH') OR exit('No direct script access allowed.');
 

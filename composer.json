@@ -5,9 +5,9 @@
       "codeigniter/framework": "3.*",
       "paragonie/random_compat": "2.*",
       "michelf/php-markdown": "1.*",
-      "peppeocchi/php-cron-scheduler": "2.*",
-      "zendframework/zend-mail": "2.*",
-      "zendframework/zend-escaper": "2.*",
+      "peppeocchi/php-cron-scheduler": "3.*",
+      "laminas/laminas-mail": "2.*",
+      "laminas/laminas-escaper": "2.*",
       "google/recaptcha": "1.*",
       "mikey179/vfsstream": "1.*",
       "pyrocms/lex": "2.*",
@@ -21,6 +21,5 @@
       "ext-gd": "*",
       "ext-openssl": "*",
       "ext-fileinfo": "*"
-   },
-   "require-dev": {}
+   }
 }
