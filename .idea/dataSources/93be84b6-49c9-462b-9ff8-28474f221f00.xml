@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <dataSource name="admin_apx@s1.vietnhan.com">
-  <database-model serializer="dbm" dbms="MARIADB" family-id="MARIADB" format-version="4.15">
+  <database-model serializer="dbm" dbms="MARIADB" family-id="MARIADB" format-version="4.16">
     <root id="1">
       <ServerVersion>5.5.60</ServerVersion>
       <DefaultEngine>InnoDB</DefaultEngine>
@@ -9,7 +9,6 @@
     </root>
     <schema id="2" parent="1" name="admin_apx">
       <Current>1</Current>
-      <Visible>1</Visible>
       <Collation>utf8mb4_general_ci</Collation>
     </schema>
     <schema id="3" parent="1" name="information_schema">

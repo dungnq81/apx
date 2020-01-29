@@ -22,12 +22,11 @@ class Admin extends Admin_Controller
 
     /**
      * Login
-     * @throws \Defuse\Crypto\Exception\EnvironmentIsBrokenException
      */
 	public function login()
 	{
 		// Set the validation rules
-		$validation_rules = [
+		$_validation_rules = [
 			[
 				'field' => 'identity',
 				'label' => 'Tên đăng nhập',
@@ -41,16 +40,16 @@ class Admin extends Admin_Controller
 		];
 
 		// Call validation and set rules
-		$this->form_validation->set_rules($validation_rules);
+		$this->form_validation->set_rules($_validation_rules);
 
 		// If the validation worked, or the user is already logged in
 		if ($this->auth->logged_in() OR $this->form_validation->run())
 		{
 			// if they were trying to go someplace besides the dashboard we'll have stored it in the session
-			$redirect = $this->session->userdata('admin_redirect');
+			$_redirect = $this->session->userdata('admin_redirect');
 			$this->session->unset_userdata('admin_redirect');
 
-			redirect($redirect ? $redirect : 'admin');
+			redirect($_redirect ? $_redirect : 'admin');
 		}
 
 		$this->template
@@ -77,11 +76,11 @@ class Admin extends Admin_Controller
 	 * @return bool
 	 * @throws Exception
 	 */
-	public function _check_login_callback($identity)
+    public function _check_login_callback($identity)
 	{
 	    // recapcha
-        $verify = recaptcha_verify($this->input->post('g-recaptcha-response'));
-        if($verify)
+        $_verify = recaptcha_verify($this->input->post('g-recaptcha-response'));
+        if ($_verify)
         {
             if ($this->auth->login($identity, $this->input->post('password'), str_to_bool($this->input->post('remember'))))
             {

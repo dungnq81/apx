@@ -129,6 +129,7 @@ input, button, textarea, select {border-radius: 0;}
     display: inline-block !important;
     width: auto;
 }
+.margin-0 {margin: 0 !important;}
 /************************/
 label input[type="radio"] {display: none;}
 label input[type="radio"] + span {
@@ -148,6 +149,7 @@ label input[type="checkbox"] {display: none;}
 label input[type="checkbox"] + span {
     display: block;
     cursor: pointer;
+    margin-bottom: 1rem;
 }
 label input[type="checkbox"] + span::before {
     content: '\f0c8';
@@ -158,6 +160,7 @@ label input[type="checkbox"] + span::before {
     color: #333;
 }
 label input[type="checkbox"]:checked + span::before {content: "\f14a";}
+label.margin-0 input[type="checkbox"] + span {margin: 0 !important;}
 /************************/
 .fb_dialog {bottom: 6rem !important;}
 .img-res {
@@ -754,6 +757,8 @@ html.is-flickity-fullscreen {overflow: hidden;}
 .row.owl-carousel .owl-nav .owl-prev {right: 40px;}
 .owl-carousel .owl-item img {width: auto;}
 /************************/
+.tabs-content {padding: 1rem;}
+/************************/
 .select-language {position: relative;}
 .select-language>img.flag {
     position: absolute;
@@ -802,7 +807,7 @@ html.is-flickity-fullscreen {overflow: hidden;}
     margin-bottom: 1rem;
 }
 .file-input-wrap .trap-plus {
-    border: 2px dotted #999;
+    border: 1px dotted #666;
     height: 146px;
     width: 146px;
     display: flex;
@@ -826,7 +831,6 @@ html.is-flickity-fullscreen {overflow: hidden;}
 .file-input-wrap input[data-invalid] ~ .trap-plus {border-color: #cc4b37;}
 .file-input-wrap input[data-invalid] ~ .trap-plus>i {color: #cc4b37;}
 /************************/
-.grid-container {max-width: 64rem;}
 .main-container {
     margin-bottom: 30px;
     margin-top: 30px;
@@ -850,7 +854,6 @@ html.is-flickity-fullscreen {overflow: hidden;}
 .frm-wrapper label a {font-weight: normal;}
 .frm-wrapper label>sup {color: #cc4b37;}
 .frm-wrapper .btn-submit {
-    margin-bottom: 15px;
     padding: 1rem;
     display: inline-block;
 }

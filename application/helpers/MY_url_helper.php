@@ -1,28 +1,28 @@
-<?php defined('BASEPATH') OR exit('No direct script access allowed.');
+<?php defined( 'BASEPATH' ) OR exit( 'No direct script access allowed.' );
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('site_uri'))
+if ( ! function_exists( 'site_uri' ) )
 {
 	/**
 	 * Site URI
 	 *
 	 * Create a local URI based on your basepath.
 	 *
-	 * @param    string $uri
+	 * @param string $uri
 	 *
 	 * @return    string
 	 */
-	function site_uri($uri = '')
-	{
-        $CI = &get_instance();
-		return $CI->config->site_uri($uri);
+	function site_uri( $uri = '' ) {
+		$CI = &get_instance();
+
+		return $CI->config->site_uri( $uri );
 	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('url_title'))
+if ( ! function_exists( 'url_title' ) )
 {
 	/**
 	 * Takes a string as input and creates a
@@ -37,60 +37,56 @@ if (! function_exists('url_title'))
 	 *
 	 * @override
 	 */
-	function url_title($str, $separator = '-', $lowercase = TRUE)
-	{
-		if ($separator === 'dash')
+	function url_title( $str, $separator = '-', $lowercase = TRUE ) {
+		if ( $separator === 'dash' )
 		{
 			$separator = '-';
-		}
-		elseif ($separator === 'underscore')
+		} elseif ( $separator === 'underscore' )
 		{
 			$separator = '_';
-		}
-		elseif (empty($separator))
+		} elseif ( empty( $separator ) )
 		{
 			$separator = ' ';
 		}
 
-		$q_separator = preg_quote($separator, '#');
-		$trans = [
-			'&.+?;' => '',
-			'[^\w\d _-]' => '',
-			'\s+' => $separator,
+		$q_separator = preg_quote( $separator, '#' );
+		$trans       = [
+			'&.+?;'                   => '',
+			'[^\w\d _-]'              => '',
+			'\s+'                     => $separator,
 			'(' . $q_separator . ')+' => $separator,
-			$separator . '$' => '',
-			'^' . $separator => '',
+			$separator . '$'          => '',
+			'^' . $separator          => '',
 		];
 
-        $str = strip_tags($str);
-		$str = convert_accented_characters($str);
-		foreach ($trans as $key => $val)
+		$str = strip_tags( $str );
+		$str = convert_accented_characters( $str );
+		foreach ( $trans as $key => $val )
 		{
-			$str = preg_replace('#' . $key . '#i', $val, $str);
+			$str = preg_replace( '#' . $key . '#i', $val, $str );
 		}
 
-		if ($lowercase === TRUE)
+		if ( $lowercase === TRUE )
 		{
-			if (function_exists('mb_convert_case'))
+			if ( function_exists( 'mb_convert_case' ) )
 			{
-				$str = mb_convert_case($str, MB_CASE_LOWER, "UTF-8");
-			}
-			else
+				$str = mb_convert_case( $str, MB_CASE_LOWER, "UTF-8" );
+			} else
 			{
-				$str = strtolower($str);
+				$str = strtolower( $str );
 			}
 		}
 
-		$CI = &get_instance();
-		$str = preg_replace('#[^' . $CI->config->item('permitted_uri_chars') . ']#i', '', $str);
+		$CI  = &get_instance();
+		$str = preg_replace( '#[^' . $CI->config->item( 'permitted_uri_chars' ) . ']#i', '', $str );
 
-		return trim(stripslashes($str));
+		return trim( stripslashes( $str ) );
 	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('redirect'))
+if ( ! function_exists( 'redirect' ) )
 {
 	/**
 	 * Header Redirect
@@ -99,55 +95,51 @@ if (! function_exists('redirect'))
 	 * For very fine grained control over headers, you could use the Output
 	 * Library's set_header() function.
 	 *
-	 * @param    string $uri URL
-	 * @param    string $method Redirect method
+	 * @param string $uri URL
+	 * @param string $method Redirect method
 	 *            'auto', 'location' or 'refresh'
-	 * @param    int $code HTTP Response status code
+	 * @param int $code HTTP Response status code
 	 *
 	 * @return    void
 	 *
 	 * @override
 	 */
-	function redirect($uri = '', $method = 'auto', $code = NULL)
-	{
-		if (! preg_match('#^(\w+:)?//#i', $uri))
+	function redirect( $uri = '', $method = 'auto', $code = NULL ) {
+		if ( ! preg_match( '#^(\w+:)?//#i', $uri ) )
 		{
-			$uri = site_url($uri);
+			$uri = site_url( $uri );
 		}
 
-		if (! headers_sent())
+		if ( ! headers_sent() )
 		{
 			// IIS environment likely? Use 'refresh' for better compatibility
-			if ($method === 'auto' && isset($_SERVER['SERVER_SOFTWARE']) && strpos($_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS') !== FALSE)
+			if ( $method === 'auto' && isset( $_SERVER['SERVER_SOFTWARE'] ) && strpos( $_SERVER['SERVER_SOFTWARE'], 'Microsoft-IIS' ) !== FALSE )
 			{
 				$method = 'refresh';
-			}
-			elseif ($method !== 'refresh' && (empty($code) OR ! is_numeric($code)))
+			} elseif ( $method !== 'refresh' && ( empty( $code ) OR ! is_numeric( $code ) ) )
 			{
-				if (isset($_SERVER['SERVER_PROTOCOL'], $_SERVER['REQUEST_METHOD']) && $_SERVER['SERVER_PROTOCOL'] === 'HTTP/1.1')
+				if ( isset( $_SERVER['SERVER_PROTOCOL'], $_SERVER['REQUEST_METHOD'] ) && $_SERVER['SERVER_PROTOCOL'] === 'HTTP/1.1' )
 				{
-					$code = ($_SERVER['REQUEST_METHOD'] !== 'GET')
+					$code = ( $_SERVER['REQUEST_METHOD'] !== 'GET' )
 						? 303    // reference: http://en.wikipedia.org/wiki/Post/Redirect/Get
 						: 307;
-				}
-				else
+				} else
 				{
 					$code = 302;
 				}
 			}
 
-			switch ($method)
+			switch ( $method )
 			{
 				case 'refresh':
-					header('Refresh:0;url=' . $uri);
+					header( 'Refresh:0;url=' . $uri );
 					break;
 				default:
-					header('Location: ' . $uri, TRUE, $code);
+					header( 'Location: ' . $uri, TRUE, $code );
 					break;
 			}
 			exit;
-		}
-		else
+		} else
 		{
 			echo '<script type="text/javascript">';
 			echo 'window.location.href="' . $uri . '";';
@@ -161,7 +153,7 @@ if (! function_exists('redirect'))
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('shorten_url'))
+if ( ! function_exists( 'shorten_url' ) )
 {
 
 	/**
@@ -170,43 +162,41 @@ if (! function_exists('shorten_url'))
 	 * Takes a long url and uses the TinyURL API to return a shortened version.
 	 * Supports Cyrillic characters.
 	 *
-	 * @param  string $url long url
+	 * @param string $url long url
 	 *
 	 * @return string Short url
 	 */
-	function shorten_url($url = '')
-	{
-		if (! $url)
+	function shorten_url( $url = '' ) {
+		if ( ! $url )
 		{
-			$url = site_url(uri_string());
+			$url = site_url( uri_string() );
 		} // If no a protocol in URL, assume its a CI link
-		elseif (! preg_match('!^\w+://! i', $url))
+		elseif ( ! preg_match( '!^\w+://! i', $url ) )
 		{
-			$url = site_url($url);
+			$url = site_url( $url );
 		}
 
-		return url_contents('http://tinyurl.com/api-create.php?url=' . $url);
+		return url_contents( 'http://tinyurl.com/api-create.php?url=' . $url );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('ip_server'))
+if ( ! function_exists( 'ip_server' ) )
 {
 	/**
 	 * @return bool
 	 */
-	function ip_server()
-	{
+	function ip_server() {
 		$CI = &get_instance();
 
 		$ip = $_SERVER['SERVER_ADDR'];
-		if (! $CI->input->valid_ip($ip))
+		if ( ! $CI->input->valid_ip( $ip ) )
 		{
 			// Windows IIS
 			$ip = $_SERVER['LOCAL_ADDR'];
 		}
-		if (! $CI->input->valid_ip($ip))
+		if ( ! $CI->input->valid_ip( $ip ) )
 		{
 			return FALSE;
 		}
@@ -217,14 +207,13 @@ if (! function_exists('ip_server'))
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('ip_address'))
+if ( ! function_exists( 'ip_address' ) )
 {
 
 	/**
 	 * @return mixed
 	 */
-	function ip_address()
-	{
+	function ip_address() {
 		$CI = &get_instance();
 
 		return $CI->input->ip_address();
@@ -233,7 +222,7 @@ if (! function_exists('ip_address'))
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('server_host'))
+if ( ! function_exists( 'server_host' ) )
 {
 	/**
 	 * This method was copied from URL
@@ -244,50 +233,49 @@ if (! function_exists('server_host'))
 	 *
 	 * @return string
 	 */
-	function server_host($remove_port = TRUE)
-	{
-		$possibleHostSources = ['HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR'];
+	function server_host( $remove_port = TRUE ) {
+		$possibleHostSources   = [ 'HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR' ];
 		$sourceTransformations = [
-			"HTTP_X_FORWARDED_HOST" => function ($value) {
-				$elements = explode(',', $value);
+			"HTTP_X_FORWARDED_HOST" => function ( $value ) {
+				$elements = explode( ',', $value );
 
-				return trim(end($elements));
+				return trim( end( $elements ) );
 			}
 		];
 
 		$host = '';
-		foreach ($possibleHostSources as $source)
+		foreach ( $possibleHostSources as $source )
 		{
-			if (! empty($host))
+			if ( ! empty( $host ) )
 			{
 				break;
 			}
 
-			if (empty($_SERVER[$source]))
+			if ( empty( $_SERVER[$source] ) )
 			{
 				continue;
 			}
 
 			$host = $_SERVER[$source];
-			if (array_key_exists($source, $sourceTransformations))
+			if ( array_key_exists( $source, $sourceTransformations ) )
 			{
-				$host = $sourceTransformations[$source]($host);
+				$host = $sourceTransformations[$source]( $host );
 			}
 		}
 
 		// Remove port number from host
-		if ($remove_port == TRUE)
+		if ( $remove_port == TRUE )
 		{
-			$host = preg_replace('/:\d+$/', '', $host);
+			$host = preg_replace( '/:\d+$/', '', $host );
 		}
 
-		return trim($host);
+		return trim( $host );
 	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('gravatar'))
+if ( ! function_exists( 'gravatar' ) )
 {
 	/**
 	 * Gravatar func
@@ -300,17 +288,16 @@ if (! function_exists('gravatar'))
 	 *
 	 * @return string The gravatar's URL or the img HTML tag ready to be used.
 	 */
-	function gravatar($email = '', $size = 50, $rating = 'g', $url_only = FALSE, $default = FALSE)
-	{
-		$base_url = (is_https() ? 'https://secure.gravatar.com' : 'http://www.gravatar.com') . '/avatar/';
-		$email = empty($email) ? '3b3be63a4c2a439b013787725dfce802' : md5(strtolower(trim($email)));
-		$size = '?s=' . $size;
-		$rating = '&amp;r=' . $rating;
-		$default = ! $default ? '' : '&amp;d=' . urlencode($default);
+	function gravatar( $email = '', $size = 50, $rating = 'g', $url_only = FALSE, $default = FALSE ) {
+		$base_url = ( is_https() ? 'https://secure.gravatar.com' : 'http://www.gravatar.com' ) . '/avatar/';
+		$email    = empty( $email ) ? '3b3be63a4c2a439b013787725dfce802' : md5( strtolower( trim( $email ) ) );
+		$size     = '?s=' . $size;
+		$rating   = '&amp;r=' . $rating;
+		$default  = ! $default ? '' : '&amp;d=' . urlencode( $default );
 
 		$gravatar_url = $base_url . $email . $size . $rating . $default;
 		// URL only or the entire block of HTML ?
-		if ($url_only == TRUE)
+		if ( $url_only == TRUE )
 		{
 			return $gravatar_url;
 		}
@@ -321,7 +308,7 @@ if (! function_exists('gravatar'))
 
 // -------------------------------------------------------------
 
-if (! function_exists('url_tokens'))
+if ( ! function_exists( 'url_tokens' ) )
 {
 	/**
 	 * Get full url ignore query string
@@ -332,136 +319,139 @@ if (! function_exists('url_tokens'))
 	 *
 	 * @return string
 	 */
-	function url_tokens($url = NULL)
-	{
-		if (empty($url))
+	function url_tokens( $url = NULL ) {
+		if ( empty( $url ) )
 		{
 			return NULL;
 		}
 
 		$CI = &get_instance();
-		$CI->load->library('form_validation');
+		$CI->load->library( 'form_validation' );
 
-		if (! $CI->form_validation->valid_url($url))
+		if ( ! $CI->form_validation->valid_url( $url ) )
 		{
 			return $url;
 		}
 
-		$url = filter_var($url, FILTER_SANITIZE_URL);
-		return strtok($url, '?');
+		$url = filter_var( $url, FILTER_SANITIZE_URL );
+
+		return strtok( $url, '?' );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('valid_url'))
+if ( ! function_exists( 'valid_url' ) )
 {
-    /**
-     * @param $url
-     *
-     * @return mixed
-     */
-    function valid_url($url)
-    {
-        $CI = &get_instance();
-        $CI->load->library('form_validation');
+	/**
+	 * @param $url
+	 *
+	 * @return mixed
+	 */
+	function valid_url( $url ) {
+		$CI = &get_instance();
+		$CI->load->library( 'form_validation' );
 
-        return $CI->form_validation->valid_url($url);
-    }
+		return $CI->form_validation->valid_url( $url );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('check_https'))
+if ( ! function_exists( 'check_https' ) )
 {
-    /**
-     * @param null $url
-     * @return bool
-     */
-    function check_https($url = NULL)
-    {
-        if(is_empty($url)) return is_https();
-        if(substr($url, 0, 5) === 'https') return TRUE;
+	/**
+	 * @param null $url
+	 *
+	 * @return bool
+	 */
+	function check_https( $url = NULL ) {
+		if ( is_empty( $url ) )
+		{
+			return is_https();
+		}
+		if ( substr( $url, 0, 5 ) === 'https' )
+		{
+			return TRUE;
+		}
 
-        return FALSE;
-    }
+		return FALSE;
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('url_contents'))
+if ( ! function_exists( 'url_contents' ) )
 {
-    /**
-     * url_contents
-     *
-     * @param $url
-     *
-     * @param bool $html_escape
-     * @return false|string|string[]|null
-     */
-	function url_contents($url, $html_escape = FALSE)
-	{
-	    $data = NULL;
+	/**
+	 * url_contents
+	 *
+	 * @param $url
+	 *
+	 * @param bool $html_escape
+	 *
+	 * @return false|string|string[]|null
+	 */
+	function url_contents( $url, bool $html_escape = FALSE ) {
+		$data = NULL;
 
-	    // url or filename
-	    if(valid_url($url))
-        {
-            $url = filter_var(preg_replace('/\s+/', '', $url), FILTER_SANITIZE_URL);
+		// url or filename
+		if ( valid_url( $url ) )
+		{
+			$url = filter_var( preg_replace( '/\s+/', '', $url ), FILTER_SANITIZE_URL );
 
-            // Curl if exists
-            if (function_exists('curl_version'))
-            {
-                $handle = curl_init();
-                $options = [
-                    CURLOPT_URL => $url,
-                    CURLOPT_POST => TRUE,
-                    CURLOPT_HTTPHEADER => [
-                        'Content-Type: application/x-www-form-urlencoded',
-                    ],
-                    CURLINFO_HEADER_OUT => FALSE,
-                    CURLOPT_HEADER => FALSE,
-                    CURLOPT_RETURNTRANSFER => TRUE,
-                    CURLOPT_SSL_VERIFYHOST => TRUE,
-                    CURLOPT_SSL_VERIFYPEER => FALSE,
-                ];
+			// Curl if exists
+			if ( function_exists( 'curl_version' ) )
+			{
+				$_handle  = curl_init();
+				$_options = [
+					CURLOPT_URL            => $url,
+					CURLOPT_POST           => TRUE,
+					CURLOPT_HTTPHEADER     => [
+						'Content-Type: application/x-www-form-urlencoded',
+					],
+					CURLINFO_HEADER_OUT    => FALSE,
+					CURLOPT_HEADER         => FALSE,
+					CURLOPT_RETURNTRANSFER => TRUE,
+					CURLOPT_SSL_VERIFYHOST => TRUE,
+					CURLOPT_SSL_VERIFYPEER => FALSE,
+				];
 
-                curl_setopt_array($handle, $options);
-                $data = curl_exec($handle);
-                curl_close($handle);
-            }
-            else if (function_exists('file_get_contents'))
-            {
-                $http = (check_https($url)) ? 'https' : 'http';
-                $options = [
-                    $http => [
-                        'header' => "Content-type: application/x-www-form-urlencoded\r\n",
-                        'method' => 'POST',
-                        // Force the peer to validate (not needed in 5.6.0+, but still works)
-                        'verify_peer' => TRUE,
-                    ],
-                ];
-                $context = stream_context_create($options);
-                $data = file_get_contents($url, FALSE, $context);
-            }
-        }
-	    else if (function_exists('file_get_contents'))
-        {
-            $data = file_get_contents($url, FALSE, NULL);
-        }
+				curl_setopt_array( $_handle, $_options );
+				$data = curl_exec( $_handle );
+				curl_close( $_handle );
+			} else if ( function_exists( 'file_get_contents' ) )
+			{
+				$http    = ( check_https( $url ) ) ? 'https' : 'http';
+				$options = [
+					$http => [
+						'header'      => "Content-type: application/x-www-form-urlencoded\r\n",
+						'method'      => 'POST',
+						// Force the peer to validate (not needed in 5.6.0+, but still works)
+						'verify_peer' => TRUE,
+					],
+				];
+				$context = stream_context_create( $options );
+				$data    = file_get_contents( $url, FALSE, $context );
+			}
+		} else if ( function_exists( 'file_get_contents' ) )
+		{
+			$data = file_get_contents( $url, FALSE, NULL );
+		}
 
-	    // return NULL if empty
-        if (is_empty($data))
-        {
-            return NULL;
-        }
+		// return NULL if empty
+		if ( is_empty( $data ) )
+		{
+			return NULL;
+		}
 
-        //$string_encoding = mb_detect_encoding($data, "UTF-8, ISO-8859-1, ISO-8859-15", TRUE);
-        //$string_utf8 = mb_convert_encoding($data, "UTF-8", $string_encoding);
-        if($html_escape == TRUE)
-        {
-            return htmlspecialchars($data, ENT_COMPAT, "UTF-8", TRUE);
-        }
+		//$string_encoding = mb_detect_encoding($data, "UTF-8, ISO-8859-1, ISO-8859-15", TRUE);
+		//$string_utf8 = mb_convert_encoding($data, "UTF-8", $string_encoding);
+		if ( $html_escape == TRUE )
+		{
+			return htmlspecialchars( $data, ENT_COMPAT, "UTF-8", TRUE );
+		}
 
-        return $data;
+		return $data;
 	}
 }

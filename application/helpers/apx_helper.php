@@ -7,13 +7,13 @@ use Laminas\Escaper\Escaper;
 use ReCaptcha\ReCaptcha;
 use ReCaptcha\RequestMethod\SocketPost;
 
-defined('BASEPATH') OR exit('No direct script access allowed.');
+defined( 'BASEPATH' ) OR exit( 'No direct script access allowed.' );
 
 // -------------------------------------------------------------
 // Youtube helper
 // -------------------------------------------------------------
 
-if (! function_exists('youtube_iframe'))
+if ( ! function_exists( 'youtube_iframe' ) )
 {
 	/**
 	 * @param $url
@@ -23,12 +23,11 @@ if (! function_exists('youtube_iframe'))
 	 *
 	 * @return string
 	 */
-	function youtube_iframe($url, $w = 'auto', $h = 'auto', $autoplay = 0)
-	{
-		parse_str(parse_url($url, PHP_URL_QUERY), $vars);
-        if (isset($vars['v']))
+	function youtube_iframe( $url, $w = 'auto', $h = 'auto', $autoplay = 0 ) {
+		parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
+		if ( isset( $vars['v'] ) )
 		{
-			$idurl = $vars['v'];
+			$idurl  = $vars['v'];
 			$string = "<iframe width='" . $w . "' height='" . $h . "' src='https://www.youtube.com/embed/" . $idurl . "?wmode=opaque&autoplay=" . $autoplay . "' allowfullscreen></iframe>";
 
 			return $string;
@@ -40,30 +39,30 @@ if (! function_exists('youtube_iframe'))
 
 // -------------------------------------------------------------
 
-if (! function_exists('youtube_embed_url')) {
-    /**
-     * @param $url
-     *
-     * @return string|null
-     */
-    function youtube_embed_url($url)
-    {
-        parse_str(parse_url($url, PHP_URL_QUERY), $vars);
-        if (isset($vars['v']))
-        {
-            $idurl = $vars['v'];
-            $string = "https://www.youtube.com/embed/" . $idurl;
+if ( ! function_exists( 'youtube_embed_url' ) )
+{
+	/**
+	 * @param $url
+	 *
+	 * @return string|null
+	 */
+	function youtube_embed_url( $url ) {
+		parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
+		if ( isset( $vars['v'] ) )
+		{
+			$idurl  = $vars['v'];
+			$string = "https://www.youtube.com/embed/" . $idurl;
 
-            return $string;
-        }
+			return $string;
+		}
 
-        return NULL;
-    }
+		return NULL;
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('youtube_image'))
+if ( ! function_exists( 'youtube_image' ) )
 {
 	/**
 	 * @param $url
@@ -71,66 +70,71 @@ if (! function_exists('youtube_image'))
 	 *
 	 * @return string
 	 */
-	function youtube_image($url, $resolution = [])
-	{
-		if (! is_array($resolution) OR is_empty($resolution))
+	function youtube_image( $url, array $resolution = [] ) {
+		if ( ! is_array( $resolution ) OR is_empty( $resolution ) )
 		{
-            $resolution = [
-                'default',
-                'hqdefault',
-                'mqdefault',
-                'maxresdefault',
-                'sddefault',
-            ];
+			$resolution = [
+				'default',
+				'hqdefault',
+				'mqdefault',
+				'maxresdefault',
+				'sddefault',
+			];
 		}
 
-        $url_img = pixel_img();
-		parse_str(parse_url($url, PHP_URL_QUERY), $vars);
-        if (isset($vars['v']))
-        {
-            $id = $vars['v'];
-            for ( $x = 0; $x < sizeof( $resolution ); $x ++ )
-            {
-                $url_img = 'https://img.youtube.com/vi/' . $id . '/' . $resolution[ $x ] . '.jpg';
-                $headers = get_headers( $url_img, 1 );
-                if ( $headers == FALSE ) {}
-                else if ( $headers[0] == 'HTTP/1.0 200 OK' ) break;
-            }
-        }
+		$url_img = pixel_img();
+		parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
+		if ( isset( $vars['v'] ) )
+		{
+			$id = $vars['v'];
+			for ( $x = 0; $x < sizeof( $resolution ); $x ++ )
+			{
+				$url_img = 'https://img.youtube.com/vi/' . $id . '/' . $resolution[$x] . '.jpg';
+				$headers = get_headers( $url_img, 1 );
+				if ( $headers == FALSE )
+				{
+				} else if ( $headers[0] == 'HTTP/1.0 200 OK' )
+				{
+					break;
+				}
+			}
+		}
 
-        return $url_img;
+		return $url_img;
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('youtube_views'))
+if ( ! function_exists( 'youtube_views' ) )
 {
-    /**
-     * @param $url
-     * @param string $key
-     * @return string|null
-     */
-	function youtube_views($url, $key = '')
-	{
+	/**
+	 * @param $url
+	 * @param string $key
+	 *
+	 * @return string|null
+	 */
+	function youtube_views( $url, $key = '' ) {
 		$CI = &get_instance();
-		$CI->load->library('form_validation');
+		$CI->load->library( 'form_validation' );
 
-        if (!$CI->form_validation->valid_url($url))
-            return NULL;
+		if ( ! $CI->form_validation->valid_url( $url ) )
+		{
+			return NULL;
+		}
 
-        $views = 0;
-        parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
-        if (isset($vars['v']))
-        {
-            $key OR $key = 'AIzaSyAmrJOshYMWICuo3QMjtQ4rWucvMHdOsYI';
-            $id      = $vars['v'];
-            $jsonURL = url_contents( "https://www.googleapis.com/youtube/v3/videos?id={$id}&key={$key}&part=statistics" );
-            $json    = json_decode( $jsonURL );
-            $views   = $json->{'items'}[0]->{'statistics'}->{'viewCount'};
-        }
+		$views = 0;
+		parse_str( parse_url( $url, PHP_URL_QUERY ), $vars );
+		if ( isset( $vars['v'] ) )
+		{
+			$key OR $key = 'AIzaSyAmrJOshYMWICuo3QMjtQ4rWucvMHdOsYI';
+			$id      = $vars['v'];
+			$jsonURL = url_contents( "https://www.googleapis.com/youtube/v3/videos?id={$id}&key={$key}&part=statistics" );
+			$json    = json_decode( $jsonURL );
+			$views   = $json->{'items'}[0]->{'statistics'}->{'viewCount'};
+		}
 
-        return number_format( $views );
+		return number_format( $views );
 	}
 }
 
@@ -138,7 +142,7 @@ if (! function_exists('youtube_views'))
 // pagination helper
 // ------------------------------------------------------------------------
 
-if (! function_exists('create_pagination'))
+if ( ! function_exists( 'create_pagination' ) )
 {
 	/**
 	 * The Pagination helper cuts out some of the bumf of normal pagination
@@ -151,39 +155,40 @@ if (! function_exists('create_pagination'))
 	 * @return array The pagination array.
 	 * @see Pagination::create_links()
 	 */
-	function create_pagination($uri, $total_rows, $limit = NULL, $uri_segment = 4)
-	{
+	function create_pagination( $uri, $total_rows, $limit = NULL, int $uri_segment = 4 ) {
 		$CI = &get_instance();
-		$CI->load->library('pagination');
+		$CI->load->library( 'pagination' );
 
-		$current_page = $CI->uri->segment($uri_segment, 0);
-		$suffix = $CI->config->item('url_suffix');
+		$current_page = $CI->uri->segment( $uri_segment, 0 );
+		$suffix       = $CI->config->item( 'url_suffix' );
 
 		$limit = $limit === NULL ? $CI->setting->records_per_page : $limit;
 
 		// Initialize pagination
-		$CI->pagination->initialize([
-			'suffix' => $suffix,
-			'base_url' => (! $suffix) ? rtrim(site_url($uri), $suffix) : site_url($uri),
-			'total_rows' => $total_rows,
-			'per_page' => $limit,
-			'uri_segment' => $uri_segment,
-			'use_page_numbers' => TRUE,
+		$CI->pagination->initialize( [
+			'suffix'             => $suffix,
+			'base_url'           => ( ! $suffix ) ? rtrim( site_url( $uri ), $suffix ) : site_url( $uri ),
+			'total_rows'         => $total_rows,
+			'per_page'           => $limit,
+			'uri_segment'        => $uri_segment,
+			'use_page_numbers'   => TRUE,
 			'reuse_query_string' => TRUE,
-		]);
+		] );
 
-		$offset = $limit * ($current_page - 1);
+		$offset = $limit * ( $current_page - 1 );
 
 		//avoid having a negative offset
-		if ($offset < 0)
-            $offset = 0;
+		if ( $offset < 0 )
+		{
+			$offset = 0;
+		}
 
 		return [
 			'current_page' => $current_page,
-			'per_page' => $limit,
-			'limit' => $limit,
-			'offset' => $offset,
-			'links' => $CI->pagination->create_links()
+			'per_page'     => $limit,
+			'limit'        => $limit,
+			'offset'       => $offset,
+			'links'        => $CI->pagination->create_links()
 		];
 	}
 }
@@ -192,21 +197,19 @@ if (! function_exists('create_pagination'))
 // text helper
 // ------------------------------------------------------------------------
 
-if (! function_exists('remove_empty_tags'))
+if ( ! function_exists( 'remove_empty_tags' ) )
 {
 	/**
 	 * @param $html
 	 *
 	 * @return null|string|string[]
 	 */
-	function remove_empty_tags($html)
-	{
+	function remove_empty_tags( $html ) {
 		do
 		{
-			$tmp = $html;
-			$html = preg_replace('#<([^ >]+)[^>]*>([[:space:]]|&nbsp;)*</\1>#', '', $html);
-		}
-		while ($html !== $tmp);
+			$tmp  = $html;
+			$html = preg_replace( '#<([^ >]+)[^>]*>([[:space:]]|&nbsp;)*</\1>#', '', $html );
+		} while ( $html !== $tmp );
 
 		return $html;
 	}
@@ -214,7 +217,7 @@ if (! function_exists('remove_empty_tags'))
 
 // -------------------------------------------------------------
 
-if (! function_exists('json_encode_uni'))
+if ( ! function_exists( 'json_encode_uni' ) )
 {
 	/**
 	 *
@@ -225,17 +228,20 @@ if (! function_exists('json_encode_uni'))
 	 *
 	 * @return mixed|string
 	 */
-	function json_encode_uni($arr, $escape = FALSE)
-	{
-		if (is_php('5.4'))
-			$result = json_encode($arr, JSON_UNESCAPED_UNICODE);
-		else
-			$result = (ICONV_ENABLED == TRUE) ? preg_replace("/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", json_encode($arr)) : json_encode($arr);
+	function json_encode_uni( $arr, bool $escape = FALSE ) {
+		if ( is_php( '5.4' ) )
+		{
+			$result = json_encode( $arr, JSON_UNESCAPED_UNICODE );
+		} else
+		{
+			$result = ( ICONV_ENABLED == TRUE ) ? preg_replace( "/\\\\u([a-f0-9]{4})/e", "iconv('UCS-4LE','UTF-8',pack('V', hexdec('U$1')))", json_encode( $arr ) ) : json_encode( $arr );
+		}
 
-		if ($escape === TRUE)
+		if ( $escape === TRUE )
 		{
 			$CI = &get_instance();
-			return $CI->db->escape($result);
+
+			return $CI->db->escape( $result );
 		}
 
 		return $result;
@@ -244,7 +250,7 @@ if (! function_exists('json_encode_uni'))
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('nl2p'))
+if ( ! function_exists( 'nl2p' ) )
 {
 	/**
 	 * Replaces new lines with <p> HTML element.
@@ -253,25 +259,23 @@ if (! function_exists('nl2p'))
 	 *
 	 * @return string The HTML string.
 	 */
-	function nl2p($str)
-	{
-		return str_replace('<p></p>', '', '<p>' . nl2br(preg_replace('#(\r?\n){2,}#', '</p><p>', $str)) . '</p>');
+	function nl2p( $str ) {
+		return str_replace( '<p></p>', '', '<p>' . nl2br( preg_replace( '#(\r?\n){2,}#', '</p><p>', $str ) ) . '</p>' );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('br2nl'))
+if ( ! function_exists( 'br2nl' ) )
 {
 	/**
 	 * @param string $buff
 	 *
 	 * @return mixed|string
 	 */
-	function br2nl($buff = '')
-	{
-		$buff = preg_replace('#<br[/\s]*>#si', "\n", $buff);
-		$buff = trim($buff);
+	function br2nl( $buff = '' ) {
+		$buff = preg_replace( '#<br[/\s]*>#si', "\n", $buff );
+		$buff = trim( $buff );
 
 		return $buff;
 	}
@@ -279,224 +283,225 @@ if (! function_exists('br2nl'))
 
 // -------------------------------------------------------------
 
-if (! function_exists('html_excerpt'))
+if ( ! function_exists( 'html_excerpt' ) )
 {
-    /**
-     * https://developer.wordpress.org/reference/functions/wp_html_excerpt/
-     *
-     * @param $str
-     * @param $count
-     * @param null $more
-     * @return bool|string|string[]|null
-     */
-    function html_excerpt( $str, $count, $more = NULL )
-    {
-        if (NULL === $more)
-        {
-            $more = '';
-        }
+	/**
+	 * https://developer.wordpress.org/reference/functions/wp_html_excerpt/
+	 *
+	 * @param $str
+	 * @param $count
+	 * @param null $more
+	 *
+	 * @return bool|string|string[]|null
+	 */
+	function html_excerpt( $str, $count, $more = NULL ) {
+		if ( NULL === $more )
+		{
+			$more = '';
+		}
 
-        $str = strip_all_tags($str, TRUE);
-        $excerpt = mb_substr($str, 0, $count);
+		$str     = strip_all_tags( $str, TRUE );
+		$excerpt = mb_substr( $str, 0, $count );
 
-        // remove part of an entity at the end
-        $excerpt = preg_replace('/&[^;\s]{0,6}$/', '', $excerpt);
-        if ($str != $excerpt)
-        {
-            $excerpt = trim($excerpt) . $more;
-        }
+		// remove part of an entity at the end
+		$excerpt = preg_replace( '/&[^;\s]{0,6}$/', '', $excerpt );
+		if ( $str != $excerpt )
+		{
+			$excerpt = trim( $excerpt ) . $more;
+		}
 
-        return $excerpt;
-    }
+		return $excerpt;
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('strip_all_tags'))
+if ( ! function_exists( 'strip_all_tags' ) )
 {
-    /**
-     * https://developer.wordpress.org/reference/functions/wp_strip_all_tags/
-     *
-     * @param $string
-     * @param bool $remove_breaks
-     * @return string
-     */
-    function strip_all_tags( $string, $remove_breaks = FALSE )
-    {
-        $string = preg_replace('@<(script|style)[^>]*?>.*?</\\1>@si', '', $string);
-        $string = strip_tags($string);
+	/**
+	 * https://developer.wordpress.org/reference/functions/wp_strip_all_tags/
+	 *
+	 * @param $string
+	 * @param bool $remove_breaks
+	 *
+	 * @return string
+	 */
+	function strip_all_tags( $string, bool $remove_breaks = FALSE ) {
+		$string = preg_replace( '@<(script|style)[^>]*?>.*?</\\1>@si', '', $string );
+		$string = strip_tags( $string );
 
-        if ($remove_breaks)
-        {
-            $string = preg_replace('/[\r\n\t ]+/', ' ', $string);
-        }
+		if ( $remove_breaks )
+		{
+			$string = preg_replace( '/[\r\n\t ]+/', ' ', $string );
+		}
 
-        return trim($string);
-    }
+		return trim( $string );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('normalize_whitespace'))
+if ( ! function_exists( 'normalize_whitespace' ) )
 {
-    /**
-     * https://developer.wordpress.org/reference/functions/normalize_whitespace/
-     *
-     * @param $str
-     * @return mixed|string|string[]|null
-     */
-    function normalize_whitespace( $str )
-    {
-        $str = trim($str);
-        $str = str_replace("\r", "\n", $str);
-        $str = preg_replace(['/\n+/', '/[ \t]+/'], ["\n", ' '], $str);
-        return $str;
-    }
+	/**
+	 * https://developer.wordpress.org/reference/functions/normalize_whitespace/
+	 *
+	 * @param $str
+	 *
+	 * @return mixed|string|string[]|null
+	 */
+	function normalize_whitespace( $str ) {
+		$str = trim( $str );
+		$str = str_replace( "\r", "\n", $str );
+		$str = preg_replace( [ '/\n+/', '/[ \t]+/' ], [ "\n", ' ' ], $str );
+
+		return $str;
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('js_escape'))
+if ( ! function_exists( 'js_escape' ) )
 {
-    /**
-     * Normalize the string for JavaScript string value
-     *
-     * @param $text
-     * @return mixed|string|string[]|null
-     */
-    function js_escape($text)
-    {
-        $safe_text = (string) $text;
-        $safe_text = htmlspecialchars($safe_text, ENT_COMPAT, config_item('charset'), FALSE);
-        $safe_text = preg_replace('/&#(x)?0*(?(1)27|39);?/i', "'", stripslashes($safe_text));
-        $safe_text = str_replace("\r", '', $safe_text);
-        $safe_text = str_replace("\n", '\\n', addslashes($safe_text));
+	/**
+	 * Normalize the string for JavaScript string value
+	 *
+	 * @param $text
+	 *
+	 * @return mixed|string|string[]|null
+	 */
+	function js_escape( $text ) {
+		$safe_text = (string) $text;
+		$safe_text = htmlspecialchars( $safe_text, ENT_COMPAT, config_item( 'charset' ), FALSE );
+		$safe_text = preg_replace( '/&#(x)?0*(?(1)27|39);?/i', "'", stripslashes( $safe_text ) );
+		$safe_text = str_replace( "\r", '', $safe_text );
+		$safe_text = str_replace( "\n", '\\n', addslashes( $safe_text ) );
 
-        return $safe_text;
-    }
+		return $safe_text;
+	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('escape_html'))
+if ( ! function_exists( 'escape_html' ) )
 {
-    /**
-     * https://docs.zendframework.com/zend-escaper/escaping-html/
-     *
-     * @param $text
-     * @return string
-     */
-    function escape_html($text)
-    {
-        static $_escaper;
-        if ($_escaper === NULL)
-        {
-            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
-        }
+	/**
+	 * https://docs.zendframework.com/zend-escaper/escaping-html/
+	 *
+	 * @param $text
+	 *
+	 * @return string
+	 */
+	function escape_html( $text ) {
+		static $_escaper;
+		if ( $_escaper === NULL )
+		{
+			$_escaper[0] = new Escaper( strtolower( config_item( 'charset' ) ) );
+		}
 
-        return $_escaper[0]->escapeHtml($text);
-    }
+		return $_escaper[0]->escapeHtml( $text );
+	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('escape_html_attr'))
+if ( ! function_exists( 'escape_html_attr' ) )
 {
-    /**
-     * https://docs.zendframework.com/zend-escaper/escaping-html-attributes/
-     *
-     * @param $text
-     * @return string
-     */
-    function escape_html_attr($text)
-    {
-        static $_escaper;
-        if ($_escaper === NULL)
-        {
-            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
-        }
+	/**
+	 * https://docs.zendframework.com/zend-escaper/escaping-html-attributes/
+	 *
+	 * @param $text
+	 *
+	 * @return string
+	 */
+	function escape_html_attr( $text ) {
+		static $_escaper;
+		if ( $_escaper === NULL )
+		{
+			$_escaper[0] = new Escaper( strtolower( config_item( 'charset' ) ) );
+		}
 
-        return $_escaper[0]->escapeHtmlAttr($text);
-    }
+		return $_escaper[0]->escapeHtmlAttr( $text );
+	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('escape_js'))
+if ( ! function_exists( 'escape_js' ) )
 {
-    /**
-     * https://docs.zendframework.com/zend-escaper/escaping-javascript/
-     *
-     * @param $text
-     * @return string
-     */
-    function escape_js($text)
-    {
-        static $_escaper;
-        if ($_escaper === NULL)
-        {
-            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
-        }
+	/**
+	 * https://docs.zendframework.com/zend-escaper/escaping-javascript/
+	 *
+	 * @param $text
+	 *
+	 * @return string
+	 */
+	function escape_js( $text ) {
+		static $_escaper;
+		if ( $_escaper === NULL )
+		{
+			$_escaper[0] = new Escaper( strtolower( config_item( 'charset' ) ) );
+		}
 
-        return $_escaper[0]->escapeJs($text);
-    }
+		return $_escaper[0]->escapeJs( $text );
+	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('escape_css'))
+if ( ! function_exists( 'escape_css' ) )
 {
-    /**
-     * CSS escaping excludes only basic alphanumeric characters
-     * and escapes all other characters into valid CSS hexadecimal escapes.
-     * https://docs.zendframework.com/zend-escaper/escaping-css/
-     *
-     * @param $text
-     * @return string
-     */
-    function escape_css($text)
-    {
-        static $_escaper;
-        if ($_escaper === NULL)
-        {
-            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
-        }
+	/**
+	 * CSS escaping excludes only basic alphanumeric characters
+	 * and escapes all other characters into valid CSS hexadecimal escapes.
+	 * https://docs.zendframework.com/zend-escaper/escaping-css/
+	 *
+	 * @param $text
+	 *
+	 * @return string
+	 */
+	function escape_css( $text ) {
+		static $_escaper;
+		if ( $_escaper === NULL )
+		{
+			$_escaper[0] = new Escaper( strtolower( config_item( 'charset' ) ) );
+		}
 
-        return $_escaper[0]->escapeCss($text);
-    }
+		return $_escaper[0]->escapeCss( $text );
+	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('escape_url'))
+if ( ! function_exists( 'escape_url' ) )
 {
-    /**
-     * URL escaping applies to data being inserted into a URL
-     * and not to the whole URL itself.
-     * https://docs.zendframework.com/zend-escaper/escaping-url/
-     *
-     * @param $text
-     * @return string
-     */
-    function escape_url($text)
-    {
-        static $_escaper;
-        if ($_escaper === NULL)
-        {
-            $_escaper[0] = new Escaper(strtolower(config_item('charset')));
-        }
+	/**
+	 * URL escaping applies to data being inserted into a URL
+	 * and not to the whole URL itself.
+	 * https://docs.zendframework.com/zend-escaper/escaping-url/
+	 *
+	 * @param $text
+	 *
+	 * @return string
+	 */
+	function escape_url( $text ) {
+		static $_escaper;
+		if ( $_escaper === NULL )
+		{
+			$_escaper[0] = new Escaper( strtolower( config_item( 'charset' ) ) );
+		}
 
-        return $_escaper[0]->escapeUrl($text);
-    }
+		return $_escaper[0]->escapeUrl( $text );
+	}
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('process_data_jmr1'))
+if ( ! function_exists( 'process_data_jmr1' ) )
 {
 
 	// Set PCRE recursion limit to sane value = STACKSIZE / 500 (256KB stack. Win32 Apache or  8MB stack. *nix)
-	ini_set('pcre.recursion_limit', (strtolower(substr(PHP_OS, 0, 3)) === 'win' ? '524' : '16777'));
+	ini_set( 'pcre.recursion_limit', ( strtolower( substr( PHP_OS, 0, 3 ) ) === 'win' ? '524' : '16777' ) );
 
 	/**
 	 * Process data JMR1
@@ -510,8 +515,7 @@ if (! function_exists('process_data_jmr1'))
 	 * @author Marcos Coelho <marcos@marcoscoelho.com>
 	 * @see http://stackoverflow.com/q/5312349
 	 */
-	function process_data_jmr1($text = '')
-	{
+	function process_data_jmr1( $text = '' ) {
 		$re = '%                            # Collapse whitespace everywhere but in blacklisted elements.
         (?>                                 # Match all whitespans other than single space.
           [^\S]\s*                          # Either one [\t\r\n\f\v] and zero or more ws,
@@ -532,9 +536,10 @@ if (! function_exists('process_data_jmr1'))
         )                                   # If we made it here, we are not in a blacklist tag.
         %Six';
 
-		if (($data = preg_replace($re, ' ', $text)) === NULL)
+		if ( ( $data = preg_replace( $re, ' ', $text ) ) === NULL )
 		{
-			log_message('error', 'PCRE Error! Output of the page "' . uri_string() . '" is too big.');
+			log_message( 'error', 'PCRE Error! Output of the page "' . uri_string() . '" is too big.' );
+
 			return $text;
 		}
 
@@ -546,25 +551,25 @@ if (! function_exists('process_data_jmr1'))
 // string helper
 // ------------------------------------------------------------------------
 
-if (! function_exists('trim_s'))
+if ( ! function_exists( 'trim_s' ) )
 {
-    /**
-     * @param string $str
-     * @param string $space
-     *
-     * @return string|string[]|null
-     */
-    function trim_s($str, $space = '')
-    {
-        $str = (string) $str;
-        $str = trim($str);
-        return preg_replace('/\s+/', $space, $str);
-    }
+	/**
+	 * @param string $str
+	 * @param string $space
+	 *
+	 * @return string|string[]|null
+	 */
+	function trim_s( $str, $space = '' ) {
+		$str = (string) $str;
+		$str = trim( $str );
+
+		return preg_replace( '/\s+/', $space, $str );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('uuid'))
+if ( ! function_exists( 'uuid' ) )
 {
 	/**
 	 * Universally Unique Identifier
@@ -575,87 +580,90 @@ if (! function_exists('uuid'))
 	 *
 	 * @return string
 	 */
-	function uuid()
-	{
-		return sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-			mt_rand(0, 0xffff), mt_rand(0, 0xffff),
-			mt_rand(0, 0xffff),
-			mt_rand(0, 0x0C2f) | 0x4000,
-			mt_rand(0, 0x3fff) | 0x8000,
-			mt_rand(0, 0x2Aff), mt_rand(0, 0xffD3), mt_rand(0, 0xff4B)
+	function uuid() {
+		return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+			mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0xffff ),
+			mt_rand( 0, 0x0C2f ) | 0x4000,
+			mt_rand( 0, 0x3fff ) | 0x8000,
+			mt_rand( 0, 0x2Aff ), mt_rand( 0, 0xffD3 ), mt_rand( 0, 0xff4B )
 		);
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('sanitize_html_class'))
+if ( ! function_exists( 'sanitize_html_class' ) )
 {
-    /**
-     * https://developer.wordpress.org/reference/functions/sanitize_html_class/
-     *
-     * @param $class
-     * @param string $fallback
-     * @return string|string[]|null
-     */
-    function sanitize_html_class( $class, $fallback = '' )
-    {
-        //Strip out any % encoded octets
-        $sanitized = preg_replace( '|%[a-fA-F0-9][a-fA-F0-9]|', '', $class );
+	/**
+	 * https://developer.wordpress.org/reference/functions/sanitize_html_class/
+	 *
+	 * @param $class
+	 * @param string $fallback
+	 *
+	 * @return string|string[]|null
+	 */
+	function sanitize_html_class( $class, $fallback = '' ) {
+		//Strip out any % encoded octets
+		$sanitized = preg_replace( '|%[a-fA-F0-9][a-fA-F0-9]|', '', $class );
 
-        //Limit to A-Z,a-z,0-9,_,-
-        $sanitized = preg_replace( '/[^A-Za-z0-9_-]/', '', $sanitized );
+		//Limit to A-Z,a-z,0-9,_,-
+		$sanitized = preg_replace( '/[^A-Za-z0-9_-]/', '', $sanitized );
 
-        if ( '' == $sanitized && $fallback )
-        {
-            return sanitize_html_class( $fallback );
-        }
+		if ( '' == $sanitized && $fallback )
+		{
+			return sanitize_html_class( $fallback );
+		}
 
-        return $sanitized;
-    }
-}
-
-// -------------------------------------------------------------
-
-if (! function_exists('normalize_filename'))
-{
-    /**
-     * Normalize given filename. Accented characters becomes non-accented and
-     * removes any other special characters. Usable for non-unicode filesystems
-     *
-     * @param $filename
-     * @return string
-     */
-    function normalize_filename($filename)
-    {
-        $string = htmlentities($filename, ENT_QUOTES, 'UTF-8');
-        if (strpos($string, '&') !== FALSE)
-            $filename = html_entity_decode(preg_replace('~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|tilde|uml);~i', '$1', $string), ENT_QUOTES, 'UTF-8');
-
-        $filename = trim(preg_replace('~[^0-9a-z\.\- ]~i', "_", $filename));
-        return $filename;
-    }
-}
-
-// -------------------------------------------------------------
-
-if (! function_exists('salt'))
-{
-    /**
-     * @param int $size
-     * @return string
-     * @throws EnvironmentIsBrokenException
-     */
-	function salt($size = 32)
-	{
-	    $size OR $size = Key::KEY_BYTE_SIZE;
-		return bin2hex(Core::secureRandom($size));
+		return $sanitized;
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('strposa'))
+if ( ! function_exists( 'normalize_filename' ) )
+{
+	/**
+	 * Normalize given filename. Accented characters becomes non-accented and
+	 * removes any other special characters. Usable for non-unicode filesystems
+	 *
+	 * @param $filename
+	 *
+	 * @return string
+	 */
+	function normalize_filename( $filename ) {
+		$string = htmlentities( $filename, ENT_QUOTES, 'UTF-8' );
+		if ( strpos( $string, '&' ) !== FALSE )
+		{
+			$filename = html_entity_decode( preg_replace( '~&([a-z]{1,2})(?:acute|cedil|circ|grave|lig|orn|ring|slash|tilde|uml);~i', '$1', $string ), ENT_QUOTES, 'UTF-8' );
+		}
+
+		$filename = trim( preg_replace( '~[^0-9a-z\.\- ]~i', "_", $filename ) );
+
+		return $filename;
+	}
+}
+
+// -------------------------------------------------------------
+
+if ( ! function_exists( 'salt' ) )
+{
+	/**
+	 * @param int $size
+	 *
+	 * @return string
+	 * @throws EnvironmentIsBrokenException
+	 */
+	function salt( int $size = 32 ) {
+		$size OR $size = Key::KEY_BYTE_SIZE;
+
+		return bin2hex( Core::secureRandom( $size ) );
+	}
+}
+
+// -------------------------------------------------------------
+
+if ( ! function_exists( 'strposa' ) )
 {
 	/**
 	 * @param $haystack
@@ -664,15 +672,18 @@ if (! function_exists('strposa'))
 	 *
 	 * @return bool
 	 */
-	function strposa($haystack, $needle, $offset = 0)
-	{
-		if (! is_array($needle))
-			$needle = [$needle];
-
-		foreach ($needle as $query)
+	function strposa( $haystack, $needle, int $offset = 0 ) {
+		if ( ! is_array( $needle ) )
 		{
-			if (strpos($haystack, $query, $offset) !== FALSE)
-				return TRUE; // stop on first true result
+			$needle = [ $needle ];
+		}
+
+		foreach ( $needle as $query )
+		{
+			if ( strpos( $haystack, $query, $offset ) !== FALSE )
+			{
+				return TRUE;
+			} // stop on first true result
 		}
 
 		return FALSE;
@@ -681,23 +692,23 @@ if (! function_exists('strposa'))
 
 // -------------------------------------------------------------
 
-if (! function_exists('str_to_bool'))
+if ( ! function_exists( 'str_to_bool' ) )
 {
 	/**
 	 * Converts various string bools to a true bool
 	 *
 	 * @param string $value
+	 *
 	 * @return bool
 	 */
-	function str_to_bool($value = '')
-	{
-		return filter_var($value, FILTER_VALIDATE_BOOLEAN);
+	function str_to_bool( $value = '' ) {
+		return filter_var( $value, FILTER_VALIDATE_BOOLEAN );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('str_replace_first'))
+if ( ! function_exists( 'str_replace_first' ) )
 {
 	/**
 	 * @param $find
@@ -706,52 +717,52 @@ if (! function_exists('str_replace_first'))
 	 *
 	 * @return string
 	 */
-	function str_replace_first($find, $replace = '', $subject = '')
-	{
-		if (! is_string($replace) OR ! is_string($subject))
+	function str_replace_first( $find, $replace = '', $subject = '' ) {
+		if ( ! is_string( $replace ) OR ! is_string( $subject ) )
+		{
 			return $subject;
+		}
 
 		// stolen from the comments at PHP.net/str_replace
 		// Splits $subject into an array of 2 items by $find,
 		// and then joins the array with $replace
-		return implode($replace, explode($find, $subject, 2));
+		return implode( $replace, explode( $find, $subject, 2 ) );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('standard_phone'))
+if ( ! function_exists( 'standard_phone' ) )
 {
 	/**
 	 * @param $phone
 	 *
 	 * @return string
 	 */
-	function standard_phone($phone)
-	{
-		return preg_replace('/[^0-9]+/', '', $phone);
+	function standard_phone( $phone ) {
+		return preg_replace( '/[^0-9]+/', '', $phone );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('verified_phone'))
+if ( ! function_exists( 'verified_phone' ) )
 {
 	/**
 	 * @param $phone
 	 *
 	 * @return string
 	 */
-	function verified_phone($phone)
-	{
-		$preg = preg_replace('/[^0-9]+/', '', $phone);
-		return substr($preg, -9, 9);
+	function verified_phone( $phone ) {
+		$preg = preg_replace( '/[^0-9]+/', '', $phone );
+
+		return substr( $preg, - 9, 9 );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('compare_phone'))
+if ( ! function_exists( 'compare_phone' ) )
 {
 	/**
 	 * @param $dbphone
@@ -759,13 +770,14 @@ if (! function_exists('compare_phone'))
 	 *
 	 * @return bool
 	 */
-	function compare_phone($dbphone, $phone)
-	{
-		$dbphone = preg_replace('/[^0-9]+/', '', $dbphone);
-		$phone = preg_replace('/[^0-9]+/', '', $phone);
+	function compare_phone( $dbphone, $phone ) {
+		$dbphone = preg_replace( '/[^0-9]+/', '', $dbphone );
+		$phone   = preg_replace( '/[^0-9]+/', '', $phone );
 
-		if (strcmp(substr($dbphone, -9, 9), substr($phone, -9, 9)) === 0)
+		if ( strcmp( substr( $dbphone, - 9, 9 ), substr( $phone, - 9, 9 ) ) === 0 )
+		{
 			return TRUE;
+		}
 
 		return FALSE;
 	}
@@ -775,35 +787,37 @@ if (! function_exists('compare_phone'))
 // file helper
 // -------------------------------------------------------------
 
-if (! function_exists('pixel_img')) {
-    /**
-     * @param string $img_url
-     *
-     * @return string
-     */
-    function pixel_img($img_url = '')
-    {
-        if (file_exists($img_url))
-            return $img_url;
+if ( ! function_exists( 'pixel_img' ) )
+{
+	/**
+	 * @param string $img_url
+	 *
+	 * @return string
+	 */
+	function pixel_img( $img_url = '' ) {
+		if ( file_exists( $img_url ) )
+		{
+			return $img_url;
+		}
 
-        return site_url('/') . "uploads/pixel.png";
-    }
+		return site_url( '/' ) . "uploads/pixel.png";
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('valid_image'))
+if ( ! function_exists( 'valid_image' ) )
 {
-    /**
-     * @param $src_file_name
-     * @param array $supported_ext_image
-     * @return bool
-     */
-	function valid_image($src_file_name, $supported_ext_image = [])
-	{
-		if (! is_array($supported_ext_image) OR empty($supported_ext_image))
+	/**
+	 * @param $src_file_name
+	 * @param array $supported_ext_image
+	 *
+	 * @return bool
+	 */
+	function valid_image( $src_file_name, $supported_ext_image = [] ) {
+		if ( ! is_array( $supported_ext_image ) OR empty( $supported_ext_image ) )
 		{
-            $supported_ext_image = [
+			$supported_ext_image = [
 				'gif',
 				'jpg',
 				'jpeg',
@@ -811,9 +825,11 @@ if (! function_exists('valid_image'))
 			];
 		}
 
-		$ext = get_file_extension($src_file_name, FALSE);
-		if (in_array($ext, $supported_ext_image))
+		$ext = get_file_extension( $src_file_name, FALSE );
+		if ( in_array( $ext, $supported_ext_image ) )
+		{
 			return TRUE;
+		}
 
 		return FALSE;
 	}
@@ -821,7 +837,7 @@ if (! function_exists('valid_image'))
 
 // -------------------------------------------------------------
 
-if (! function_exists('get_file_extension'))
+if ( ! function_exists( 'get_file_extension' ) )
 {
 	/**
 	 * @param $filename
@@ -829,22 +845,25 @@ if (! function_exists('get_file_extension'))
 	 *
 	 * @return string
 	 */
-	function get_file_extension($filename, $include_dot = TRUE)
-	{
+	function get_file_extension( $filename, bool $include_dot = TRUE ) {
 		$dot = '';
-		if ($include_dot == TRUE)
+		if ( $include_dot == TRUE )
+		{
 			$dot = '.';
+		}
 
-		if (is_php('5.4'))
-			return $dot . strtolower((new SplFileInfo($filename))->getExtension());
+		if ( is_php( '5.4' ) )
+		{
+			return $dot . strtolower( ( new SplFileInfo( $filename ) )->getExtension() );
+		}
 
-		return $dot . strtolower(pathinfo($filename, PATHINFO_EXTENSION));
+		return $dot . strtolower( pathinfo( $filename, PATHINFO_EXTENSION ) );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('get_file_name'))
+if ( ! function_exists( 'get_file_name' ) )
 {
 	/**
 	 * @param $filename
@@ -852,12 +871,13 @@ if (! function_exists('get_file_name'))
 	 *
 	 * @return string
 	 */
-	function get_file_name($filename, $include_ext = FALSE)
-	{
-		if (is_php('5.4'))
-			return $include_ext ? (new SplFileInfo($filename))->getFilename() : (new SplFileInfo($filename))->getBasename(get_file_extension($filename));
+	function get_file_name( $filename, bool $include_ext = FALSE ) {
+		if ( is_php( '5.4' ) )
+		{
+			return $include_ext ? ( new SplFileInfo( $filename ) )->getFilename() : ( new SplFileInfo( $filename ) )->getBasename( get_file_extension( $filename ) );
+		}
 
-		return $include_ext ? pathinfo($filename, PATHINFO_FILENAME) . get_file_extension($filename) : pathinfo($filename, PATHINFO_FILENAME);
+		return $include_ext ? pathinfo( $filename, PATHINFO_FILENAME ) . get_file_extension( $filename ) : pathinfo( $filename, PATHINFO_FILENAME );
 	}
 }
 
@@ -865,36 +885,40 @@ if (! function_exists('get_file_name'))
 // directory helper
 // -------------------------------------------------------------
 
-if (! function_exists('recurse_copy'))
+if ( ! function_exists( 'recurse_copy' ) )
 {
 	/**
 	 * @param $src
 	 * @param $dst
 	 */
-	function recurse_copy($src, $dst)
-	{
-		$dir = opendir($src);
-		if (! file_exists($dst))
-			mkdir($dst, 0755, TRUE);
-
-		while (FALSE !== ($file = readdir($dir)))
+	function recurse_copy( $src, $dst ) {
+		$dir = opendir( $src );
+		if ( ! file_exists( $dst ) )
 		{
-			if (($file != '.') && ($file != '..'))
+			mkdir( $dst, 0755, TRUE );
+		}
+
+		while ( FALSE !== ( $file = readdir( $dir ) ) )
+		{
+			if ( ( $file != '.' ) && ( $file != '..' ) )
 			{
-				if (is_dir($src . '/' . $file))
-					recurse_copy($src . '/' . $file, $dst . '/' . $file);
-				else
-					copy($src . '/' . $file, $dst . '/' . $file);
+				if ( is_dir( $src . '/' . $file ) )
+				{
+					recurse_copy( $src . '/' . $file, $dst . '/' . $file );
+				} else
+				{
+					copy( $src . '/' . $file, $dst . '/' . $file );
+				}
 			}
 		}
 
-		closedir($dir);
+		closedir( $dir );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('create_directory'))
+if ( ! function_exists( 'create_directory' ) )
 {
 	/**
 	 * recursively create a long directory path
@@ -903,61 +927,75 @@ if (! function_exists('create_directory'))
 	 *
 	 * @return bool
 	 */
-	function create_directory($path)
-	{
-		if (is_dir($path))
+	function create_directory( $path ) {
+		if ( is_dir( $path ) )
+		{
 			return TRUE;
+		}
 
-		$prev_path = substr($path, 0, strrpos($path, '/', - 2) + 1);
-		$return = create_directory($prev_path);
+		$prev_path = substr( $path, 0, strrpos( $path, '/', - 2 ) + 1 );
+		$return    = create_directory( $prev_path );
 
-		return ($return && is_really_writable($prev_path)) ? mkdir($path) : FALSE;
+		return ( $return && is_really_writable( $prev_path ) ) ? mkdir( $path ) : FALSE;
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('normalize_path'))
+if ( ! function_exists( 'normalize_path' ) )
 {
-    /**
-     * Normalize the given path. On Windows servers backslash will be replaced
-     * with slash. Removes unnecessary double slashes and double dots. Removes
-     * last slash if it exists.
-     *
-     * Examples:
-     * path::normalize("C:\\any\\path\\") returns "C:/any/path"
-     * path::normalize("/your/path/..//home/") returns "/your/home"
-     * @param string $path
-     * @return string
-     */
-    function normalize_path($path)
-    {
-        // Backslash to slash convert
-        if (strtoupper(substr(PHP_OS, 0, 3)) == "WIN") {
-            $path = preg_replace('/([^\\\])\\\+([^\\\])/s', "$1/$2", $path);
-            if (substr($path, -1) == "\\") $path = substr($path, 0, -1);
-            if (substr($path, 0, 1) == "\\") $path = "/" . substr($path, 1);
-        }
+	/**
+	 * Normalize the given path. On Windows servers backslash will be replaced
+	 * with slash. Removes unnecessary double slashes and double dots. Removes
+	 * last slash if it exists.
+	 *
+	 * Examples:
+	 * path::normalize("C:\\any\\path\\") returns "C:/any/path"
+	 * path::normalize("/your/path/..//home/") returns "/your/home"
+	 *
+	 * @param string $path
+	 *
+	 * @return string
+	 */
+	function normalize_path( $path ) {
+		// Backslash to slash convert
+		if ( strtoupper( substr( PHP_OS, 0, 3 ) ) == "WIN" )
+		{
+			$path = preg_replace( '/([^\\\])\\\+([^\\\])/s', "$1/$2", $path );
+			if ( substr( $path, - 1 ) == "\\" )
+			{
+				$path = substr( $path, 0, - 1 );
+			}
+			if ( substr( $path, 0, 1 ) == "\\" )
+			{
+				$path = "/" . substr( $path, 1 );
+			}
+		}
 
-        $path = preg_replace('/\/+/s', "/", $path);
+		$path = preg_replace( '/\/+/s', "/", $path );
 
-        $path = "/$path";
-        if (substr($path, -1) != "/")
-            $path .= "/";
+		$path = "/$path";
+		if ( substr( $path, - 1 ) != "/" )
+		{
+			$path .= "/";
+		}
 
-        $expr = '/\/([^\/]{1}|[^\.\/]{2}|[^\/]{3,})\/\.\.\//s';
-        while (preg_match($expr, $path))
-            $path = preg_replace($expr, "/", $path);
+		$expr = '/\/([^\/]{1}|[^\.\/]{2}|[^\/]{3,})\/\.\.\//s';
+		while ( preg_match( $expr, $path ) )
+		{
+			$path = preg_replace( $expr, "/", $path );
+		}
 
-        $path = substr($path, 0, -1);
-        $path = substr($path, 1);
-        return $path;
-    }
+		$path = substr( $path, 0, - 1 );
+		$path = substr( $path, 1 );
+
+		return $path;
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('make_upload_file'))
+if ( ! function_exists( 'make_upload_file' ) )
 {
 	/**
 	 * @param $new_path
@@ -966,19 +1004,18 @@ if (! function_exists('make_upload_file'))
 	 *
 	 * @return bool
 	 */
-	function make_upload_file($new_path, $new_file_name, $tmp_file)
-	{
-		if (create_directory($new_path))
+	function make_upload_file( $new_path, $new_file_name, $tmp_file ) {
+		if ( create_directory( $new_path ) )
 		{
 			// we'll attempt to use copy() first. If that fails
-            // we'll use move_uploaded_file().
-            if (!@copy($tmp_file, rtrim($new_path, '/') . '/' . $new_file_name))
-            {
-                if (!@move_uploaded_file($tmp_file, rtrim($new_path, '/') . '/' . $new_file_name))
-                {
-                    return FALSE;
-                }
-            }
+			// we'll use move_uploaded_file().
+			if ( ! @copy( $tmp_file, rtrim( $new_path, '/' ) . '/' . $new_file_name ) )
+			{
+				if ( ! @move_uploaded_file( $tmp_file, rtrim( $new_path, '/' ) . '/' . $new_file_name ) )
+				{
+					return FALSE;
+				}
+			}
 
 			return TRUE;
 		}
@@ -991,7 +1028,7 @@ if (! function_exists('make_upload_file'))
 // array helper
 // -------------------------------------------------------------
 
-if (! function_exists('array_object_merge'))
+if ( ! function_exists( 'array_object_merge' ) )
 {
 	/**
 	 * Merge an array or an object into another object
@@ -999,63 +1036,67 @@ if (! function_exists('array_object_merge'))
 	 * @param object $object The object to act as host for the merge.
 	 * @param object|array $array The object or the array to merge.
 	 */
-	function array_object_merge(&$object, $array)
-	{
+	function array_object_merge( &$object, $array ) {
 		// Make sure we are dealing with an array.
-        is_array($array) OR $array = get_object_vars($array);
-        foreach ($array as $key => $value)
-            $object->{$key} = $value;
+		is_array( $array ) OR $array = get_object_vars( $array );
+		foreach ( $array as $key => $value )
+		{
+			$object->{$key} = $value;
+		}
 	}
 
 }
 
 // ------------------------------------------------------------------------
 
-if (!function_exists('array_for_select'))
+if ( ! function_exists( 'array_for_select' ) )
 {
-    /**
-     * @return array|bool
-     */
-    function array_for_select()
-    {
-        $args = func_get_args();
-        $return = [];
-        switch (count($args))
-        {
-            case 3:
-                foreach ($args[0] as $itteration):
-                    if (is_object($itteration))
-                        $itteration = (array)$itteration;
-                    $return[$itteration[$args[1]]] = $itteration[$args[2]];
-                endforeach;
-                break;
+	/**
+	 * @return array|bool
+	 */
+	function array_for_select() {
+		$args   = func_get_args();
+		$return = [];
+		switch ( count( $args ) )
+		{
+			case 3:
+				foreach ( $args[0] as $itteration ):
+					if ( is_object( $itteration ) )
+					{
+						$itteration = (array) $itteration;
+					}
+					$return[$itteration[$args[1]]] = $itteration[$args[2]];
+				endforeach;
+				break;
 
-            case 2:
-                foreach ($args[0] as $key => $itteration):
-                    if (is_object($itteration))
-                        $itteration = (array)$itteration;
-                    $return[$key] = $itteration[$args[1]];
-                endforeach;
-                break;
+			case 2:
+				foreach ( $args[0] as $key => $itteration ):
+					if ( is_object( $itteration ) )
+					{
+						$itteration = (array) $itteration;
+					}
+					$return[$key] = $itteration[$args[1]];
+				endforeach;
+				break;
 
-            case 1:
-                foreach ($args[0] as $itteration):
-                    $return[$itteration] = $itteration;
-                endforeach;
-                break;
+			case 1:
+				foreach ( $args[0] as $itteration ):
+					$return[$itteration] = $itteration;
+				endforeach;
+				break;
 
-            default:
-                return FALSE;
-        }
+			default:
+				return FALSE;
+		}
 
-        return $return;
-    }
+		return $return;
+	}
 
 }
 
 // ------------------------------------------------------------------------
 
-if (! function_exists('in_array_r'))
+if ( ! function_exists( 'in_array_r' ) )
 {
 	/**
 	 * Recursively search an array
@@ -1068,12 +1109,13 @@ if (! function_exists('in_array_r'))
 	 *
 	 * @return bool
 	 */
-	function in_array_r($needle, $haystack, $strict = FALSE)
-	{
-		foreach ($haystack as $item)
+	function in_array_r( $needle, $haystack, bool $strict = FALSE ) {
+		foreach ( $haystack as $item )
 		{
-			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && in_array_r($needle, $item, $strict)))
+			if ( ( $strict ? $item === $needle : $item == $needle ) || ( is_array( $item ) && in_array_r( $needle, $item, $strict ) ) )
+			{
 				return TRUE;
+			}
 		}
 
 		return FALSE;
@@ -1082,77 +1124,80 @@ if (! function_exists('in_array_r'))
 
 // -------------------------------------------------------------
 
-if (! function_exists('assoc_array_prop'))
+if ( ! function_exists( 'assoc_array_prop' ) )
 {
-    /**
-     * Associative array property
-     *
-     * Reindexes an array using a property of your elements. The elements should
-     * be a collection of array or objects.
-     *
-     * Note: To give a full result all elements must have the property defined
-     * in the second parameter of this function.
-     *
-     * @author Marcos Coelho
-     * @param array $arr
-     * @param string $prop Should be a common property with value scalar, as id, slug, order.
-     * @return array
-     */
-    function assoc_array_prop(array &$arr = NULL, $prop = 'id')
-    {
-        $newarr = [];
-        foreach ($arr as $old_index => $element)
-        {
-            if (is_array($element))
-            {
-                if (isset($element[$prop]) && is_scalar($element[$prop]))
-                    $newarr[$element[$prop]] = $element;
-            }
-            elseif (is_object($element))
-            {
-                if (isset($element->{$prop}) && is_scalar($element->{$prop}))
-                    $newarr[$element->{$prop}] = $element;
-            }
-        }
+	/**
+	 * Associative array property
+	 *
+	 * Reindexes an array using a property of your elements. The elements should
+	 * be a collection of array or objects.
+	 *
+	 * Note: To give a full result all elements must have the property defined
+	 * in the second parameter of this function.
+	 *
+	 * @param array $arr
+	 * @param string $prop Should be a common property with value scalar, as id, slug, order.
+	 *
+	 * @return array
+	 * @author Marcos Coelho
+	 */
+	function assoc_array_prop( array &$arr = NULL, $prop = 'id' ) {
+		$newarr = [];
+		foreach ( $arr as $old_index => $element )
+		{
+			if ( is_array( $element ) )
+			{
+				if ( isset( $element[$prop] ) && is_scalar( $element[$prop] ) )
+				{
+					$newarr[$element[$prop]] = $element;
+				}
+			} elseif ( is_object( $element ) )
+			{
+				if ( isset( $element->{$prop} ) && is_scalar( $element->{$prop} ) )
+				{
+					$newarr[$element->{$prop}] = $element;
+				}
+			}
+		}
 
-        return $arr = $newarr;
-    }
+		return $arr = $newarr;
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('object_to_array'))
+if ( ! function_exists( 'object_to_array' ) )
 {
 	/**
 	 * @param object $object
 	 *
 	 * @return array
 	 */
-	function object_to_array($object)
-	{
-		if (is_string($object))
+	function object_to_array( $object ) {
+		if ( is_string( $object ) )
+		{
 			return (array) $object;
+		}
 
-        return array_map(__FUNCTION__, (array) $object);
+		return array_map( __FUNCTION__, (array) $object );
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('array_to_object'))
+if ( ! function_exists( 'array_to_object' ) )
 {
 	/**
 	 * @param array $arr
 	 *
 	 * @return array|object
 	 */
-	function array_to_object($arr = [])
-	{
+	function array_to_object( array $arr = [] ) {
 		/**
 		 * Return array converted to object
 		 * for recursive call
 		 */
-        return is_array($arr) ? (object) array_map(__FUNCTION__, $arr) : $arr;
+		return is_array( $arr ) ? (object) array_map( __FUNCTION__, $arr ) : $arr;
 	}
 }
 
@@ -1160,42 +1205,47 @@ if (! function_exists('array_to_object'))
 // validate helper
 // -------------------------------------------------------------
 
-if (! function_exists('string_empty'))
+if ( ! function_exists( 'string_empty' ) )
 {
-    /**
-     * @param string $str
-     * @return bool
-     */
-    function string_empty($str = '')
-    {
-        if(!is_string($str))
-            return FALSE;
+	/**
+	 * @param string $str
+	 *
+	 * @return bool
+	 */
+	function string_empty( $str = '' ) {
+		if ( ! is_string( $str ) )
+		{
+			return FALSE;
+		}
 
-        $str = preg_replace('/\s+/', '', $str);
-        return empty($str) ? TRUE : FALSE;
-    }
+		$str = preg_replace( '/\s+/', '', $str );
+
+		return empty( $str ) ? TRUE : FALSE;
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('string_not_empty'))
+if ( ! function_exists( 'string_not_empty' ) )
 {
-    /**
-     * @param string $str
-     * @return bool
-     */
-    function string_not_empty($str = '')
-    {
-        if(! is_string($str))
-            return FALSE;
+	/**
+	 * @param string $str
+	 *
+	 * @return bool
+	 */
+	function string_not_empty( $str = '' ) {
+		if ( ! is_string( $str ) )
+		{
+			return FALSE;
+		}
 
-        return ! string_empty($str);
-    }
+		return ! string_empty( $str );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('is_empty'))
+if ( ! function_exists( 'is_empty' ) )
 {
 	/**
 	 * @param string|object|array $cnt
@@ -1203,40 +1253,53 @@ if (! function_exists('is_empty'))
 	 *
 	 * @return bool
 	 */
-	function is_empty($cnt, $excluded_tags = NULL)
-	{
-		if (empty($cnt)) return TRUE;
-        if (is_object($cnt)) $cnt = object_to_array($cnt);
-		if (is_array($cnt)) return is_empty_array($cnt);
-        if (is_string($cnt))
-        {
-            $cnt = strip_tags($cnt, $excluded_tags);
-            return string_empty($cnt);
-        }
+	function is_empty( $cnt, $excluded_tags = NULL ) {
+		if ( empty( $cnt ) )
+		{
+			return TRUE;
+		}
+		if ( is_object( $cnt ) )
+		{
+			$cnt = object_to_array( $cnt );
+		}
+		if ( is_array( $cnt ) )
+		{
+			return is_empty_array( $cnt );
+		}
+		if ( is_string( $cnt ) )
+		{
+			$cnt = strip_tags( $cnt, $excluded_tags );
 
-        return FALSE;
+			return string_empty( $cnt );
+		}
+
+		return FALSE;
 	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('is_empty_array'))
+if ( ! function_exists( 'is_empty_array' ) )
 {
 	/**
 	 * @param array $arr
 	 *
 	 * @return bool
 	 */
-	function is_empty_array($arr = [])
-	{
-        if (!is_array($arr)) return FALSE;
-        foreach ($arr as $value)
-        {
-            if (!is_empty($value))
-                return FALSE;
-        }
+	function is_empty_array( array $arr = [] ) {
+		if ( ! is_array( $arr ) )
+		{
+			return FALSE;
+		}
+		foreach ( $arr as $value )
+		{
+			if ( ! is_empty( $value ) )
+			{
+				return FALSE;
+			}
+		}
 
-        return TRUE;
+		return TRUE;
 	}
 }
 
@@ -1244,28 +1307,28 @@ if (! function_exists('is_empty_array'))
 // inflector helper
 // -------------------------------------------------------------
 
-if (!function_exists('keywords'))
+if ( ! function_exists( 'keywords' ) )
 {
-    /**
-     * Keywords
-     *
-     * Takes multiple words separated by spaces and changes them to keywords
-     * Makes sure the keywords are separated by a comma followed by a space.
-     *
-     * @param string $str The keywords as a string, separated by whitespace.
-     * @return string The list of keywords in a comma separated string form.
-     */
-    function keywords($str)
-    {
-        return preg_replace('/[\s]+/', ', ', trim($str));
-    }
+	/**
+	 * Keywords
+	 *
+	 * Takes multiple words separated by spaces and changes them to keywords
+	 * Makes sure the keywords are separated by a comma followed by a space.
+	 *
+	 * @param string $str The keywords as a string, separated by whitespace.
+	 *
+	 * @return string The list of keywords in a comma separated string form.
+	 */
+	function keywords( $str ) {
+		return preg_replace( '/[\s]+/', ', ', trim( $str ) );
+	}
 }
 
 // -------------------------------------------------------------
 // user helper
 // -------------------------------------------------------------
 
-if (! function_exists('role_or_die'))
+if ( ! function_exists( 'role_or_die' ) )
 {
 	/**
 	 * Checks if role has access to controller or returns error
@@ -1277,17 +1340,16 @@ if (! function_exists('role_or_die'))
 	 *
 	 * @return bool
 	 */
-	function role_or_die($controller, $role, $redirect_to = 'admin', $message = '')
-	{
-        if (is_ajax_request() AND !group_has_role($controller, $role))
+	function role_or_die( $controller, $role, $redirect_to = 'admin', $message = '' ) {
+		if ( is_ajax_request() AND ! group_has_role( $controller, $role ) )
 		{
-			echo json_encode(['error' => ($message ? $message : 'Access denied')]);
+			echo json_encode( [ 'error' => ( $message ? $message : 'Access denied' ) ] );
+
 			return FALSE;
-		}
-        elseif (!group_has_role($controller, $role))
+		} elseif ( ! group_has_role( $controller, $role ) )
 		{
-			ci()->session->set_flashdata('error', ($message ? $message : 'Access denied'));
-			redirect($redirect_to);
+			ci()->session->set_flashdata( 'error', ( $message ? $message : 'Access denied' ) );
+			redirect( $redirect_to );
 		}
 
 		return TRUE;
@@ -1296,7 +1358,7 @@ if (! function_exists('role_or_die'))
 
 // -------------------------------------------------------------
 
-if (! function_exists('group_has_role'))
+if ( ! function_exists( 'group_has_role' ) )
 {
 	/**
 	 * Checks if a group has access to controller or role
@@ -1306,18 +1368,23 @@ if (! function_exists('group_has_role'))
 	 *
 	 * @return bool
 	 */
-	function group_has_role($controller, $role)
-	{
-        if (!ci()->current_user)
+	function group_has_role( $controller, $role ) {
+		if ( ! ci()->current_user )
+		{
 			return FALSE;
+		}
 
-        if ('administrator' == ci()->current_user->group_name)
+		if ( 'administrator' == ci()->current_user->group_name )
+		{
 			return TRUE;
+		}
 
 		// List available controller permissions for this user
-        $permissions = ci()->permission_m->get_group(ci()->current_user->group_id);
-        if (empty($permissions[$controller]) OR empty($permissions[$controller][$role]))
+		$permissions = ci()->permission_m->get_group( ci()->current_user->group_id );
+		if ( empty( $permissions[$controller] ) OR empty( $permissions[$controller][$role] ) )
+		{
 			return FALSE;
+		}
 
 		return TRUE;
 	}
@@ -1327,198 +1394,199 @@ if (! function_exists('group_has_role'))
 // recaptcha verify helper
 // -------------------------------------------------------------
 
-if (! function_exists('recaptcha_verify'))
+if ( ! function_exists( 'recaptcha_verify' ) )
 {
-    /**
-     * @param string $response
-     * @return bool
-     */
-    function recaptcha_verify($response = '')
-    {
-        $CI = &get_instance();
-        string_not_empty($response) OR $response = $CI->input->post('g-recaptcha-response');
-        if ($response)
-        {
-            // Create an instance of the service using your secret
-            $recaptcha = new ReCaptcha($CI->setting->recaptcha_secretkey);
-            if (! function_exists('file_get_contents'))
-            {
-                // This makes use of fsockopen() instead.
-                $recaptcha = new ReCaptcha($CI->setting->recaptcha_secretkey, new SocketPost());
-            }
+	/**
+	 * @param string $response
+	 *
+	 * @return bool
+	 */
+	function recaptcha_verify( $response = '' ) {
+		$CI = &get_instance();
+		string_not_empty( $response ) OR $response = $CI->input->post( 'g-recaptcha-response' );
+		if ( $response )
+		{
+			// Create an instance of the service using your secret
+			$recaptcha = new ReCaptcha( $CI->setting->recaptcha_secretkey );
+			if ( ! function_exists( 'file_get_contents' ) )
+			{
+				// This makes use of fsockopen() instead.
+				$recaptcha = new ReCaptcha( $CI->setting->recaptcha_secretkey, new SocketPost() );
+			}
 
-            // Make the call to verify the response and also pass the user's IP address
-            $resp = $recaptcha->setExpectedHostname($_SERVER['SERVER_NAME'])->verify($response, ip_address());
-            if ($resp->isSuccess())
-            {
-                return TRUE;
-            }
-        }
+			// Make the call to verify the response and also pass the user's IP address
+			$resp = $recaptcha->setExpectedHostname( $_SERVER['SERVER_NAME'] )->verify( $response, ip_address() );
+			if ( $resp->isSuccess() )
+			{
+				return TRUE;
+			}
+		}
 
-        return FALSE;
-    }
+		return FALSE;
+	}
 }
 
 // -------------------------------------------------------------
 // view helper
 // -------------------------------------------------------------
 
-if (! function_exists('_post'))
+if ( ! function_exists( '_post' ) )
 {
-    /**
-     * @param string $name
-     * @param string $default
-     * @param bool $_escape
-     *
-     * @return mixed|string
-     */
-    function _post($name, $default = '', $_escape = TRUE)
-    {
-        if(! isset($_POST[$name]))
-            return $default;
+	/**
+	 * @param string $name
+	 * @param string $default
+	 * @param bool $_escape
+	 *
+	 * @return mixed|string
+	 */
+	function _post( $name, $default = '', bool $_escape = TRUE ) {
+		if ( ! isset( $_POST[$name] ) )
+		{
+			return $default;
+		}
 
-        if($_escape == TRUE)
-            return escape_html(ci()->input->post($name, TRUE));
+		if ( $_escape == TRUE )
+		{
+			return escape_html( ci()->input->post( $name, TRUE ) );
+		}
 
-        return ci()->input->post($name, TRUE);
-    }
+		return ci()->input->post( $name, TRUE );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('_get'))
+if ( ! function_exists( '_get' ) )
 {
-    /**
-     * @param $name
-     * @param string $default
-     * @return mixed|string
-     */
-    function _get($name, $default = '', $_escape = TRUE)
-    {
-        if(! isset($_GET[$name]))
-            return $default;
+	/**
+	 * @param $name
+	 * @param string $default
+	 *
+	 * @return mixed|string
+	 */
+	function _get( $name, $default = '', bool $_escape = TRUE ) {
+		if ( ! isset( $_GET[$name] ) )
+		{
+			return $default;
+		}
 
-        if($_escape == TRUE)
-            return escape_html(ci()->input->get($name, TRUE));
+		if ( $_escape == TRUE )
+		{
+			return escape_html( ci()->input->get( $name, TRUE ) );
+		}
 
-        return ci()->input->get($name, TRUE);
-    }
+		return ci()->input->get( $name, TRUE );
+	}
 }
 
 // -------------------------------------------------------------
 // other helper
 // -------------------------------------------------------------
 
-if (! function_exists('is_json'))
+if ( ! function_exists( 'is_json' ) )
 {
-    /**
-     * isJson method
-     *
-     * Check if string is a valid json
-     *
-     * @param $string
-     *
-     * @return bool
-     */
-    function is_json($string)
-    {
-        json_decode($string);
-        return (json_last_error() == JSON_ERROR_NONE);
-    }
+	/**
+	 * isJson method
+	 *
+	 * Check if string is a valid json
+	 *
+	 * @param $string
+	 *
+	 * @return bool
+	 */
+	function is_json( $string ) {
+		json_decode( $string );
+
+		return ( json_last_error() == JSON_ERROR_NONE );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('is_ajax_request'))
+if ( ! function_exists( 'is_ajax_request' ) )
 {
-    /**
-     * @return mixed
-     */
-    function is_ajax_request()
-    {
-        $CI = &get_instance();
-        return $CI->input->is_ajax_request();
-    }
+	/**
+	 * @return mixed
+	 */
+	function is_ajax_request() {
+		$CI = &get_instance();
+
+		return $CI->input->is_ajax_request();
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('asset_js'))
+if ( ! function_exists( 'asset_js' ) )
 {
-    /**
-     * @param $script
-     * @param bool $script_min
-     * @param string $group
-     */
-    function asset_js($script, $script_min = FALSE, $group = 'global')
-    {
-        echo get_asset_js($script, $script_min, $group);
-    }
+	/**
+	 * @param $script
+	 * @param bool $script_min
+	 * @param string $group
+	 */
+	function asset_js( $script, bool $script_min = FALSE, $group = 'global' ) {
+		echo get_asset_js( $script, $script_min, $group );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('get_asset_js'))
+if ( ! function_exists( 'get_asset_js' ) )
 {
-    /**
-     * @param $script
-     * @param bool $script_min
-     * @param string $group
-     * @return string
-     */
-    function get_asset_js($script, $script_min = FALSE, $group = 'global')
-    {
-        if(!class_exists('Asset'))
-            return __return_empty_string();
+	/**
+	 * @param $script
+	 * @param bool $script_min
+	 * @param string $group
+	 *
+	 * @return string
+	 */
+	function get_asset_js( $script, bool $script_min = FALSE, $group = 'global' ) {
+		if ( ! class_exists( 'Asset' ) )
+		{
+			return __return_empty_string();
+		}
 
-        Asset::js($script, $script_min, $group);
-        return Asset::render_js($group);
-    }
+		Asset::js( $script, $script_min, $group );
+
+		return Asset::render_js( $group );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('asset_css'))
+if ( ! function_exists( 'asset_css' ) )
 {
-    /**
-     * @param $sheet
-     * @param bool $sheet_min
-     * @param string $group
-     */
-    function asset_css($sheet, $sheet_min = FALSE, $group = 'global')
-    {
-        echo get_asset_css($sheet, $sheet_min, $group);
-    }
+	/**
+	 * @param $sheet
+	 * @param bool $sheet_min
+	 * @param string $group
+	 */
+	function asset_css( $sheet, bool $sheet_min = FALSE, $group = 'global' ) {
+		echo get_asset_css( $sheet, $sheet_min, $group );
+	}
 }
 
 // -------------------------------------------------------------
 
-if (! function_exists('get_asset_css'))
+if ( ! function_exists( 'get_asset_css' ) )
 {
-    /**
-     * @param $sheet
-     * @param bool $sheet_min
-     * @param string $group
-     * @return string
-     */
-    function get_asset_css($sheet, $sheet_min = FALSE, $group = 'global')
-    {
-        if(!class_exists('Asset'))
-            return __return_empty_string();
+	/**
+	 * @param $sheet
+	 * @param bool $sheet_min
+	 * @param string $group
+	 *
+	 * @return string
+	 */
+	function get_asset_css( $sheet, bool $sheet_min = FALSE, $group = 'global' ) {
+		if ( ! class_exists( 'Asset' ) )
+		{
+			return __return_empty_string();
+		}
 
-        Asset::css($sheet, $sheet_min, $group);
-        return Asset::render_css($group);
-    }
-}
+		Asset::css( $sheet, $sheet_min, $group );
 
-// -------------------------------------------------------------
-
-/**
- * @return bool
- */
-function __return_true()
-{
-    return TRUE;
+		return Asset::render_css( $group );
+	}
 }
 
 // -------------------------------------------------------------
@@ -1526,9 +1594,17 @@ function __return_true()
 /**
  * @return bool
  */
-function __return_false()
-{
-    return FALSE;
+function __return_true() {
+	return TRUE;
+}
+
+// -------------------------------------------------------------
+
+/**
+ * @return bool
+ */
+function __return_false() {
+	return FALSE;
 }
 
 // -------------------------------------------------------------
@@ -1536,9 +1612,8 @@ function __return_false()
 /**
  * @return int
  */
-function __return_zero()
-{
-    return 0;
+function __return_zero() {
+	return 0;
 }
 
 // -------------------------------------------------------------
@@ -1546,9 +1621,8 @@ function __return_zero()
 /**
  * @return array
  */
-function __return_empty_array()
-{
-    return [];
+function __return_empty_array() {
+	return [];
 }
 
 // -------------------------------------------------------------
@@ -1556,9 +1630,8 @@ function __return_empty_array()
 /**
  * @return null
  */
-function __return_null()
-{
-    return NULL;
+function __return_null() {
+	return NULL;
 }
 
 // -------------------------------------------------------------
@@ -1566,7 +1639,6 @@ function __return_null()
 /**
  * @return string
  */
-function __return_empty_string()
-{
-    return '';
+function __return_empty_string() {
+	return '';
 }

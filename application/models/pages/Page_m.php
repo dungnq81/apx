@@ -245,7 +245,7 @@ class Page_m extends MY_Model
         $input['created_on'] = now();
         $input['updated_on'] = 0;
         $input['published_on'] = strtotimetz(str_replace('/', '-', $input['published_on']));
-        if(!is_empty($input['restricted_password']))
+        if (!is_empty($input['restricted_password']))
         {
             $_pass = $this->_password_generator($input['restricted_password']);
             $input['restricted_key'] = $_pass['key'];
@@ -253,7 +253,7 @@ class Page_m extends MY_Model
         }
 
         $entities_id = $this->entity_m->create($input);
-        if($entities_id)
+        if ($entities_id)
         {
             $this->db->trans_start();
 

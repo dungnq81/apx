@@ -37,7 +37,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="thumbnails">
                         <div class="trap-wrap">
                             <input name="img" id="img" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_txt">
-                            <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                            <div class="trap-plus"><i class="fal fa-plus"></i></div>
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                 <p class="help-text" id="restricted_password_txt">Nhập mật khẩu để bảo vệ trang. (nếu có)</p>
             </div>
             <div>
-                <label class="font-normal">
+                <label class="font-normal margin-0">
                     <input type="checkbox" name="comment_enabled" id="comment_enabled">
                     <span>Cho phép bình luận</span>
                 </label>
@@ -128,12 +128,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             <div>
                 <label>Robots Meta Settings</label>
                 <div class="br"></div>
-                <label class="font-normal">
+                <label class="font-normal margin-0">
                     <input type="checkbox" name="meta_noindex">
                     <span>Noindex <a target="_blank" href="https://support.google.com/webmasters/answer/93710?hl=en" title="This tells search engines not to show this page in their search results.">[?]</a></span>
                 </label>
                 <div class="br"></div>
-                <label class="font-normal">
+                <label class="font-normal margin-0">
                     <input type="checkbox" name="meta_nofollow">
                     <span>Nofollow <a target="_blank" href="https://support.google.com/webmasters/answer/96569?hl=en" title="This tells search engines not to follow links on this page.">[?]</a></span>
                 </label>
@@ -157,7 +157,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
                     <div class="thumbnails">
                         <div class="trap-wrap">
                             <input name="img_social" id="img_social" type="file" pattern="^.+?\.(png|PNG|jpg|JPG|jpeg|JPEG|gif|GIF)$" aria-describedby="img_social_txt">
-                            <div class="trap-plus"><i class="fa fa-plus" aria-hidden="true"></i></div>
+                            <div class="trap-plus"><i class="fal fa-plus"></i></div>
                         </div>
                     </div>
                 </div>
@@ -184,14 +184,14 @@ defined('BASEPATH') OR exit('No direct script access allowed');
         <div class="lang-wrap">
             <label for="languages_id">Ngôn ngữ</label>
             <div class="select-language">
-                <img class="flag" src="<?php echo lang_item(LANG)->flag;?>" alt="<?php echo escape_html(lang_item(LANG)->name);?>">
+                <img class="flag" src="<?php echo lang_item( LANG )->flag;?>" alt="<?php echo escape_html(lang_item(LANG)->name);?>">
                 <?php
                 /** @var array $languages */
-                echo form_dropdown('languages_id', $languages, [LANG], 'id="languages_id" class="inline-block"'); ?>
+                echo form_dropdown('languages_id', $languages, [ lang_item( LANG )->languages_id ], 'id="languages_id" class="inline-block"'); ?>
             </div>
         </div>
         <div class="btn-submit">
-            <?php echo form_hidden('_action', 'add'); ?>
+	        <?php echo form_hidden( '_action', 'add' ); ?>
             <button type="submit" class="button">Thêm mới</button>
         </div>
     </div>

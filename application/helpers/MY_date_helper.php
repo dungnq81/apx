@@ -16,7 +16,7 @@ if (! function_exists('strtotimetz'))
      */
     function strtotimetz($str, $timezone = NULL)
     {
-        if (empty($timezone))
+	    if ( empty( $timezone ) )
         {
             $timezone = config_item('time_reference');
         }
@@ -43,19 +43,18 @@ if (! function_exists('format_date'))
      * @return string The formatted date.
      * @throws Exception
      */
-	function format_date($unix, $format = '')
-	{
-		if ($unix == '' OR ! is_numeric($unix))
+	function format_date( $unix, $format = '' ) {
+		if ( $unix == '' OR ! is_numeric( $unix ) )
 		{
-			$unix = strtotimetz($unix);
+			$unix = strtotimetz( $unix );
 		}
 
-		if (! $format)
+		if ( ! $format )
 		{
-            $CI = &get_instance();
+			$CI     = &get_instance();
 			$format = $CI->setting->date_format;
 		}
 
-		return strstr($format, '%') !== FALSE ? ucfirst(utf8_encode(strftime($format, $unix))) : date($format, $unix);
+		return strstr( $format, '%' ) !== FALSE ? ucfirst( utf8_encode( strftime( $format, $unix ) ) ) : date( $format, $unix );
 	}
 }

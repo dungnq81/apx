@@ -100,7 +100,7 @@ $(function () {
                             // hover, click
                             thumbnails.find('figure').on({
                                 mouseenter: function () {
-                                    $(this).append($("<a/>", {"class": "close", "href": "javascript:;", "title": "Remove " + escapeString(file.name)}).html("<i class=\"fa fa-times\" aria-hidden=\"true\"></i>"));
+                                    $(this).append($("<a/>", {"class": "close", "href": "javascript:;", "title": "Remove " + escapeString(file.name)}).html("<i class=\"fal fa-times\"></i>"));
                                     $(this).find('.close').on('click', function () {
                                         reset_file_input(event.target);
                                         $(this).closest('figure').remove();
