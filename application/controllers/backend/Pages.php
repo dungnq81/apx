@@ -93,7 +93,7 @@ class Pages extends Admin_Controller {
 	 *
 	 * @param int $id The id of the page.
 	 */
-	public function edit( $id = 0 ) {
+	public function edit( int $id = 0 ) {
 		// We are lost without an id. Redirect to the pages add.
 		$id OR redirect( 'admin/pages/add' );
 
