@@ -125,15 +125,15 @@ class Pages extends Admin_Controller {
 	 * This is used in the creation forms.
 	 */
 	private function _form_data() {
-		$_lang_options    = $this->language_m->array_for_select( 'languages_id', 'name' );
-		$_layouts_options = $this->pages_layout_m->array_for_select( 'id', 'title' );
+		$_lang_options    = $this->language_m->array_for_select( 'code', 'name' );
+		$_layout_options = $this->pages_layout_m->array_for_select( 'id', 'title' );
 
 		// @todo load parent page
 
 		// load page scripts
 		$this->template
 			->set( 'languages', $_lang_options )
-			->set( 'layouts', $_layouts_options )
+			->set( 'layouts', $_layout_options )
 			->append_js( [ 'admin/pages.js' ] );
 	}
 

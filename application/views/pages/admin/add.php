@@ -182,12 +182,12 @@ defined('BASEPATH') OR exit('No direct script access allowed');
             </div>
         </div>
         <div class="lang-wrap">
-            <label for="languages_id">Ngôn ngữ</label>
+            <label for="languages">Ngôn ngữ</label>
             <div class="select-language">
                 <img class="flag" src="<?php echo lang_item( LANG )->flag;?>" alt="<?php echo escape_html(lang_item(LANG)->name);?>">
                 <?php
                 /** @var array $languages */
-                echo form_dropdown('languages_id', $languages, [ lang_item( LANG )->languages_id ], 'id="languages_id" class="inline-block"'); ?>
+                echo form_dropdown('languages', $languages, [ LANG ], 'id="languages" class="inline-block"'); ?>
             </div>
         </div>
         <div class="btn-submit">
